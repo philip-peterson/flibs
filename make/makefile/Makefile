@@ -33,7 +33,7 @@ EXE_TEST_LOGGER = $(bindir)/test_m_logger.exe
 archive_flibs = $(PROJECTDIR)/bin/$(OS)/$(ARCH)/$(FC)/$(VERSION)/flibs.a
 
 all: $(archive) tests
-	$(ECHO) "Target all OK."
+	@echo "Targets are all built."
 
 archive: $(libdir) $(bindir) $(archive_flibs) 
 
