@@ -48,7 +48,7 @@ fi
 # Copy build options
 #
 cp $options.mk options.mk
-sed -i "s|VERSION = .*$|VERSION = $options|g" $makefilecfg
+echo "$makefilecfg" |  sed "s|VERSION = .*$|VERSION = $options|g"
 
 #
 # Identify the compiler
@@ -125,11 +125,11 @@ if test $found -eq 1 ;then
     echo Compiler: $compiler
     cp $compiler.mk config.mk
     # Ugly; this is to avoid replacing Makefile-linux/win32-NT
-    sed -i "s|include Makefile-gfortran|include Makefile-$compiler|g" $makefilecfg
-    sed -i "s|include Makefile-g95|include Makefile-$compiler|g" $makefilecfg
-    sed -i "s|include Makefile-ifort|include Makefile-$compiler|g" $makefilecfg
+    echo "$makefilecfg" | sed "s|include Makefile-gfortran|include Makefile-$compiler|g"
+    echo "$makefilecfg" | sed "s|include Makefile-g95|include Makefile-$compiler|g"
+    echo "$makefilecfg" | sed "s|include Makefile-ifort|include Makefile-$compiler|g"
 else
-    echo No suitable compiler found!
+    echo 'No suitable compiler found!'
 fi
 
 cd ..
