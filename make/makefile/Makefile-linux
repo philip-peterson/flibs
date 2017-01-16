@@ -1,5 +1,5 @@
 #
-# Commands specific for the Windows system
+# Commands specific for the Linux system
 #
 SHELL=/bin/sh
 MKDIR= mkdir

@@ -10,6 +10,7 @@ include Makefile-cfg
 #
 include Makefile-flibs-objects
 
+
 ifeq ($(FC),g95)
 	F90OPTS += -I$(srcdir)/strings
 endif
