@@ -1,0 +1,61 @@
+Building the test program:
+-------------------------
+
+For Linux and Cygwin environments, use the "mk" shell script
+For MinGW and plain Windows, use the "mk.bat" batch file
+
+There are a number of macros defined:
+
+INBETWEEN          - Use this if the implicit length argument for string
+                     arguments appear right after the string argument
+                     itself (so, inbetween all arguments visible from
+                     the Fortran side)
+
+LINUX              - Use this for Linux-like environments (no __stdcall
+                     required and shared memory is provided via
+                     the mmap() interface)
+
+MINGW              - Use this for MinGW on Windows (no __stdcall, but
+                     using the Windows functions CreateFileMapping() and
+                     others)
+
+FTN_ALLCAPS        - Fortran names appear with all letters turned to
+                     capitals
+
+FTN_UNDERSCORE     - Fortran names have one underscore appended
+
+FTN_DBL_UNDERSCORE - Fortran names have two underscores appended, if the
+                     name has an embedded underscore
+
+
+Running the test program:
+------------------------
+
+- Start two terminals/DOS-boxes
+- In one start the test program as:
+
+  test_ipc_file <file1.inp
+
+- In the other as:
+
+  test_ipc_file <file2.inp
+
+(Similarly the mmap version: test_ipc_mmap <file1.inp)
+
+This ensures that one version sends the information to the other.
+
+
+Notes on the modules:
+--------------------
+
+1. The modules do not include a command yet to set the directory where
+   all the files should be
+
+2. The modules require a SLEEP() function/routine that is not native to
+   Fortran (or C for that matter). The file-based IPC module relies on a
+   compatibility module from Compaq Visual Fortran (also available in
+   Intel Fortran). This should be transformed into a more
+   compiler-independent form. (It may require a C function though)
+
+3. The ad hoc script "mk" is provided to compile the test program.
+   It is a temporary solution.

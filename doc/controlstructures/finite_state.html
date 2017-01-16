@@ -1,0 +1,290 @@
+
+<html><head>
+<title>finite_state_machine - flibs</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'controlstructures/finite_state.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2006 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;
+   -->
+<! -- CVS: $Id: finite_state.html,v 1.2 2013/05/13 08:03:15 knystrom Exp $ finite_state_machine.n
+   -->
+<body><div class="doctools">
+<h1 class="title">finite_state_machine(n) 1.0  &quot;flibs&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>finite_state_machine - Support for building finite state machines</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">DATA TYPES AND ROUTINES</a></li>
+<li class="section"><a href="#section3">EXAMPLE</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">call fsm_loop( data, machine )</b></a></li>
+<li><a href="#2"><b class="cmd">call fsm_loop_int( data, machine )</b></a></li>
+<li><a href="#3"><b class="cmd">call fsm_loop_print( data, machine, print_debug )</b></a></li>
+<li><a href="#4"><b class="cmd">call fsm_loop_print_int( data, machine, print_debug )</b></a></li>
+<li><a href="#5"><b class="cmd">call fsm_get_state( fsm, state )</b></a></li>
+<li><a href="#6"><b class="cmd">call fsm_set_state( fsm, state )</b></a></li>
+<li><a href="#7"><b class="cmd">call fsm_set_lurep( fsm, lurep )</b></a></li>
+<li><a href="#8"><b class="cmd">lurep = fsm_get_lurep( fsm )</b></a></li>
+<li><a href="#9"><b class="cmd">call fsm_finish( fsm )</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>The <em>finite_state.f90</em> source file defines a set of subroutines
+that allow you to build a so-called finite state machine. This is
+basically a way to structure a program or a part of a program that
+takes input (from a file or from some other source) and reacts to
+that input depending on the &quot;state&quot; it is in. A simple example could
+be a heating device with a thermostat: if the ambient temperature is
+high enough, there is no need to heat the room, so the system is in a
+rest state. If the temperature is lower than the set temperature, the
+heater should be turned on.</p>
+<p>Finite state machines are encountered in many different areas in one
+form or other. Lexical analysers are another, more complicated example.
+When analysing an arithmetic expression like &quot;1+2*3&quot;, the &quot;+&quot; that
+follows the &quot;1&quot; will probably bring the analyser in a different state:
+the literal number has terminated, it now needs to deal with an
+operator. This type of programming is used in the test/demo program to
+show how to use the finite_state.f90 source file to build a non-trivial
+FSM.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">DATA TYPES AND ROUTINES</a></h2>
+<p>The source code expects a data type, STATE_DATA, that contains all
+information describing the finite state machine. The contents is
+entirely up to the application though. The state data are passed to the
+subroutine that implements the actual state machine, so that you can use
+this argument to prepare the computation.</p>
+<p>The type must be defined in a module called &quot;fsm_data_definitions&quot;:</p>
+<pre class="example">
+module MYDATA_POOL
+type POOLDATA
+    integer :: pool_index          ! For private use by pool_acquire/pool_release
+    real, dimension(100) :: work   ! The actual work space
+end type
+include &quot;mem_pool.f90&quot;
+end module MYDATA_POOL
+</pre>
+<p>The code defines the following routines:</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">call fsm_loop( data, machine )</b></a></dt>
+<dd><p>Run a finite state machine, implemented by the subroutine &quot;machine&quot; that
+uses character strings to define the state. The first state is always
+set to the parameter FSM_INIT_CHAR (=&quot;INIT&quot;), the initial state, and should be
+used to initialise the computation.</p>
+<dl class="arguments">
+<dt>type(STATE_DATA) <i class="arg">data</i></dt>
+<dd><p>The data defining the current state of the machine</p></dd>
+<dt>subroutine <i class="arg">machine</i></dt>
+<dd><p>Subroutine that does the actual computation. Its interface is:</p>
+<pre class="example">
+    subroutine machine( fsm, data, curstate )
+        use fsm_data_definitions
+        implicit none
+        type(FSM_STATE),  intent(inout) :: fsm
+        type(STATE_DATA), intent(inout) :: data
+        character(len=*), intent(in)    :: curstate
+    end subroutine</pre>
+</dd>
+</dl></dd>
+<dt><a name="2"><b class="cmd">call fsm_loop_int( data, machine )</b></a></dt>
+<dd><p>Similar to <em>fsm_loop</em> but the machine's state is an integer now.
+The first state is represented by the parameter FSM_INIT (=0).</p>
+<p>It has the same interface as <em>fsm_loop</em></p></dd>
+<dt><a name="3"><b class="cmd">call fsm_loop_print( data, machine, print_debug )</b></a></dt>
+<dd><p>Like <em>fsm_loop</em>, but the third argument is a routine that allows
+you to print intermediate results. It's interface is:</p>
+<pre class="example">
+    subroutine print_debug( lurep, data, oldstate, curstate )
+        use fsm_data_definitions
+        implicit none
+        integer, intent(in)             :: lurep
+        type(STATE_DATA), intent(inout) :: data
+        character(len=*), intent(in)    :: oldstate
+        character(len=*), intent(in)    :: curstate
+    end subroutine</pre>
+</dd>
+<dt><a name="4"><b class="cmd">call fsm_loop_print_int( data, machine, print_debug )</b></a></dt>
+<dd><p>Like <em>fsm_loop_int</em>, but the third argument is a routine that
+allows you to print intermediate results. It's interface is:</p>
+<pre class="example">
+    subroutine print_debug( lurep, data, oldstate, curstate )
+        use fsm_data_definitions
+        implicit none
+        integer, intent(in)             :: lurep
+        type(STATE_DATA), intent(inout) :: data
+        integer, intent(in)             :: oldstate
+        integer, intent(in)             :: curstate
+    end subroutine</pre>
+</dd>
+<dt><a name="5"><b class="cmd">call fsm_get_state( fsm, state )</b></a></dt>
+<dd><p>Get the current state from the FSM data structure</p>
+<dl class="arguments">
+<dt>type(FSM_DATA) <i class="arg">fsm</i></dt>
+<dd><p>The data maintained by the FSM loop</p></dd>
+<dt>integer/character(len=*), intent(out) <i class="arg">state</i></dt>
+<dd><p>Current state of the finite state machine - either as integer or as
+character string.</p></dd>
+</dl></dd>
+<dt><a name="6"><b class="cmd">call fsm_set_state( fsm, state )</b></a></dt>
+<dd><p>Set the current state in the FSM data structure</p>
+<dl class="arguments">
+<dt>type(FSM_DATA) <i class="arg">fsm</i></dt>
+<dd><p>The data maintained by the FSM loop</p></dd>
+<dt>integer/character(len=*), intent(in) <i class="arg">state</i></dt>
+<dd><p>The new state of the finite state machine - either as integer or as
+character string.</p></dd>
+</dl></dd>
+<dt><a name="7"><b class="cmd">call fsm_set_lurep( fsm, lurep )</b></a></dt>
+<dd><p>Set the LU-number for the print routine (by default: 0, to be
+interpreted as output to screen).</p></dd>
+<dt><a name="8"><b class="cmd">lurep = fsm_get_lurep( fsm )</b></a></dt>
+<dd><p>Return the LU-number for the print routine.</p></dd>
+<dt><a name="9"><b class="cmd">call fsm_finish( fsm )</b></a></dt>
+<dd><p>Instruct the FSM loop to stop.</p></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">EXAMPLE</a></h2>
+<p>The use of the source code in the two files &quot;finite_state.f90&quot;and
+&quot;fsm_state.f90&quot; is illustrated by the following example:</p>
+<pre class="example">
+module fsm_data_definitions
+    implicit none
+    include 'fsm_state.f90'
+    type STATE_DATA
+        integer :: position           ! Current position in the string
+        integer :: open_parens        ! Number of open parentheses
+        character(len=80)              :: string ! String holding the expression
+    end type STATE_DATA
+end module fsm_data_definitions</pre>
+<p>This module defines the STATE_DATA derived type and includes the file
+with the (private) definitions.</p>
+<p>The module that actually implements the finite state machine looks like
+this (the included file &quot;finite_state.f90&quot;contains the <em>contains</em>
+keyword):</p>
+<pre class="example">
+module analyse_string
+    use fsm_data_definitions
+    include 'finite_state.f90'
+!
+! Here is the actual routine that implements the finite state machine
+!
+! analyse_expression --
+!     Analyse an arithmetic expression
+! Arguments:
+!     fsm           Private data structure for the FSM machinery
+!     data          Evaluation data structure
+!     state_name    Current state of the machine
+!
+subroutine analyse_expression( fsm, data, state_name )
+    type(FSM_STATE),  intent(inout)  :: fsm
+    type(STATE_DATA), intent(inout)  :: data
+    character(len=*), intent(in)     :: state_name
+    ...
+end subroutine analyse_expression
+end module</pre>
+<p>(You can find the complete source code in the file
+&quot;tst_finite_state.f90&quot; in the source distribution)</p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2006 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;</p>
+</div>
+</div></body></html>

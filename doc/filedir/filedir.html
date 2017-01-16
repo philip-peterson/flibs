@@ -1,0 +1,200 @@
+
+<html><head>
+<title>flibs/strings - flibs</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'filedir/filedir.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2005 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;
+   -->
+<! -- CVS: $Id: filedir.html,v 1.2 2013/05/13 08:03:15 knystrom Exp $ flibs/strings.n
+   -->
+<body><div class="doctools">
+<h1 class="title">flibs/strings(n) 1.0  &quot;flibs&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>flibs/strings - Manipulate file and directory names</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">ROUTINES</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">use filedir</b></a></li>
+<li><a href="#2"><b class="cmd">rootname = filedir_rootname( filename )</b></a></li>
+<li><a href="#3"><b class="cmd">extension = filedir_extension( filename )</b></a></li>
+<li><a href="#4"><b class="cmd">basename = filedir_basename( filename )</b></a></li>
+<li><a href="#5"><b class="cmd">dirname = filedir_dirname( filename )</b></a></li>
+<li><a href="#6"><b class="cmd">dirname = filedir_concat( directory, filename )</b></a></li>
+<li><a href="#7"><b class="cmd">newname = filedir_add_extension( filename, extension )</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>The <em>filedir</em> contains a number of routines to manipulate file
+and directory names:</p>
+<ul class="itemized">
+<li><p>Strip the extension from a file name and return the &quot;root name&quot;.</p></li>
+<li><p>Determine instead the extension from a file name and return that.</p></li>
+<li><p>Strip the directory name from the path to the file and return the &quot;base
+name&quot;.</p></li>
+<li><p>Strip the file name from the path to the file and return the
+directory.</p></li>
+<li><p>Concatenate file and directory names.</p></li>
+<li><p>Add an extension to a file name.</p></li>
+</ul>
+<p>These are all relatively simple routines, but they are fairly common,
+hence the module.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">ROUTINES</a></h2>
+<p>The module contains the following routines:</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">use filedir</b></a></dt>
+<dd><p>To import the subroutines, use this module.</p></dd>
+<dt><a name="2"><b class="cmd">rootname = filedir_rootname( filename )</b></a></dt>
+<dd><p>Strips the extension if any off the file name and returns the result.</p>
+<dl class="arguments">
+<dt>character(len=*) <i class="arg">filename</i></dt>
+<dd><p>Name of the file</p></dd>
+</dl></dd>
+<dt><a name="3"><b class="cmd">extension = filedir_extension( filename )</b></a></dt>
+<dd><p>Returns the extension if any found in a file name</p>
+<dl class="arguments">
+<dt>character(len=*) <i class="arg">filename</i></dt>
+<dd><p>Name of the file</p></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">basename = filedir_basename( filename )</b></a></dt>
+<dd><p>Returns the base name of a file (so, without the directory part)</p>
+<dl class="arguments">
+<dt>character(len=*) <i class="arg">filename</i></dt>
+<dd><p>Name of the file</p></dd>
+</dl></dd>
+<dt><a name="5"><b class="cmd">dirname = filedir_dirname( filename )</b></a></dt>
+<dd><p>Returns the directory part of a file name</p>
+<dl class="arguments">
+<dt>character(len=*) <i class="arg">filename</i></dt>
+<dd><p>Name of the file</p></dd>
+</dl></dd>
+<dt><a name="6"><b class="cmd">dirname = filedir_concat( directory, filename )</b></a></dt>
+<dd><p>Prepend the directory to the file name</p>
+<dl class="arguments">
+<dt>character(len=*) <i class="arg">directory</i></dt>
+<dd><p>Directory to prepend</p></dd>
+<dt>character(len=*) <i class="arg">filename</i></dt>
+<dd><p>Name of the file</p></dd>
+</dl></dd>
+<dt><a name="7"><b class="cmd">newname = filedir_add_extension( filename, extension )</b></a></dt>
+<dd><p>Append an extension to the file name</p>
+<dl class="arguments">
+<dt>character(len=*) <i class="arg">directory</i></dt>
+<dd><p>Directory to prepend</p></dd>
+<dt>character(len=*) <i class="arg">filename</i></dt>
+<dd><p>Name of the file</p></dd>
+</dl></dd>
+</dl>
+<p><em>Note:</em>
+The functions all return strings that are large enough to guarantee
+that the entire result can be hold. In many cases, the length is the
+same as that of the input argument, but for instance with
+<em>file_add_extension</em> it is the sum of the lengths of the
+two arguments plus 1 (for the dot).</p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2005 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;</p>
+</div>
+</div></body></html>

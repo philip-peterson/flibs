@@ -1,0 +1,152 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin fcgi_protocol n 1.0]
+[copyright {2013 Ricolindo Carino <ricolindo dot carion at gmail dot com>}]
+[copyright {2013 Arjen Markus <arjenmarkus at sourceforge dot net>}]
+[moddesc flibs]
+[titledesc {Module for supporting the Internet Fast-CGI protocol}]
+
+[description]
+
+When you want to create web applications, the Fast-CGI (fast common gateway
+interface) is one of the means to integrate your underlying programs
+with the web server. The protocol itself is, at least superficially,
+simple enough, but you need to take care of a number of details.
+It is these details that the [emph fcgi_protocol] module seeks to take
+care of.
+
+[para]
+Note that the fast-CGI protocol differs from the CGI protocol in that
+it requires specific support from the web server and that the program
+stays alive all the time, whereas with the CGI protocol the program
+is started with each request. This makes it easier to keep control over
+the processing.
+
+[para]
+The global structure of a program that uses this module to
+communicate with the web server is basically:
+[para]
+Within a loop that starts with a call to the function [term fcip_accept_environment_variables], do:
+
+[list_begin bullet]
+[bullet]
+Get the data from the web server, via the subroutine [term fcgip_make_dictionary]
+[bullet]
+Write the HTML code that represents the answer to the request to an external file
+[bullet]
+Notify the web server via the suboutine [term fcip_put_file]
+[list_end]
+
+The module relies on the [term cgi_protocol] module and a library for fast-CGI support
+(see the detailed documentation on the subject).
+
+[section "DATA TYPES AND ROUTINES"]
+The module defines the following data types:
+
+[list_begin definitions]
+
+[call [cmd "dict_struct"]]
+A derived type holding a list of keyword-value pairs. Each value is of the
+type "dict_data" (see below). The routine [term fcgip_make_dictionary] fills such a
+structure to hold all form variables and their values.
+
+[call [cmd "dict_data"]]
+The derived type whose contents is the string value of a particular form
+variable. It has one component: value, a string of 200 characters long
+(the actual length is set via the parameter "dict_value_length", so you
+can easily change it if this should prove necessary).
+
+[list_end]
+
+The module defines the following routines:
+
+[list_begin definitions]
+
+[call [cmd "call fcgip_accept_environment_variables()"]]
+Routine to accept an incoming request from the web server. It
+prepares for the transfer of the data making up the request. It returns
+a positive value if there is a request and a non-positive one, if the
+server is shutting down.
+[nl]
+The function should be called as a condition for a [term "do while"] loop,
+so that the program continues to accept new requests.
+[nl]
+It has no arguments.
+
+[call [cmd "call fcgip_make_dictionary( dict, unitNo )"]]
+Analyse the request data and make them available in the dictionary.
+
+[list_begin arg]
+[arg_def "type(dict_struct), pointer" dict]
+Variable to hold alll the form variables and their values. You pass
+this variable to [emph cgi_get()] to retrieve these values. You can also
+store new variables and values, if this is useful (via the plain
+dictionary routines).
+[nl]
+[emph Note:]
+Initialise it to "null()" before calling the routine.
+
+[arg_def "integer, intent(in)" unitNo]
+Unit number of a file to write debugging statements to. Typically the
+same file as the one used to transfer the HTML output. (The debugging
+statements are filtered out.)
+[list_end]
+
+
+[call [cmd "call fcgip_put_file( unitNo, mimetype )"]]
+Copy the response to the request to the web server. This is then presented
+to the user.
+
+[list_begin arg]
+[arg_def "integer, intent(in)" unitNo]
+The unit number of the opened file that contains the information that
+should be sent to the user. It is typically HTML text, but can actually
+be anything supported by the server.
+
+[arg_def "character(len=*), intent(in), optional" mimetype]
+String to indicate to the web server what the type of response is, the
+MIME type. Typically this is [term text/html], so if you leave out the
+argument, this is used by default.
+[list_end]
+
+[list_end]
+
+[section NOTES]
+The test/demonstration programs illustrate several techniques to set
+up web services:
+
+[list_begin bullet]
+[bullet]
+The program [term test_fcgi.f90] shows how a single program can respond
+to different requests by examining the [term DOCUMENT_URI] environment variable.
+This environment variable contains the value of the [term action] attribute of
+the form that contains the [term submit] button.
+[nl]
+At the start of the program it presents an initial web page that contains
+several choices.
+
+[bullet]
+The program [term guess_number_fcgi.f90] implements a simple game. As the program
+stays alive the whole time, you can rely on the data for each game to remain
+available between answers from the user (this in contrast to CGI).
+[nl]
+To distinguish between users, a hidden variable in the HTML form is used,
+[term COMPUTATION_ID]. This is actually an index into an array of data structures,
+each holding the data for one game.
+
+[bullet]
+The program [term run_long_computation.f90] in combination with [term long_computation.f90]
+illustrates a strategy for running computations in the background and having
+the user inspect the results from time to time. Each computation is run in
+a separate directory. Again the [term COMPUTATION_ID] variable identifies which
+computation the user is looking at.
+
+[nl]
+[emph Note:] The set-up as described by [uri fortran-fastcgi-nginx.html "the detailed description"].
+does not seem to allow calling external programs from the fast-CGI program under Windows.
+An indirect approach must be taken.
+[para]
+[emph "Still to be implemented as a demo"]
+
+[list_end]
+
+[manpage_end]

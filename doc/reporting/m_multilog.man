@@ -1,0 +1,486 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin flibs/m_multilog n 1.3]
+[copyright {2012-2014 Karin Nyström knystrom at users.sourceforge.net}]
+[moddesc flibs]
+[titledesc {Manage multiple log files}]
+
+[description]
+
+The module m_multilog provides a logging type with a set of type
+bound procedures and other methods to manage one or more log
+files. The module and its test program are based on the m_logger
+module (including unit test) which is part of the flibs library.
+For applications in need of only one log, m_logger is the
+recommended module.
+
+[section OVERVIEW]
+
+The goal of this component is to provide a way to write messages
+both on standard output and on one or more log files, so that a
+trace of the execution - with desired level of detail - can be
+read by the user after the execution.
+
+[para]
+One single statement should be able to write to all open log files
+with appropriate log level set. Example:
+
+[example {
+   call log_msg ('Log message', WARNING)
+}]
+
+will write to logs with log level equal to or lower than
+WARNING, i.e. WARNING, INFO, FINE/DEBUG.
+
+[para]
+The module provides methods to
+[list_begin bullet]
+[bullet]
+connect a file to a log object
+[bullet]
+configure the logging process, for example disable the standard
+output messages or enable time stamps,
+[bullet]
+log messages,
+[bullet]
+group log objects,
+[bullet]
+write log messages to a group of log objects.
+[list_end]
+
+Individual logs are started with [term "log_t%startup (filename \[,options\])"].
+The method takes the log file name as first argument:
+its main purpose is to connect the log to the file.
+Optional arguments: log information level, append true/false
+
+[para]
+Logs can be added to the log group with "add_log". Logs can be
+removed from the log group using the "remove_log" method, which will
+also close the file connected to the log.
+
+[para]
+The messages are sent to one or more of the active logs with the
+static method "log_msg". Infolevel is an optional argument to
+log_msg, if left out it's set to ALL which means that the message
+will be written to all logs.
+
+[para]
+In the following example, extracted from the unit tests of
+m_multilog provided with the project, one connects the file
+"test_m_multilog.log" to the log, two messages of which only the
+first should be written to file and shut down the logging system.
+
+[example {
+   type (log_t) :: test
+
+   call test%startup ( 'test_m_multilog.log' , INFO )
+   call add_log ( test )
+   call log_msg ( 'First message' , INFO )
+   call log_msg ( 'Second message', FINE )
+   call shutdown_log_group ()
+}]
+
+By default, the logging is done on all log files with appropriate
+infolevel and on standard output. The user may want to configure
+the behaviour of the log_group so that message are not written on
+standard output.
+
+[para]
+The static method [term "log_group_configure(option,value)"]
+is the central point to configure the log group itself or all logs
+connected to it. It takes a character "option" string and a "value" as
+arguments. 
+
+[para]
+It is also possible to configure a specific log using the type
+bound generic routine log_t%configure ( option, value ). In the
+following example, one writes messages on file and in one case
+also to stdout.
+
+[example {
+  type (log_t) :: test
+
+  call test%startup ( 'test_m_multilog.log' )
+  call add_log ( test )
+  call test%configure ( "writeonstdout" , .true. )
+  call log_msg( 'This message is written both on screen and on file' )
+  call test%configure ( "writeonstdout" , .false. )
+  call log_msg( 'This message is written only on file' )
+  call shutdown_log_group ()
+}]
+
+[para]
+Timestamps can be formatted using a slightly modified version of
+format_date from the libdate module. The following strings are
+available:
+[list_begin bullet]
+[bullet]
+[term dd] - Day of month ("01" for instance)
+[bullet]
+[term ds] - Day of month ("1" for instance, s for space)
+[bullet]
+[term HH] - Hour (00-23)
+[bullet]
+[term HS] - Hour (0-23)
+[bullet]
+[term mm] - Month ("01" for january)
+[bullet]
+[term ms] - Month ("1" for january, s for space)
+[bullet]
+[term MM] - Minutes within the hour (00-59)
+[bullet]
+[term MS] - Minutes within the hour (0-59)
+[bullet]
+[term MM] - Seconds within the minute (00-59)
+[bullet]
+[term MS] - Seconds within the minute (0-59)
+[bullet]
+[term YY] - Year without the century
+[bullet]
+[term yyyy] - Year with the century
+[list_end]
+
+The default pattern for timestamps is "yyyy-mm-dd HH:MM:SS".
+
+[example {
+  type (log_t) :: test
+
+  call test%startup ( 'test_m_multilog.log' )
+  call add_log ( test )
+  call test%configure ( "timefmt" , "YY-mm-dd HH:MM" )
+  call test%configure ( "timestamp" , .true. )
+  call log_msg( 'This message is written with custom timestamp' )
+  call shutdown_log_group ()
+}]
+
+
+[section "METHODS"]
+
+Public types and parameters:
+[list_begin definitions]
+
+[call "type(log_t) :: log"]
+Defines a log file to write to. It is opened via the [term startup] method.
+
+[call "integer, parameter :: DEBUG, FINE, INFO, WARNING, ERROR, ALL"]
+Different levels of logging information. Messages are only written to the log
+file if they have a level equal to or higher than the level for the file. The
+level "ALL" indicates messages that are written to any file.
+
+[call "integer, parameter :: LOG_LEVEL_VOLUME, LOG_LEVEL_CHAPTER, LOG_LEVEL_SECTION, LOG_LEVEL_SUBSECTION"]
+Different delimiters for the information in the log files. The routine [term log_delimiter] writes the
+corresponding delimiting string to the log file(s).
+[list_end]
+
+
+The module provides the following methods per logging object ([term type(log_t)]):
+
+[list_begin definitions]
+
+[call [method "this%startup"] ( [arg log_file] [opt ", append"] [opt ", info_lvl"])]
+Initialises the log, connect it to the given filename and set default values.
+[list_begin arg]
+[arg_def [type "class(log_t), intent(inout) ::"]  this]
+[arg_def [type "character(len=*), intent(in) ::"] log_file]
+Name of the log file
+[arg_def [type "logical, optional, intent(in) ::"] append]
+If present and true, then the messages will be appended to the end of the log file.
+If present and false, then the initialization of the
+log overwrites the messages of the previous logging session.
+[nl]
+If not provided, the default value is append=.true.
+[arg_def [type "integer, optional, intent(in) ::"] info_lvl]
+If present, set log_t%infolevel to the provided value
+If not present, set to default value INFO.
+[list_end]
+
+
+[call [method "this%shutdown"]]
+[list_begin arg]
+[arg_def [type "class(log_t), intent(inout) ::"]  this]
+[list_end]
+Close the log
+
+
+[call [method "this%reset"] ( )]
+[list_begin arg]
+[arg_def [type "class(log_t), intent(inout) ::"]  this]
+[list_end]
+Set all internal settings for the log to default values.
+
+
+[call [method "this%write"] ( [arg msg] [opt ", info_lvl"])]
+Log the given character string to one logging unit.
+If the logging to standard output is enabled, writes the message
+on standard output.
+[nl]
+If the logging to the log file is enabled, writes the message
+into the log file.
+[nl]
+Before outputting directly the message string, the string is
+trimmed, that is to say that all trailing blanks are removed from
+the string.
+[nl]
+
+If the time stamp option is enabled, a time stamp with format
+"year-month-day hh:mm:ss" or custom timestamp format is inserted
+before the message.
+
+[emph Note:]
+Before outputting directly the message string, the string is
+trimmed, that is to say that all trailing blanks are removed from
+the string.
+
+[list_begin arg]
+[arg_def [type "class(log_t), intent(inout) ::"]  this]
+[arg_def [type "character(len=*), intent(in) ::"] msg]
+Log message to be written
+[arg_def [type "integer, optional, intent(in) ::"] info_lvl]
+If present, set log_t%infolevel to the provided value
+If not present, set to default value INFO.
+[list_end]
+
+
+[call [method "this%configure"] ( [arg "option"] [arg ", value"] ) ]
+[list_begin arg]
+[arg_def [type "class(log_t), intent(inout) ::"]  this]
+[arg_def [type "character ( len = * ) , intent(in) ::"] option]
+[arg_def [type "integer, intent(in) ::"] value]
+[list_end]
+Configure the integer static option of the object.
+The option is set for the log object if given, otherwise it is set for the log group
+as a whole.
+[nl]
+The [arg option] may be one of the following.
+[list_begin bullet]
+[bullet] [arg option] = "infolevel" :
+Set level of detail in the log to [arg value]. Available values: ALL, ERROR, WARNING,
+INFO, FINE, DEBUG. FINE and DEBUG levels are the same currently.
+[list_end]
+
+
+[call [method "this%configure"] ( [arg "option"] [arg ", value"] ) ]
+[list_begin arg]
+[arg_def [type "class(log_t), intent(inout) ::"]  this]
+[arg_def [type "character ( len = * ) , intent(in) ::"] option]
+[arg_def [type "logical, intent(in) ::"] value]
+[list_end]
+Set the logical static [arg option] of the object to [arg value].
+The option is set for the log object if given, otherwise it is set for the log group
+as a whole.
+[nl]
+The [arg option] may be one of the following.
+[list_begin bullet]
+[bullet] [arg option] = "timestamp" :
+Disable or enable the insertion of time stamps.
+If the time stamp option is enabled, a time stamp with format
+"year-month-day hh:mm:ss" or custom format is inserted before the
+message.
+[bullet] [arg option] = "writeonstdout" :
+Disable or enable the writing on standard output.
+[bullet] [arg option] = "writeonlogfile" :
+Disable or enable the writing on log file.
+[list_end]
+
+
+[call [method "this%configure"] ( [arg "option"] [arg ", value"] ) ]
+[list_begin arg]
+[arg_def [type "class(log_t), intent(inout) ::"]  this]
+[arg_def [type "character ( len = * ) , intent(in) ::"] option]
+[arg_def [type "character ( len = * ) , intent(in) ::"] value]
+[list_end]
+Set the logical static [arg option] of the object to [arg value].
+The option is set for the log object if given, otherwise it is set for the log group
+as a whole.
+[nl]
+The [arg option] may be one of the following.
+[list_begin bullet]
+[bullet] [arg option] = "timefmt" :
+Set timestamp format to [arg value]
+[list_end]
+
+
+[call [method "this%cget"] ( [arg "option"] [arg ", value"]) ]
+[list_begin arg]
+[arg_def [type "class(log_t), intent(inout) ::"]  this]
+[arg_def [type "character ( len = * ) , intent(in) ::"] option]
+[arg_def [type "logical, intent(in) ::"] value]
+[list_end]
+Get the logical static "option" of the object.
+[nl]
+The [arg option] may be one of the following.
+[list_begin bullet]
+[bullet] [arg option] = "timestamp" :
+Current value of the option to enable / disable insertion of time stamps.
+[bullet] [arg option] = "writeonstdout" :
+Current value of the option to enable / disable writing on standard output.
+[bullet] [arg option] = "writeonlogfile" :
+Current value of the option to enable / disable writing on log file.
+[bullet] [arg option] = "stoponerror" :
+Current value of the option to enable / disable stopping when an error is met.
+[list_end]
+
+
+[call [method "this%cget"] ( [arg "option"] [arg ", value"] ) ]
+[list_begin arg]
+[arg_def [type "class(log_t), intent(inout) ::"]  this]
+[arg_def [type "character ( len = * ) , intent(in) ::"] option]
+[arg_def [type "integer, intent(in) ::"] value]
+[list_end]
+Get the integer static "option" of the log.
+[nl]
+[list_begin bullet]
+[bullet] [arg option] = "infolevel" :
+The log's infolevel
+[bullet] [arg option] = "logfileunit" :
+Current logical unit connected to the logging system.
+[list_end]
+
+
+[list_end]
+
+
+The module provides the following routines for the global log handler:
+
+[list_begin definitions]
+
+[call [method "shutdown_log_group"]]
+Close all logs connected to the log_group object
+
+
+[call [method "add_log"] ( [arg log] )]]
+Add a log_t object to the log group. Up to four log objects can be added.
+[list_begin arg]
+[arg_def [type "type(log_t), intent(inout) ::"]  log]
+log        log_t object (initialized with log_t%startup)
+[list_end]
+
+
+[call [method "remove_log"] ( [arg log] )]]
+Remove a log_t object from the log group.
+[list_begin arg]
+[arg_def [type "type(log_t), intent(inout) ::"]  log]
+log        log_t object (initialized with log_t%startup)
+[list_end]
+
+
+[call [method "log_msg"] ( [arg msg] [opt ", info_lvl"])]
+Log the given character string to all logging units with relevant
+info_lvl. If no info_lvl is specified, ALL is used (write to all
+logs).
+[nl]
+If the logging to standard output is enabled, writes the message
+on standard output as well as to relevant log files.
+Before outputting directly the message string, the string is
+trimmed, that is to say that all trailing blanks are removed from
+the string.
+[nl]
+If the time stamp option is enabled, a time stamp with format
+"year-month-day hh:mm:ss" or custom time stamp is inserted before the
+message.
+
+[list_begin arg]
+[arg_def [type "character(len=*), intent(in) ::"] msg]
+Log message to be written
+[arg_def [type "integer, optional, intent(in) ::"] info_lvl]
+Optional: log information level, default = INFO
+[list_end]
+
+
+[call [method "log_group_reset"] ( )]
+Set all internal settings for all logs to default values.
+
+
+[call [method "log_group_configure"] ( [arg "option"] [arg ", value"] ) ]
+[list_begin arg]
+[arg_def [type "character ( len = * ) , intent(in) ::"] option]
+[arg_def [type "logical, intent(in) ::"] value]
+[list_end]
+Set the logical static [arg option] of the component to [arg value].
+The option is set for the log object if given, otherwise it is set for the log group
+as a whole.
+[nl]
+The [arg option] may be one of the following.
+[list_begin bullet]
+[bullet] [arg option] = "timestamp" :
+Disable or enable the insertion of time stamps.
+If the time stamp option is enabled, a time stamp with format
+"year-month-day hh:mm:ss" or custom format is inserted before the
+message.
+[bullet] [arg option] = "writeonstdout" :
+Disable or enable the writing on standard output.
+[bullet] [arg option] = "writeonlogfile" :
+Disable or enable the writing on log file.
+[bullet] [arg option] = "stoponerror" :
+Configure the behaviour of the component whenever an
+error is met.
+If stoponerror is true, then the execution stops if an error is encountered.
+If stoponerror is false, then the execution continues if an error is encountered.
+In both cases, a message is displayed on standard output.
+[list_end]
+
+
+[call [method "log_group_configure"] ( [arg "option"] [arg ", value"]) ]
+[list_begin arg]
+[arg_def [type "character ( len = * ) , intent(in) ::"] option]
+[arg_def [type "character ( len = * ) , intent(in) ::"] value]
+[list_end]
+Set the character static "option" of the component to "value".
+The character options are global, so independent of the log objects.
+[nl]
+The "option" may be one of the following.
+[list_begin bullet]
+[bullet] [arg option] = "level_string_volume"
+Set the string used for volume delimiter.
+[bullet] [arg option] = "level_string_chapter"
+Set the string used for chapter delimiter.
+[bullet] [arg option] = "level_string_section"
+Set the string used for section delimiter.
+[bullet] [arg option] = "level_string_subsection"
+Set the string used for subsection delimiter.
+[bullet] [arg option] = "timefmt"
+Set timestamp format for all logs to [arg value]
+[list_end]
+
+
+[call [method "log_group_cget"] ( [arg "option"] [arg ", value"] ) ]
+[list_begin arg]
+[arg_def [type "character ( len = * ) , intent(in) ::"] option]
+[arg_def [type "logical, intent(in) ::"] value]
+[list_end]
+Get the logical static "option" of the component.
+The option is retrieved for the log group as a whole.
+[nl]
+The [arg option] may be one of the following.
+[list_begin bullet]
+[bullet] [arg option] = "stoponerror" :
+Current value of the option to enable / disable stopping when an error is met.
+[list_end]
+
+
+[call [method "log_group_cget"] ( [arg "option"] [arg ", value"] ) ]
+[list_begin arg]
+[arg_def [type "character ( len = * ) , intent(in) ::"] option]
+[arg_def [type "character ( len = * ) , intent(out) ::"] value]
+[list_end]
+Get the character static "option" of the component.
+[nl]
+The "option" may be one of the following.
+[list_begin bullet]
+[bullet] [arg option] = "level_string_volume"
+Get the string used for volume delimiter.
+[bullet] [arg option] = "level_string_chapter"
+Get the string used for chapter delimiter.
+[bullet] [arg option] = "level_string_section"
+Get the string used for section delimiter.
+[bullet] [arg option] = "level_string_subsection"
+Get the string used for subsection delimiter.
+[list_end]
+
+[list_end]
+
+
+[section TODO]
+Parallel mode - split to one log/thread and then merge?
+[para]
+Configurable log levels i.e. possibility to re-arrange the hierarchy
+[manpage_end]

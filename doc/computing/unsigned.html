@@ -1,0 +1,154 @@
+
+<html><head>
+<title>unsigned_integers - flibs</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'computing/unsigned.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2010 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;
+   -->
+<! -- CVS: $Id: unsigned.html,v 1.1 2012/01/22 19:52:33 arjenmarkus Exp $ unsigned_integers.n
+   -->
+<body><div class="doctools">
+<h1 class="title">unsigned_integers(n) 1.0  &quot;flibs&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>unsigned_integers - Implement operations with unsigned integers</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">use unsigned_integers</b></a></li>
+<li><a href="#2"><b class="cmd">c = a .udiv. b</b></a></li>
+<li><a href="#3"><b class="cmd">compare = a .ult. b</b></a></li>
+<li><a href="#4"><b class="cmd">string = to_string( a )</b></a></li>
+<li><a href="#5"><b class="cmd">a = to_unsigned( string )</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>The <em>unsigned_integers</em> module provides a number of operations that emulate
+unsigned integers in Fortran. For some applications unsigned integers are very useful.
+The module uses <em>ordinary</em> integers as the basic data type and adds only those
+operations that differ between signed and unsigned integers:</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">use unsigned_integers</b></a></dt>
+<dd><p>The name of the module. The module does not use any others.</p></dd>
+<dt><a name="2"><b class="cmd">c = a .udiv. b</b></a></dt>
+<dd><p>Division with <em>a</em> and <em>b</em> interpreted as unsigned integers.
+(Both should be declared as ordinary integers!)</p></dd>
+<dt><a name="3"><b class="cmd">compare = a .ult. b</b></a></dt>
+<dd><p>Compare two &quot;unsigned&quot; integers and return the result as a logical.
+The result is true if <em>a</em> is smaller than <em>b</em>.</p>
+<p>Similarly: <em>.ule.</em>, <em>.ugt.</em> and <em>.uge.</em> are the unsigned equivalents of
+<em>.le.</em>, <em>.gt.</em> and <em>.ge.</em>.</p></dd>
+<dt><a name="4"><b class="cmd">string = to_string( a )</b></a></dt>
+<dd><p>Return a string representing the &quot;unsigned&quot; integer <em>a</em>.</p></dd>
+<dt><a name="5"><b class="cmd">a = to_unsigned( string )</b></a></dt>
+<dd><p>Return an &quot;unsigned&quot; integer from a string. (Accepts &quot;-1&quot; and &quot;2147483648&quot; represent the
+unsigned value 2147483648.</p></dd>
+</dl>
+<p>All other operations, including left and right bit shifts (in Fortran), give the same results
+for unsigned integers as for signed integers, so that you can safely use the standard operations.
+The only caveat is that this presumes two's-complement integers, but those are ubiquitous.</p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2010 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;</p>
+</div>
+</div></body></html>

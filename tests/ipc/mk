@@ -1,0 +1,7 @@
+#!/bin/sh
+#
+# Quick and dirty: compile and link ipc-mmap
+#
+gcc -c ../../src/ipc/ipc_mmap_c.c -DLINUX -DFTN_UNDERSCORE
+gfortran -c ../../src/ipc/ipc_mmap.f90
+gfortran -o test_ipc_mmap test_ipc_mmap.f90 ipc_mmap.o ipc_mmap_c.o

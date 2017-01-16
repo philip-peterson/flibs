@@ -1,0 +1,217 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin minimisation n 1.0]
+[copyright {2013 Mike Powell}]
+[copyright {2013 Arjen Markus <arjenmarkus at sourceforge dot net>}]
+[moddesc flibs]
+[titledesc {Miminisation routines}]
+
+[description]
+
+The [term newuoa_minimisation] and [term bobyqa_minimisation] modules provide facilities
+to minimise a function of one or more variables without the use of derivatives
+(see [uri http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2007_03.pdf "A view of algorithms for optimization without derivatives"].
+
+[para]
+The first module provides the routine [term NEWUOA] which implements an unconstrained minimisation
+algorithm. The second module provides the routine [term BOBYQA] which implements an algorithm where
+the minimum of the function is sought within a given hyperblock.
+
+[para]
+[emph Note:] The code was developed by Mike Powell. It has been slightly adjusted so that advantage
+can be taken of a number of modern Fortran features. This has led to a slightly different interface
+than the original code. These are the changes:
+[list_begin bullet]
+[bullet]
+Use the generic names for standard functions like [term abs] and [term min].
+[bullet]
+Use an allocatable work array, so that the user is no longer responsible for this.
+[bullet]
+Wrap the code in a module, so that the interfaces can be checked by the compiler.
+[bullet]
+Use a [term kind] parameter instead of [term REAL*8].
+[bullet]
+Use assumed shape arrays, so that the number of dimensions can be automatically derived from
+the size of the [term X] array.
+[bullet]
+Make the subroutine that computes the value of the function to be minimised an argument,
+rather than requiring a fixed name. This makes the module more flexible.
+[list_end]
+
+[section "ROUTINES"]
+There are two public routines, one in each module:
+
+[list_begin definitions]
+
+[call [cmd "call newuoa((npt,x,rhobeg,rhoend,iprint,maxfun,calfun)"]]
+This subroutine seeks the least value of a function of many variables,
+by a trust region method that forms quadratic models by interpolation.
+There can be some freedom in the interpolation conditions, which is
+taken up by minimizing the Frobenius norm of the change to the second
+derivative of the quadratic model, beginning with a zero matrix. The
+arguments of the subroutine are as follows.
+[para]
+Initial values of the variables must be set in [term "X(1),X(2),...,X(N)"]. They
+will be changed to the values that give the least calculated [term F].
+
+[list_begin arg]
+[arg_def integer npt]
+[term NPT] is the number of interpolation conditions. Its value must be in the
+interval [lb][term "N+2,(N+1)(N+2)/2"][rb].
+
+[arg_def "real(kind=wp), dimension(:)" x]
+Array with coordinate values. On input the initial values, on output the vector
+for which the minimum function value was found.
+
+[arg_def "real(kind=wp)" "rhobeg, rhoend"]
+[term RHOBEG] and [term RHOEND] must be set to the initial and final values of a trust
+region radius, so both must be positive with [term RHOEND<=RHOBEG]. Typically
+[term RHOBEG] should be about one tenth of the greatest expected change to a
+variable, and [term RHOEND] should indicate the accuracy that is required in
+the final values of the variables.
+
+[arg_def integer iprint]
+The value of [term IPRINT] should be set to 0, 1, 2 or 3, which controls the
+amount of printing. Specifically, there is no output if [term IPRINT=0] and
+there is output only at the return if [term IPRINT=1]. Otherwise, each new
+value of [term RHO] is printed, with the best vector of variables so far and
+the corresponding value of the objective function. Further, each new
+value of [term F] with its variables are output if [term IPRINT=3].
+
+[arg_def integer maxfun]
+[term MAXFUN] must be set to an upper bound on the number of calls of [term CALFUN].
+
+[arg_def subroutine calfun]
+Subroutine [term CALFUN] must be provided by the user. It must set [term F] to
+the value of the objective function for the variables [term X(1),X(2),...,X(N)].
+[para]
+Its interface is:
+
+[example {
+    subroutine calfun( x, f )
+        import wp
+        real(kind=wp), dimension(:)  :: x
+        real(kind=wp)                :: f
+    end subroutine calfun
+}]
+[list_end]
+
+
+[call [cmd "call bobyqa((npt,x,xl,xu,rhobeg,rhoend,iprint,maxfun,calfun)"]]
+This subroutine seeks the least value of a function of many variables,
+by applying a trust region method that forms quadratic models by
+interpolation. There is usually some freedom in the interpolation
+conditions, which is taken up by minimizing the Frobenius norm of
+the change to the second derivative of the model, beginning with the
+zero matrix. The values of the variables are constrained by upper and
+lower bounds. The arguments of the subroutine are as follows.
+
+[para]
+Initial values of the variables must be set in [term "X(1),X(2),...,X(N)"]. They
+will be changed to the values that give the least calculated [term F].
+
+[list_begin arg]
+[arg_def integer npt]
+[term NPT] is the number of interpolation conditions. Its value must be in the
+interval [lb][term "N+2,(N+1)(N+2)/2"][rb].
+
+[arg_def "real(kind=wp), dimension(:)" x]
+Array with coordinate values. On input the initial values, on output the vector
+for which the minimum function value was found.
+
+[arg_def "real(kind=wp), dimension(:)" "xl, xu"]
+For [term I=1,2,...,N], [term XL(I)] and [term XU(I)] must provide the lower and upper
+bounds, respectively, on [term X(I)]. The construction of quadratic models
+requires [term XL(I)] to be strictly less than [term XU(I)] for each [term I]. Further,
+the contribution to a model from changes to the [term I]-th variable is
+damaged severely by rounding errors if [term XU(I)-XL(I)] is too small.
+
+[arg_def "real(kind=wp)" "rhobeg, rhoend"]
+[term RHOBEG] and [term RHOEND] must be set to the initial and final values of a trust
+region radius, so both must be positive with [term RHOEND] no greater than
+[term RHOBEG]. Typically, [term RHOBEG] should be about one tenth of the greatest
+expected change to a variable, while [term RHOEND] should indicate the
+accuracy that is required in the final values of the variables. An
+error return occurs if any of the differences [term "XU(I)-XL(I), I=1,...,N"]
+is less than [term 2*RHOBEG].
+
+[arg_def integer iprint]
+The value of [term IPRINT] should be set to 0, 1, 2 or 3, which controls the
+amount of printing. Specifically, there is no output if [term IPRINT=0] and
+there is output only at the return if [term IPRINT=1]. Otherwise, each new
+value of [term RHO] is printed, with the best vector of variables so far and
+the corresponding value of the objective function. Further, each new
+value of [term F] with its variables are output if [term IPRINT=3].
+
+[arg_def integer maxfun]
+[term MAXFUN] must be set to an upper bound on the number of calls of [term CALFUN].
+
+[arg_def subroutine calfun]
+Subroutine [term CALFUN] must be provided by the user. It must set [term F] to
+the value of the objective function for the variables [term X(1),X(2),...,X(N)].
+[para]
+Its interface is the same for routine [term NEWUOA].
+[list_end]
+
+[list_end]
+
+[section EXAMPLE]
+The functon to be minimised does not need to be a straightforward mathematical function.
+The only requirements are that it is continuous in its arguments and more or less smooth.
+
+[para]
+Here is an example of a minimisation problem that would be very difficult to solve when
+derivatives are required. The problem is to find the values for the coefficients [term a] and
+[term b] in the system of ordinary differential equations below that lead to a final vector
+[term "(x,y) = (0.5,0.25)"] at time [term "t = 1"]:
+[example {
+    dx/dt = - a x
+    dy/dt = + a x - b y
+
+    (x,y) = (1,0) at time t = 0
+}]
+
+The subroutine to compute the function to be minimised is shown below. It computes the
+solution at [term "t = 1"] for the above system and computes the sum of square differences with the
+target vector. This sum is the function value to be minimised:
+
+[example {
+! compute_diff --
+!     Compute the solution and determine how close it is to the required solution
+!
+! Arguments:
+!     param          Vector of parameters
+!     f              Value of the function to be minimized
+!
+subroutine compute_diff( param, f )
+    use bobyqa_minimisation, only: wp
+
+    implicit none
+    real(kind=wp), dimension(:) :: param
+    real(kind=wp)               :: f
+
+    integer                     :: i
+    real(kind=wp), dimension(2) :: x
+    real(kind=wp), dimension(2) :: dx
+    real(kind=wp)               :: dt
+
+    !
+    ! Initial condition: x = [1.0, 0.0]
+    ! We want x = [0.5, 0.25] at time = 1
+    !
+    dt   = 0.01
+    x(1) = 1.0
+    x(2) = 0.0
+
+    do i = 1,100
+        dx(1) = -param(1) * x(1)
+        dx(2) = +param(1) * x(1) - param(2) * x(2)
+
+        x(1)  = x(1) + dx(1) * dt
+        x(2)  = x(2) + dx(2) * dt
+    enddo
+
+    f = (x(1)-0.5)**2 + (x(2)-0.25)**2
+
+end subroutine calfun}]
+
+[manpage_end]

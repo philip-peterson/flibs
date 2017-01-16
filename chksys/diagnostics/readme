@@ -1,0 +1,21 @@
+diagnostics:
+-----------
+
+The program compdiag is intended to check the diagnostic
+capabilities of a Fortran compiler. It does so by writing
+small programs and passing them to the compiler. The output
+is analysed and a report is generated from the findings.
+
+The program is not meant to check whether the compiler
+correctly identifies syntactical mistakes (though it does
+not really matter, as the generated programs could easily
+be adapted for this purpose).
+
+Contents:
+compdiag.f90 -- source code for the program
+rundiag.bat  -- Windows batch file to run the program
+rundiag.sh   -- Linux/UNIX/OSX shell script to run it
+compdiag.inp -- file containing the code for the test programs
+compile.bat  -- small batch file to run the compiler of choice
+compile.sh   -- small shell script to run the compiler of choice
+

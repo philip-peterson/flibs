@@ -1,0 +1,165 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin enum_space n 1.0]
+[copyright {2013 Arjen Markus <arjenmarkus at sourceforge dot net>}]
+[moddesc flibs]
+[titledesc {Enumerate grid points in space}]
+
+[description]
+
+The [term enum_space] module provides a set of routines to enumerate the
+integer grid points in one-, two- or three-dimensional space.
+
+[para]
+[emph Motivation:]
+When solving Diophantine equations with brute force (so simply try
+all combinations of integer values and see whether that gives a
+solution), one would like to search a limited region of the solution
+space and stop after, say, 100 solutions. For instance:
+
+[example {
+    x**2 + y**2 = z**3 + 3*z**2
+}]
+
+You never know in which region these solutions lie, so it may that
+you need to examine a very large range for all variables involved:
+
+[example {
+    do z = 1,1000
+        do y = 1,1000
+            do x = 1,1000
+                ... is (x,y,z) a solution? Print it
+            enddo
+        enddo
+    enddo
+}]
+
+The drawback is that you examine the cube line by line and if
+the solutions have coordinates of the same order of magnitude,
+So examining solutions with very different sizes (x=1000, y= 10, z=1)
+may waste a lot of time.
+[para]
+The procedures in this module use a simple enumeration technique that
+makes it possible to enumerate the grid points around the origin
+in ever wider shells (square around the origin or an octaeder in 3D
+space):
+
+[example {
+    |
+    9
+    |
+    5   8   .
+    | .   .   .
+    2   4   7   .
+    | .   .   .   .
+    0---1---3---6--10-
+}]
+This works for all dimensions - just repeatedly split up the
+coordinates (see the implementation of enum_octant), but it
+is non-trivial to expand this to an arbitrary dimension.
+[para]
+To cover both positive and negative integers, the module uses an
+alternating scheme: 0, 1, -1, 2, -2, 3, -3, ...
+
+[section "ROUTINES"]
+The module defines the following routines:
+
+[list_begin definitions]
+
+[call [cmd "call enum_1dspace( index, x, update)"]]
+Enumerate the grid points on a line. It returns the x-coordinate of the grid point
+with the given index (alternatingly positive and negative coordinates).
+[nl]
+[emph Note:] Initialise the index to [term start_enumeration]
+
+[list_begin arg]
+[arg_def integer index]
+The index of the grid point (updated to give the next
+index, unless you specify update = .false.)
+[arg_def integer x]
+The x-coordinate of the grid point (output)
+[arg_def logical update]
+(Optional) whether to update the index (default) or not
+[list_end]
+[nl]
+
+[call [cmd "call enum_2dspace( index, x, y, update)"]]
+Enumerate the grid points on a plane. It returns the x- and y-coordinates of the
+grid point with the given index. The grid points cover the whole plane.
+[nl]
+[emph Note:] Initialise the index to [term start_enumeration]
+
+[list_begin arg]
+[arg_def integer index]
+The index of the grid point (updated to give the next
+index, unless you specify update = .false.)
+[arg_def integer x]
+The x-coordinate of the grid point (output)
+[arg_def integer y]
+The y-coordinate of the grid point (output)
+[arg_def logical update]
+(Optional) whether to update the index (default) or not
+[list_end]
+[nl]
+
+[call [cmd "call enum_3dspace( index, x, y, z, update)"]]
+Enumerate the grid points on a plane. It returns the x-, y- and z-coordinates of the
+grid point with the given index. The grid points cover the whole 3D space.
+[nl]
+[emph Note:] Initialise the index to [term start_enumeration]
+
+[list_begin arg]
+[arg_def integer index]
+The index of the grid point (updated to give the next
+index, unless you specify update = .false.)
+[arg_def integer x]
+The x-coordinate of the grid point (output)
+[arg_def integer y]
+The y-coordinate of the grid point (output)
+[arg_def integer z]
+The z-coordinate of the grid point (output)
+[arg_def logical update]
+(Optional) whether to update the index (default) or not
+[list_end]
+[nl]
+
+[call [cmd "call enum_quadrant( index, x, y, update)"]]
+Enumerate the grid points in the first quadrant of the plane. It returns the
+x- and y-coordinates of the grid point with the given index.
+[nl]
+[emph Note:] Initialise the index to [term start_enumeration]
+
+[list_begin arg]
+[arg_def integer index]
+The index of the grid point (updated to give the next
+index, unless you specify update = .false.)
+[arg_def integer x]
+The x-coordinate of the grid point (output)
+[arg_def integer y]
+The y-coordinate of the grid point (output)
+[arg_def logical update]
+(Optional) whether to update the index (default) or not
+[list_end]
+[nl]
+
+[call [cmd "call enum_octant index, x, y, z, update)"]]
+Enumerate the grid points in the first 3D octant. It returns the x-, y- and z-coordinates of the
+grid point with the given index.
+[nl]
+[emph Note:] Initialise the index to [term start_enumeration]
+
+[list_begin arg]
+[arg_def integer index]
+The index of the grid point (updated to give the next
+index, unless you specify update = .false.)
+[arg_def integer x]
+The x-coordinate of the grid point (output)
+[arg_def integer y]
+The y-coordinate of the grid point (output)
+[arg_def integer z]
+The z-coordinate of the grid point (output)
+[arg_def logical update]
+(Optional) whether to update the index (default) or not
+[list_end]
+
+[list_end]
+[manpage_end]

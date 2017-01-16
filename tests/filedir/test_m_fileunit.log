@@ -1,0 +1,131 @@
+  -> Test #           1 PASS
+  -> Test #           2 PASS
+ Test #2 : get_unit
+  Unused unit:           1
+  -> Test #           3 PASS
+  -> Test #           4 PASS
+  Unused unit:           2
+  -> Test #           5 PASS
+  -> Test #           6 PASS
+  -> Test #           7 PASS
+  -> Test #           8 PASS
+  -> Test #           9 PASS
+  -> Test #          10 PASS
+   * iunit :            1
+   * iostat :            0
+   * exist :  T
+   * opened :  T
+   * named :  T
+   * filename : 
+ D:\M.Baudin\PERSO\AtelierFortran\flibs\tests\filedir\declaration.txt
+   * sequential : YES
+   * direct : NO
+   * form : FORMATTED
+   * formatted : YES
+   * record length :          132
+   * last record :            0
+   * blank : NULL
+   * position : ASIS
+   * action : READWRITE
+   * read : YES
+   * write : YES
+   * readwrite : YES
+   * delim : NONE
+   * pad : YES
+   * iunit :            2
+   * iostat :            0
+   * exist :  T
+   * opened :  T
+   * named :  T
+   * filename : 
+ D:\M.Baudin\PERSO\AtelierFortran\flibs\tests\filedir\declaration2.txt
+   * sequential : YES
+   * direct : NO
+   * form : FORMATTED
+   * formatted : YES
+   * record length :          132
+   * last record :            0
+   * blank : NULL
+   * position : ASIS
+   * action : READWRITE
+   * read : YES
+   * write : YES
+   * readwrite : YES
+   * delim : NONE
+   * pad : YES
+ Number of units opened :            3
+ Unit #            1 /           3
+   * iunit :            1
+   * iostat :            0
+   * exist :  T
+   * opened :  T
+   * named :  T
+   * filename : 
+ D:\M.Baudin\PERSO\AtelierFortran\flibs\tests\filedir\declaration.txt
+   * sequential : YES
+   * direct : NO
+   * form : FORMATTED
+   * formatted : YES
+   * record length :          132
+   * last record :            0
+   * blank : NULL
+   * position : ASIS
+   * action : READWRITE
+   * read : YES
+   * write : YES
+   * readwrite : YES
+   * delim : NONE
+   * pad : YES
+ Unit #            2 /           3
+   * iunit :            2
+   * iostat :            0
+   * exist :  T
+   * opened :  T
+   * named :  T
+   * filename : 
+ D:\M.Baudin\PERSO\AtelierFortran\flibs\tests\filedir\declaration2.txt
+   * sequential : YES
+   * direct : NO
+   * form : FORMATTED
+   * formatted : YES
+   * record length :          132
+   * last record :            0
+   * blank : NULL
+   * position : ASIS
+   * action : READWRITE
+   * read : YES
+   * write : YES
+   * readwrite : YES
+   * delim : NONE
+   * pad : YES
+ Unit #            3 /           3
+   * iunit :           12
+   * iostat :            0
+   * exist :  T
+   * opened :  T
+   * named :  T
+   * filename : 
+ D:\M.Baudin\PERSO\AtelierFortran\flibs\tests\filedir\test_m_fileunit.log
+   * sequential : YES
+   * direct : NO
+   * form : FORMATTED
+   * formatted : YES
+   * record length :          132
+   * last record :            0
+   * blank : NULL
+   * position : UNDEFINED
+   * action : WRITE
+   * read : NO
+   * write : YES
+   * readwrite : NO
+   * delim : NONE
+   * pad : YES
+  -> Test #          11 PASS
+  -> Test #          12 PASS
+  -> Test #          13 PASS
+ Test suite completed
+ **********************
+ End of tests.
+  Total number of tests :           13
+  Total number of success tests :           13
+  Total number of failing tests :            0

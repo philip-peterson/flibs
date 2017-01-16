@@ -1,0 +1,40 @@
+Handling dynamic libraries:
+--------------------------
+
+The mdoule dynamic_libraries uses several Fortran 2003 features to:
+- load a dynamic library (DLL under Windows or shared library under
+  Linux - no support yet for OSX)
+- get procedure pointers to teh subroutines and functions they contain
+  by name
+
+This enables you to extend your program from the outside, not merely
+replace predefined routines by using a different dynamic library with
+routines with the same name, but to add new routines (though with
+predefined interfaces).
+
+Currently the module does NOT take care of the case-sensitivity and
+namemangling, so that it is not quite platform-independent.
+
+Also, on Windows the calling convention seems to play an important
+and confusing role. Therefore the very basic routines are implemented
+per compiler.
+
+Some caveats:
+- Tested with Intel Fortran 11.0 on Windows and Linux
+- Tested with gfortran 4.5 on Windows (under MinGW) - earlier versions
+  do not work because of the calling convention issue
+
+Typical build procedure (illustrated for gfortran on Windows):
+
+- Build the dynamic library in the test directory:
+
+     gfortran -o test_lib.dll test_lib.f90 -shared
+
+- Build the program:
+
+     gfortran -c win_gnu_dynlib.f90
+     gfortran -c dynlib.f90
+     gfortran -o test_dynlib.exe test_dynlib.f90 dynlib.o win_gnu_dynlib.o
+
+  (win_gnu_dynlib.f90 is the implementation for gfortran under Windows)
+

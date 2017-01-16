@@ -1,0 +1,125 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin flibs/strings n 1.1]
+[copyright {2012 Arjen Markus <arjenmarkus@sourceforge.net>}]
+[moddesc flibs]
+[titledesc {Handle a list of tokens}]
+
+[description]
+
+The [strong tokenlists] module builds on the [strong tokenize] module and
+provides an object-oriented interface to the set of tokens that was found
+in a string. The object holds a copy of the string, so that parsing is
+done only once and you can randomly access the tokens.
+
+
+[section INTERFACE]
+The module defines a single class, [term tokenlist] and passes on the
+predefined character classes from the [strong tokenize] module.
+
+[list_begin definitions]
+
+[call [cmd "use tokenlists"]]
+To import the definitions, use this module.
+
+[call [cmd "type(tokenlist)"]]
+The derived type with methods for handling a list of tokens.
+
+[call [cmd "call list%set_tokenizer( gaps, separators, delimiters )"]]
+Initialise the tokenizer characteristics for the [term tokenlist] object.
+(See [strong tokenize] module for details).
+
+[list_begin arg]
+
+[arg_def "class(tokenlist)" list]
+The [term tokenlist] object to be configured.
+
+[arg_def "character(len=*)" gaps]
+The string of characters that are to be treated as "gaps". They take
+precedence over the "separators". Use "token_empty" if there are none.
+
+[arg_def "character(len=*)" separators]
+The string of characters that are to be treated as "separators".
+Use "token_empty" if there are none.
+
+[arg_def "character(len=*)" delimiters]
+The string of characters that are to be treated as
+"delimiters". Use "token_empty" if there are none.
+
+[list_end]
+
+
+[call [cmd "call list%tokenize( string )"]]
+Tokenize the string and store the results for later retrieval. A copy
+of the string is stored in the [term tokenlist] object.
+
+[list_begin arg]
+
+[arg_def "class(tokenizer)" list]
+The [term tokenlist] object to be used
+
+[arg_def "character(len=*)" string]
+The string to be split into tokens.
+
+[list_end]
+
+
+[call [cmd "number_tokens = list%number()"]]
+Get the number of tokens that was found in the string.
+one.
+
+[list_begin arg]
+
+[arg_def "type(tokenlist)" list]
+The [term tokenlist] object to be used
+
+[list_end]
+
+
+[call [cmd "length_token = list%length(idx)"]]
+Get the length of the idx'th token.
+
+[list_begin arg]
+
+[arg_def "type(tokenlist)" list]
+The [term tokenlist] object to be used
+
+[arg_def "integer" idx]
+The index of the token you want to know the length of
+
+[list_end]
+
+
+[call [cmd "substring = list%token(idx)"]]
+Get the idx'th token. The returned string is exactly of the
+length of the token.
+
+[list_begin arg]
+
+[arg_def "type(tokenlist)" list]
+The [term tokenlist] object to be used
+
+[arg_def "integer" idx]
+The index of the token you want returned
+
+[list_end]
+
+
+[list_end]
+
+Convenient parameters:
+[list_begin bullet]
+[bullet]
+[emph token_whitespace] - whitespace (a single character)
+[bullet]
+[emph token_tsv] - tab, useful for tab-separated values files
+[bullet]
+[emph token_csv] - comma, useful for comma-separated values files
+[bullet]
+[emph token_quotes] - single and double quotes, commonly used delimiters
+[bullet]
+[emph token_empty] - empty string, useful to suppress any of the
+arguments in the [emph set_tokenizer] routine.
+
+[list_end]
+
+[manpage_end]

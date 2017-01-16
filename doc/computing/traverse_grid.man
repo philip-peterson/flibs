@@ -1,0 +1,140 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin traverse_grid n 1.0]
+[copyright {2013 Arjen Markus <arjenmarkus at sourceforge dot net>}]
+[moddesc flibs]
+[titledesc {Traverse an N-dimensional grid of points}]
+
+[description]
+
+The [term traverse_grid] module defines three types with accompanying routines
+to traverse a block of grid points through N-dimensional space. The types
+have different purposes:
+
+[list_begin bullet]
+[bullet]
+Objects of the type [term grid_traversing] can be used to traverse a grid along all the grid points.
+These objects use integer coordinates only.
+
+[bullet]
+The type [term grid_coordinates] traverses a grid along the same grid points
+but you can convert the indices to (real) coordinates of the midpoints.
+
+[bullet]
+The type [term grid_sampler] is meant to sample the grid points in a quasi-random way.
+It is useful as an alternative to Monte Carlo, because the selected points are more uniformly
+distributed. (See the test program for an example.)
+
+[list_end]
+
+The idea is that the N-dimensional space in question is split up into rectangular cells
+with indices running from 0 up to but not including a maximum value. This maximum can
+differ per dimension.
+[para]
+Traversing such a grid, for instance a 4 by 3 grid, gives the following ordering of the
+points;
+[example {
+    2| 9  10  11  12
+    1| 5   6   7   8
+    0| 1   2   3   4
+     +---+---+---+---+
+       0   1   2   3
+}]
+
+That is, the grid points are visited in the shown order, with indices (0,0), (1,0), ...
+(0,1), (0,2), ..., (3,2).
+[para]
+All three types can return the raw indices, but the [term grid_coordinates] and [term grid_sampler]
+types can also return the actual coordinates (real numbers).
+
+[para]
+The [term grid_sampler] type samples the grid points using steps of the size of a prime,
+so that the whole space is effectively covered in a fairly small number of samples.
+
+[section "ROUTINES"]
+Each type contains a number of methods:
+
+[list_begin definitions]
+
+[call [cmd "call traverse%init( dimensions, max_index )"]]
+Initialise a [term grid_traversing] object with uniform dimensions, that is, each
+index runs from 0 to [term max_index-1].
+
+[list_begin arg]
+[arg_def integer dimensions]
+The number of dimensions
+[arg_def integer max_index]
+The maximum index for each dimension (actually the index runs up to that value, but
+does not reach it)
+[list_end]
+[nl]
+
+[call [cmd "call traverse%init( max_index )"]]
+Initialise a [term grid_traversing] object with different dimensions, that is,
+index i runs from 0 to [term max_index(i)-1].
+
+[list_begin arg]
+[arg_def "integer, dimension(:)" max_index]
+The maximum index per dimension. The number of dimensions is equal to the size
+of the array.
+[list_end]
+[nl]
+
+[call [cmd "call coordinates%init( max_index, range )"]]
+Initialise a [term grid_coordinates] object with uniform dimensions, that is, each
+index runs from 0 to [term max_index-1]. The [term range] argument contains the
+minimum and maximum values of the coordinates. The number of dimensions is equal
+to the second dimension of [term range] (that is, [term size(range,2)]).
+
+[list_begin arg]
+[arg_def integer max_index]
+The maximum index for each dimension (actually the index runs up to that value, but
+does not reach it)
+[arg_def "real(kind=wp), dimension(2,:)" range]
+The minimum ([term range(1,:)]) and the maximum ([term range(2,:)]) coordinate per dimension.
+This is used to determine the midpoint coordinates of a cell.
+[list_end]
+[nl]
+
+[call [cmd "call coordinates%init( max_index, range )"]]
+Initialise a [term grid_coordinates] object with uniform dimensions, that is,
+index i runs from 0 to [term max_index(i)-1]. The [term range] argument contains the
+minimum and maximum values of the coordinates. The number of dimensions is equal
+to the second dimension of [term range] (that is, [term size(range,2)]), but the
+size of [term max_index] should be equal to that.
+
+[list_begin arg]
+[arg_def "integer, dimension(:)" max_index]
+The maximum index per dimension
+[arg_def "real(kind=wp), dimension(2,:)" range]
+The minimum ([term range(1,:)]) and the maximum ([term range(2,:)]) coordinate per dimension.
+[list_end]
+[nl]
+
+[call [cmd "call sampler%init( max_index, range )"]]
+Initialise a [term grid_sampler] object, analogous to the initialisation of a
+[term grid_coordinates] object. Both variants are allowed.
+
+[call [cmd "call object%reset"]]
+Resets the current point in a [term grid_traversing], [term grid_coordinates] or
+[term grid_sampler] object to the point with indices all zero.
+
+[call [cmd "indices = object%indices()"]]
+Returns the indices of the current point in a [term grid_traversing], [term grid_coordinates] or
+[term grid_sampler] object. The receiving variable must be an array of the correct dimension.
+
+[call [cmd "coords = object%coords()"]]
+Returns the coordinates of the current point in a [term grid_coordinates] or
+[term grid_sampler] object. The receiving variable must be an array of the correct dimension.
+
+[call [cmd "call object%next( indices )"]]
+Determine the next point for a [term grid_traversing], [term grid_coordinates] or
+[term grid_sampler] object. The argument [term indices] will contain the indices of this
+new point.
+
+[list_begin arg]
+[arg_def "integer, dimension(:), optional" indices]
+The indices for the new point.
+[list_end]
+
+[list_end]
+[manpage_end]

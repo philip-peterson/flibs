@@ -1,0 +1,294 @@
+
+<html><head>
+<title>flibs/m_vstrplatform - flibs</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'platform/m_vstrplatform.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2008 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;   -- Copyright &copy; 2008 Michael Baudin &lt;michael.baudin@gmail.com&gt;
+   -->
+<! -- CVS: $Id: m_vstrplatform.html,v 1.3 2013/05/13 08:03:19 knystrom Exp $ flibs/m_vstrplatform.n
+   -->
+<body><div class="doctools">
+<h1 class="title">flibs/m_vstrplatform(n) 1.0  &quot;flibs&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>flibs/m_vstrplatform - Platform-dependent routines and features</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">OVERVIEW</a>
+<ul>
+<li class="subsection"><a href="#subsection1">Dynamic or static buffer</a></li>
+<li class="subsection"><a href="#subsection2">Pre-processing</a></li>
+</ul>
+</li>
+<li class="section"><a href="#section3">ROUTINES</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">vstrplatform_system</b> (<i class="arg">command</i> <span class="opt">?, status?</span>)</a></li>
+<li><a href="#2"><b class="cmd">vstrplatform_osstring</b>() result ( <i class="arg">currentos</i> )</a></li>
+<li><a href="#3"><b class="cmd">vstrplatform_platformstring</b>() result ( <i class="arg">currentplatform</i> )</a></li>
+<li><a href="#4"><b class="cmd">vstrplatform_getenvvar</b>(<i class="arg">envvar</i>) result ( <i class="arg">value</i> )</a></li>
+<li><a href="#5"><b class="cmd">vstrplatform_getenvvar</b>(<i class="arg">envvar</i>) result ( <i class="arg">value</i> )</a></li>
+<li><a href="#6"><b class="cmd">vstrplatform_cd</b> ( <i class="arg">dirname</i> <span class="opt">?, status?</span>)</a></li>
+<li><a href="#7"><b class="cmd">vstrplatform_cd</b> ( <i class="arg">dirname</i> <span class="opt">?, status?</span>)</a></li>
+<li><a href="#8"><b class="cmd">platform_stat</b> ( <i class="arg">filename</i> <i class="arg">, statarray</i> <span class="opt">?, status?</span>)</a></li>
+<li><a href="#9"><b class="cmd">platform_stat</b> ( <i class="arg">filename</i> <i class="arg">, statarray</i> <span class="opt">?, status?</span>)</a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>The <em>m_vstrplatform</em> module provides several routines,
+which take dynamic strings arguments, to interact
+with the operating system.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">OVERVIEW</a></h2>
+<p>The goal of this module is to provide system access with
+commands which take dynamic strings as arguments.
+It is based on m_platform, which takes character-based arguments.
+In the following example, extracted from the m_vfile module included 
+in flibs, one sets the current working directory
+by using vstrplatform_cd on a dynamic string variable.</p>
+<pre class="example">
+    type ( t_vstring ) :: dirname
+    integer :: status
+    call vstrplatform_cd ( dirname , status )
+</pre>
+<p>This is a sketch of available routines :</p>
+<ul class="itemized">
+<li><p>vstrplatform_system                       Executes an external command on the system</p></li>
+<li><p>vstrplatform_get_environment_variable     Get to one environment variable</p></li>
+<li><p>vstrplatform_cd                           Change the system current directory</p></li>
+<li><p>vstrplatform_stat                         Get status of a file</p></li>
+</ul>
+<div id="subsection1" class="subsection"><h3><a name="subsection1">Dynamic or static buffer</a></h3>
+<p>The internal algorithms provided by m_vstrplatform are based on
+basic fortran character strings. In several situations, the
+dynamic vstring has to be converted into a basic fortran character
+buffer string, which size has to be given explicitely in the source
+code, with the <em>len = &lt;something&gt;</em> statement (in the
+<em>character ( len = &lt;something&gt;)</em>).</p>
+<ul class="itemized">
+<li><p>If the _VSTRPLATFORM_STATIC_BUFFER macro is defined, then character strings of
+constant size VSTRPLATFORM_MAXIMUM_ENVVAR_LENGTH are used as buffers.</p></li>
+<li><p>If the _VSTRPLATFORM_STATIC_BUFFER macro is not defined (which is the default),
+then character strings of dynamic size are used as buffers
+with the fortran 90 &quot;len = vstring_length(this)&quot; statement.</p></li>
+</ul>
+<p>The second solution is more efficient, because the strings are not
+oversized or undersized, depending on the real number of characters
+in the dynamic string. But the feature may not be provided
+by the compiler at hand. For example, problems with the dynamic
+length character string have been experienced with Intel Fortran 8.</p>
+</div>
+<div id="subsection2" class="subsection"><h3><a name="subsection2">Pre-processing</a></h3>
+<p>The following preprocessing macro may be defined :</p>
+<ul class="itemized">
+<li><p>_VSTRPLATFORM_STATIC_BUFFER : see  the section &quot;Dynamic or static buffer&quot;</p></li>
+</ul>
+</div>
+</div>
+<div id="section3" class="section"><h2><a name="section3">ROUTINES</a></h2>
+<p>The module contains the following routines.</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">vstrplatform_system</b> (<i class="arg">command</i> <span class="opt">?, status?</span>)</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">type ( t_vstring ) ::</b> <i class="arg">command</i></dt>
+<dd></dd>
+<dt><b class="type">integer, intent (out), optional ::</b> <i class="arg">status</i></dt>
+<dd></dd>
+</dl>
+<p>Run an external <i class="arg">command</i>, optionally retrieving the status of
+that command. Under Windows the &quot;call system&quot; may generate the display of a console.
+If <i class="arg">status</i> is supplied, it contains 0 on success or nonzero error code
+upon return.</p></dd>
+<dt><a name="2"><b class="cmd">vstrplatform_osstring</b>() result ( <i class="arg">currentos</i> )</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">type ( t_vstring ) ::</b> <i class="arg">currentos</i></dt>
+<dd></dd>
+</dl>
+<p>Returns a string containing the current operating system running on the current machine,
+one of &quot;Windows 95&quot;, &quot;Windows NT&quot;, &quot;MacOS&quot;, &quot;SunOS&quot;, 
+&quot;Linux&quot; or &quot;Unix&quot;.</p></dd>
+<dt><a name="3"><b class="cmd">vstrplatform_platformstring</b>() result ( <i class="arg">currentplatform</i> )</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">type ( t_vstring ) ::</b> <i class="arg">currentplatform</i></dt>
+<dd></dd>
+</dl>
+<p>Returns a string containing the current platform running on the current machine,
+one of &quot;Windows&quot;, &quot;Mac&quot;, &quot;Unix&quot;.</p></dd>
+<dt><a name="4"><b class="cmd">vstrplatform_getenvvar</b>(<i class="arg">envvar</i>) result ( <i class="arg">value</i> )</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">type ( t_vstring ), intent(in) ::</b> <i class="arg">envvar</i></dt>
+<dd></dd>
+<dt><b class="type">type ( t_vstring ) ::</b> <i class="arg">value</i></dt>
+<dd></dd>
+</dl>
+<p>Returns the value of the environment variable <i class="arg">envvar</i>.</p></dd>
+<dt><a name="5"><b class="cmd">vstrplatform_getenvvar</b>(<i class="arg">envvar</i>) result ( <i class="arg">value</i> )</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">character(len=*), intent(in) ::</b> <i class="arg">envvar</i></dt>
+<dd></dd>
+<dt><b class="type">type ( t_vstring ) ::</b> <i class="arg">value</i></dt>
+<dd></dd>
+</dl>
+<p>Same as previous with <em>character(len=*)</em> <i class="arg">dirname</i>.</p></dd>
+<dt><a name="6"><b class="cmd">vstrplatform_cd</b> ( <i class="arg">dirname</i> <span class="opt">?, status?</span>)</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">type(t_vstring), intent(in) ::</b> <i class="arg">dirname</i></dt>
+<dd></dd>
+<dt><b class="type">integer, intent(out) , optional ::</b> <i class="arg">status</i></dt>
+<dd></dd>
+</dl>
+<p>Change working directory to <i class="arg">dirname</i>. 
+If <i class="arg">status</i> is supplied, it contains 0 on success or nonzero error code
+upon return</p></dd>
+<dt><a name="7"><b class="cmd">vstrplatform_cd</b> ( <i class="arg">dirname</i> <span class="opt">?, status?</span>)</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">character(len=*), intent(in) ::</b> <i class="arg">dirname</i></dt>
+<dd></dd>
+<dt><b class="type">integer, intent(out) , optional ::</b> <i class="arg">status</i></dt>
+<dd></dd>
+</dl>
+<p>Same as previous with <em>character(len=*)</em> <i class="arg">dirname</i>.</p></dd>
+<dt><a name="8"><b class="cmd">platform_stat</b> ( <i class="arg">filename</i> <i class="arg">, statarray</i> <span class="opt">?, status?</span>)</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">type(t_vstring), intent(in) ::</b> <i class="arg">filename</i></dt>
+<dd></dd>
+<dt><b class="type">integer, dimension (1:13) , intent(out) ::</b> <i class="arg">filename</i></dt>
+<dd></dd>
+<dt><b class="type">integer, intent(out) , optional ::</b> <i class="arg">status</i></dt>
+<dd></dd>
+</dl>
+<p>Get status of the file <i class="arg">filename</i> and fills the array <i class="arg">statarray</i>
+with the following content.</p>
+<ul class="itemized">
+<li><p>statarray(1) Device ID</p></li>
+<li><p>statarray(2) Inode number</p></li>
+<li><p>statarray(3) File mode</p></li>
+<li><p>statarray(4) Number of links</p></li>
+<li><p>statarray(5) Owner's uid</p></li>
+<li><p>statarray(6) Owner's gid</p></li>
+<li><p>statarray(7) ID of device containing directory entry for file (0 if not available)</p></li>
+<li><p>statarray(8) File size (bytes)</p></li>
+<li><p>statarray(9) Last access time</p></li>
+<li><p>statarray(10) Last modification time</p></li>
+<li><p>statarray(11) Last file status change time</p></li>
+<li><p>statarray(12) Preferred I/O block size (-1 if not available)</p></li>
+<li><p>statarray(13) Number of blocks allocated (-1 if not available)</p></li>
+</ul>
+<p>If <i class="arg">status</i> is supplied, it contains 0 on success or nonzero error code
+upon return</p></dd>
+<dt><a name="9"><b class="cmd">platform_stat</b> ( <i class="arg">filename</i> <i class="arg">, statarray</i> <span class="opt">?, status?</span>)</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">character(len=*), intent(in) ::</b> <i class="arg">filename</i></dt>
+<dd></dd>
+<dt><b class="type">integer, dimension (1:13) , intent(out) ::</b> <i class="arg">filename</i></dt>
+<dd></dd>
+<dt><b class="type">integer, intent(out) , optional ::</b> <i class="arg">status</i></dt>
+<dd></dd>
+</dl>
+<p>Same as previous with <em>character(len=*)</em> <i class="arg">dirname</i>.</p></dd>
+</dl>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2008 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;<br>
+Copyright &copy; 2008 Michael Baudin &lt;michael.baudin@gmail.com&gt;</p>
+</div>
+</div></body></html>

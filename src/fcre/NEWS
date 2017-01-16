@@ -1,0 +1,44 @@
+* Version 0.3:
+    
+    Fixes:
+    - Empty patterns and subject should be handled properly now;
+    - getPatternInfo now works (it is still mostly untested).
+    
+    Changes:
+    - Added support for the $`, $' and $& variables in substitution strings ($+ is not working yet);
+    - Added the FCRE_ERROR_EMPTY_PATTERN error code, returned in status when the pattern in a regexp object has not been set previously;
+    - The pattern is no longer compiled in setPattern, but should be automatically compiled before being used (in practice,
+      the pattern should never need to be explicitely compiled);
+    - compilePattern subroutine is now public, to allow checking the validity of the pattern;
+    - The match subroutine has been replaced by a generic to allow compile-time diagnostics and prevent some mistakes with the captured substrings.
+    
+    Bugs:
+    - procedures to get the pattern info PCRE_INFO_FIRSTTABLE, PCRE_INFO_NAMETABLE and PCRE_INFO_DEFAULT_TABLES are not implemented yet.
+    
+    
+* Version 0.2:
+    
+    Fixes:
+    - setCompilationOption and unsetCompilationOption should now be reliable even when called in the wrong order;
+    - the pattern should be automatically recompiled while matching if required (previously, an explicit call to 
+      compilePattern or setPattern was required after changing the compilation options);
+    
+    Changes:
+    - the derived type FString has been added to work around imperfect compiler support for allocatable character arrays;
+    - the array containing substrings captured by the match subroutine is now of type FString;
+    - the newRegex constructor is now PUBLIC;
+    - most procedure now have an optional status argument;
+    - unit tests were added in test_regex.f90 (requires FUnit; the tests are run using make test; the old test_regex program
+      is now in example.f90);
+    - the fcre_error_message subroutine has been added and used internally to improve the consistency of the error messages.
+    
+    Bugs:
+    - named captures do not work;
+    - the substitution string must be set after the pattern has been compiled;
+    - the compilation options PCRE_NEWLINE_CRLF and PCRE_NEWLINE_ANYCRLF are not working;
+    - getPatternInfo still does not work properly.
+
+
+* Version 0.1:
+    
+    First useable version.

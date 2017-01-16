@@ -1,0 +1,59 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin flexoutput n 1.0]
+[copyright {2016 Arjen Markus <arjenmarkus at sourceforge dot net>}]
+[moddesc flibs]
+[titledesc {Output facility with flexible substitution}]
+
+[description]
+
+The [term flexoutput] module allows you to output strings with arguments substituted via simple codes
+within the string. For example:
+[example {
+    call write_items( 10, 'The value of {2} is {1}, as expected', [ item(1), item('Name') ] )
+}]
+
+would produce the string: [term "The value of Name is 1, as expected"]
+[para]
+The function [term item] returns a value of the type [term "item_t"], so that in the above
+statement an array is constructed with integer and string values. These are then substituted
+using default formatting specific to the data type. The result is written to a file.
+
+[section "ROUTINES"]
+There are two public routines:
+
+[list_begin definitions]
+
+[call [cmd "call write_items( lun, format, item_array, advance )"]]
+This subroutine writes the string contained in the argument [term format] to the file at LU-number [term lun].
+Substrings like "{1}", "{2}", etc. are substitued by the corresponding element from the array [term item_array]. Use the
+function [term item] to construct the array of items.
+
+[list_begin arg]
+[arg_def "integer, intent(in)" lun]
+LU-number of the file to write to.
+
+[arg_def "character(len=*), intent(in)" format]
+Format string to be used.
+
+[arg_def "type(item_t), dimension(:), intent(in)" item_array]
+Array specifying the variables. COnstruct it using the [term item] function.
+
+[arg_def "logical, optional, intent(in)" advance]
+Explicitly advance or not at the end of writing the string. By default advance, so that the
+next write statement starts on a new line.
+[list_end]
+
+
+[call [cmd "arg = item( var )"]]
+This function returns a value of type [term item_t], so that an array can be formed
+to be passed to [term write_items]. The argument [term var] is one of the basic types: integer,
+single and double precision real or a character string of any length.
+
+[list_begin arg]
+[arg_def scalar var]
+The variable to be assigned a value from the input file.
+[list_end]
+
+[list_end]
+
+[manpage_end]

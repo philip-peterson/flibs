@@ -1,0 +1,138 @@
+2013-12-30 knystrom@users.sourceforge.net
+   * src/reporting/m_multilog.f90: log_t configure/cget type bound,
+	configurable timestamp format
+   * tests/reporting/test_m_multilog.f90: adapting to new type bound
+	procedures for log_t and name changes for some log_group_t related
+	procedures 
+   * src/filedir/m_filedir.f90: added option for GETCWD function
+   * configure.sh: changed to /bin/sh, write selected options to
+	Makefile-cfg
+   * make/makefile/Makefile-ifort: added
+   * make/makefile/Makefile-gfortran: added _FS_GETCWD_SUBROUTINE
+   * make/makefile/Makefile-g95: added _FS_GETCWD_FUNCTION
+
+2013-10-04 arjenmarkus@users.sourceforge.net
+   * src/dbase/dbasefile.f90: reader for dBase III files
+   * test/dbase/test_dbasefile.f90: test program for the reader for dBase III files
+   * test/dbase/makefile: corresponding makefile
+   * test/dbase/example.dbf: example of a dBase III file
+
+2013-06-30 arjenmarkus@users.sourceforge.net
+   * src/computing/traverse_grid.f90: added module for traversing a grid
+   * src/computing/enum_space.f90: module and documentation for enumerating points
+   * src/dynlib/linux_dynlib.f90: use c_associated()
+   * src/dynlib/win_ifort_dynlib.f90: use c_associated()
+   * src/dynlib/win_gnu_dynlib.f90: use c_associated() and compiler directives
+   * src/dynlib/dynlib.f90: extend the module
+   * src/mysql/mysql.f90: small improvements
+   * src/odbc/codbc.c: consistent casts and data types
+   * src/odbc/fodbc.c: support for blobls added (does not seem to work properly though)
+
+
+2013-05-13 knystrom@users.sourceforge.net
+   * src/reporting/m_exception.f90: negative LUN allowed
+   * tests/reporting/test_m_exception.f90: added test case for negative LUN
+   * doc/reporting/m_exception.*: corresponding changes in doc
+	
+2012-12-23 arjenmarkus@users.sourceforge.net
+   * src/reporting/m_multilog.f90: added new module provided by Karin Nystrom
+   * tests/reporting/test_m_multilog.f90: test program for the new module provided by Karin Nystrom
+   * doc/reporting/m_multilog.man: describe the new module
+   * tests/reporting/makefile: include the test program for the m_multilog module
+   * src/computing/random_permutations.f90: added new module for random permutations
+   * tests/computing/test_random_permutations.f90: added test program for random permutations
+   * tests/computing/makefile: include the test program for random permutations
+   * doc/cgi/fortran-fastcgi-nginx.html: added instructions for using Fast-CGI with Nginx webserver
+
+2012-11-27 arjenmarkus@users.sourceforge.net
+   * src/reporting/m_logger.f90: use the new flush statement instead of closing/opening the log file
+   * tests/reporting/test_m_logger.f90: add a test that aborts the program, so we can ensure the log
+         file will be written completely to disk
+   * src/datastructures/generic_stack.f90: module for implementing a stack - work in progress
+   * src/datastructures/basic_buffer.f90: module for implementing a circular buffer - work in progress
+
+2012-11-21 arjenmarkus@users.sourceforge.net
+   * src/reporting/m_logger.f90: apply patch by Karin Nystrom (introducing Fortran 2008 feature NEWUNIT=)
+   * tests/reporting/makefile: add rules for making three more test programs (only test_report still missing)
+   * doc/reporting/m_logger.man: document the use of NEWUNIT=
+
+2012-11-04 arjenmarkus@users.sourceforge.net
+   * src/computing/libdate.f90: implemented routine scan_date
+   * doc/computing/libdate.man: documentation of routine scan_date
+   * tests/computing/test_libdate.f90: implemented tests for scan_date and corrected mistakes
+   * src/strings/tokenize.f90: removed superfluous comment, now storing start of token (for tokenlist)
+   * src/strings/tokenlist.f90: implemented a token list derived type - more convenient interface
+   * doc/strings/tokenlist.man: documentation of the tokenlists module
+   * tests/strings/makefile: first version of a makefile for the test programs in this subdirectory
+   * src/streams/readchar.f90: basic module for reading a file character by character (to be used in more sophisticated modules)
+   * tests/streams/test_readchar.f90: test program for the read_characters module
+   * tests/streams/readchar.txt: test file for the read_characters module
+   * tests/streams/makefile: first version of a makefile for the test programs in this subdirectory
+   * doc/streams/readchar.man: documentation of the read_characters module
+
+2012-11-03 arjenmarkus@users.sourceforge.net
+   * src/odbc/fodbc.f90: support for BLOBs (SQLite and PostgreSQL)
+   * src/odbc/codbc.f90: support for BLOBs (SQLite and PostgreSQL)
+   * tests/odbc/test_fodbc.f90: test support for BLOBs (SQLite and PostgreSQL)
+   * doc/odbc/fodbc.man: description of support for BLOBs (several platform dependencies!)
+
+2012-04-06 arjenmarkus@users.sourceforge.net
+   * src/mysql/mysql.f90: updated kinds because of 64 bits OSes (by Daniel Kraft)
+
+     Many changes not recorded here.
+
+2008-08-10 arjenmarkus@users.sourceforge.net
+   * chksys/chksysff.f90: added a test for the type of hexdecimal and binary constants/literals
+
+2008-07-09 arjenmarkus@users.sourceforge.net
+   * tests/tools/check_reals.f90: drop the elemental keyword
+
+2008-07-04 arjenmarkus@users.sourceforge.net
+   * src/tools: added a new program (editcode): specific preprocessing tasks
+   * tests/tools: small test for the preprocessing program
+
+2008-05-04 arjenmarkus@users.sourceforge.net
+   * index.html: added the vstring and vstringlist modules, as well as finite_state and messages
+   * finite_state: updated the test program, wrote the documentation
+   * messages: updated the module and the test program
+
+2008-03-16 arjenmarkus@users.sourceforge.net
+   * testmake: a complete application to create test programs
+   * chksys: a set of programs to check properties of the compiler
+
+2008-03-13 arjenmarkus@users.sourceforge.net
+
+   * filedir: module for manipulating files and directories added (written by Michael Baudin)
+   * platform: module for basic identification of platform properties (written by Michael Baudin)
+
+2008-01-27 arjenmarkus@users.sourceforge.net
+
+   * ftnunit.f90: added init and final routines, added assertions
+   * test_ftnunit.f90: added init and final routines
+
+2008-01-26 arjenmarkus@users.sourceforge.net
+
+   * ftnunit.f90: moved the test subroutine
+   * ftnunit.man: updated documentation
+   * gentabletest.tcl: added facility
+
+   (ChangeLog was not kept up-to-date)
+
+2006-06-25 arjenmarkus@users.sourceforge.net
+
+   * added pointsets.f90
+   * started with simple interval arithmetic
+   * added an implementation of text streams
+   * simple string manipulations
+   * experiment with integer programming
+
+2006-04-11 arjenmarkus@users.sourceforge.net
+
+   * integer_set.f90: correction of one inconsistency (intent)
+   * func_qsort.f90: added to repository
+   * quantum.f90: added to repository
+   * quantum_computing.pdf: added to site docs
+   * index.html: description of experiments directory
+   * backtracking facilities
+
+   Note: no detailed record maintained before 11 april 2006

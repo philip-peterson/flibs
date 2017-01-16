@@ -1,0 +1,84 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin read_characters n 1.0]
+[copyright {2012 Arjen Markus <arjenmarkus@sourceforge.net>}]
+[moddesc flibs]
+[titledesc {Read a file character by character}]
+
+[description]
+
+The [strong read_characters] module defines a derived type with accompanying
+routines to read a file character by character. It uses features of
+Fortran 2003 to define an object-oriented interface and is meant as a basic
+class for more sophisticated modules.
+
+[section "DATA TYPES AND ROUTINES"]
+The module defines a single data type, CHARACTER_STREAM, and several
+functions and subroutines:
+
+[list_begin definitions]
+
+[call [cmd "use read_characters"]]
+The name of the module
+
+[call [cmd "type(CHARACTER_STREAM)"]]
+The class defining the functionality
+
+[call [cmd "integer, parameter :: single_character, end_of_line, end_of_file, read_error"]]
+Parameters defining the type of result from the [term get] method.
+
+
+[call [cmd "call stream%open( filename, error )"]]
+Open the file "filename" using an unused LU-number. If some error
+occurs, the argument "error" is set to true.
+
+[list_begin arg]
+
+[arg_def "class(character_stream)" stream]
+The variable by which to reference the file
+
+[arg_def "character(len=*), intent(in)" filename]
+The name of the file to open
+
+[arg_def "logical, intent(out)" error]
+Argument indicating whether opening the file was successful or not.
+Note that the file is opened with read/write access (though not
+explicitly) and that it is opened in such a way that the record length
+is 4 bytes. If this is not possible (for any number of reasons), an
+error is returned.
+
+[list_end]
+[nl]
+
+
+[call [cmd "call stream%close( stream )"]]
+Close the file that was opened as a stream.
+
+[list_begin arg]
+
+[arg_def "class(character_stream)" stream]
+The variable by which to reference the file
+
+[list_end]
+[nl]
+
+
+[call [cmd "call stream%get( char, type )"]]
+Get the next character from the file. The type argument indicates if it is an
+ordinary character, end-of-line or end-of-file.
+
+[list_begin arg]
+
+[arg_def "class(character_stream)" stream]
+The variable by which to reference the file
+
+[arg_def "character(len=1) intent(out)" char]
+The character that was read (if type is set to [term single_character].
+
+[arg_def "integer, intent(out)" type]
+Indicator, one of: [term single_character], [term end_of_line], [term end_of_file] or [term read_error].
+
+[list_end]
+
+[list_end]
+
+[manpage_end]

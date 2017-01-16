@@ -1,0 +1,631 @@
+<html>
+<head>
+<title>Fortran + FastCGI + nginx : Possibly the fastest combination for certain web applications?</title>
+</head>
+<body>
+<h1>Fortran + FastCGI + nginx : Possibly the fastest combination for certain web applications?</h1>
+<h2>By Ricolindo dot Carino at gmail dot com</h2>
+
+Below is an example of a simple FastCGI Fortran application that runs with the nginx webserver.
+Instructions for <a href="#Linux">GNU/Linux</a> and <a href="#Windows">MS Windows XP</a> are provided.
+
+<h2><a name="Linux">Section I. GNU/Linux</a></h2>
+
+The following instructions were tested to work in the following environment:
+<ul>
+<li>Lenovo ThinkPad X200
+<li>GNU/Linux, Ubuntu 12.04
+<li>gfortran and spawn-fcgi installed using Ubuntu Software Center
+<li>User is 'heeds', with 'sudo' privilege.
+</ul>
+
+
+<h3>Part A. Download, install and configure nginx</h3>
+
+<ol>
+<li>Download nginx (v.1.2.5) sources from <a href="http://nginx.org/en/download.html">http://nginx.org/en/download.html</a>
+
+<li>Unzip to /home/heeds
+
+<li>Change working directory to nginx sources
+<pre>
+  $ cd /home/heeds/ngingx-1.2.5
+</pre>
+
+<li>Install nginx
+<pre>
+  $ ./configure --without-http_rewrite_module --without-http_gzip_module
+  $ make
+  $ sudo make install
+</pre>
+
+<li>Run nginx
+<pre>
+  $ sudo /usr/local/nginx/sbin/nginx
+</pre>
+If the error "nginx: [emerg] bind() to 0.0.0.0.80 failed ...", it means another process is using
+port 80 - most probably Apache. Stop Apache, then start nginx as follows:
+
+<pre>
+  $ sudo service apache2 stop
+  $ sudo /usr/local/nginx/sbin/nginx
+</pre>
+
+<li>Open browser, go to http://localhost. Browser should display 'Welcome to nginx!'
+
+<li>Edit the nginx configuration file
+<pre>
+  $ sudo gedit /usr/local/nginx/conf/nginx.conf
+</pre>
+
+Change section "location"
+<br>
+From:
+<pre>
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+</pre>
+To:
+<pre>
+        location / {
+            root   /home/heeds/HEEDS/web;
+            index  index.html;
+        }
+</pre>
+Save and exit editor.
+
+<li>Create /home/heeds/HEEDS/web/index.html as follows:
+<pre>
+	&lt;html&gt;
+	&lt;body&gt;
+	&lt;h1&gt; Welcome to HEEDS via nginx!&lt;/h1&gt;
+	&lt;/body&gt;
+	&lt;/html&gt;
+	&lt;/preb&gt;
+</pre>
+
+<li>Reload nginx
+<pre>
+  $ sudo /usr/local/nginx/sbin/nginx -s reload
+</pre>
+
+<li>Reload browser. Browser should display 'Welcome to HEEDS via nginx!'
+</ol>
+
+<h3>Part B. Download and install FastCGI</h3>
+
+<ol>
+<li>Download the <a href="http://www.fastcgi.com/dist/fcgi.tar.gz">FastCGI development kit</a> from <a href="http://www.fastcgi.com/dist">http://www.fastcgi.com/dist/</a>
+
+<li>Unzip to /home/heeds/
+
+<li>Change working directory to FastCGI sources
+<pre>
+  $ cd /home/heeds/fcgi-2.4.1
+</pre>
+
+<li>Install FastCGI
+<pre>
+  $ ./configure
+  $ make
+  $ make install
+</pre>
+
+<li>Run FastCGI example/echo
+<pre>
+  $ cd /home/heeds/fcgi-2.4.1/example
+  $ spawn-fcgi -a 127.0.0.1 -p 9000 ./echo
+</pre>
+
+<li>Re-edit the nginx configuration file
+<pre>
+  $ sudo gedit /usr/local/nginx/conf/nginx.conf
+</pre>
+
+Change section "location"
+<br>
+From:
+<pre>
+        location / {
+            root   /home/heeds/HEEDS/web;
+            index  index.html;
+        }
+</pre>
+To:
+<pre>
+        location / {
+            root   /home/heeds/HEEDS/web;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.html;
+            include        fastcgi_params;
+        }
+</pre>
+Save and exit editor.
+
+<li>Reload nginx
+<pre>
+  $ sudo /usr/local/nginx/sbin/nginx -s reload
+</pre>
+
+<li>Reload browser. Browser should display 'FastCGI echo', etc. Successive reload
+will increment the 'Request number'
+
+<li>Kill the 'FastCGI echo' process
+<pre>
+  $ kill -9 9066 (the actual Process ID appears after the Request number)
+</pre>
+
+<li>Reload browser. Browser should display 'An error ocurred.'
+</ol>
+
+
+<h3>Part C. A simple FastCGI Fortran application</h3>
+
+<ol>
+<li>Save Fortran code in Section III below as /home/heeds/fcgi-2.4.1/example/fortran_fcgi.F90
+
+<li>Compile as:
+<pre>
+  $ gfortran -o fortran_fcgi fortran_fcgi.F90 -lfcgi -Wl,--rpath -Wl,/usr/local/lib
+</pre>
+
+<li>Execute as:
+<pre>
+  $ spawn-fcgi -a 127.0.0.1 -p 9000 ./fortran_fcgi
+</pre>
+
+<li>Reload browser. Browser should display 'fortran FastCGI', etc. Enter some text in the
+Username &amp; Password fields, then click Login. Also click on the available links.
+
+<li>Clicking 'Stop' will terminate the fortran_fcgi and the spawn_fcgi processes.
+
+</ol>
+
+
+<h2><a name="Windows">Section II. Microsoft Windows</a></h2>
+
+The following instructions were tested to work in the following environment:
+<ul>
+<li>Lenovo ThinkPad X200
+<li>Windows XP Professional
+</ul>
+
+Download the following installers and files (links verified to be available on 2012-12-20):
+<ol>
+<li>MinGW installer -
+<a href="http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/mingw-get-inst-20120426/mingw-get-inst-20120426.exe/download">
+http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/mingw-get-inst-20120426/mingw-get-inst-20120426.exe/download</a>
+<li>FastCGI DevPak -
+<a href="http://prdownloads.sourceforge.net/devpaks/libfcgi-2.4.0-1cm.DevPak?download">
+http://prdownloads.sourceforge.net/devpaks/libfcgi-2.4.0-1cm.DevPak?download</a>
+<li>spawn-fcgi-win32.c -
+<a href="https://github.com/mkottman/lighttpd-1.5-mingw/blob/master/spawn-fcgi-win32.c">
+https://github.com/mkottman/lighttpd-1.5-mingw/blob/master/spawn-fcgi-win32.c</a>
+<li>Nginx installer -
+<a href="http://nginx.org/download/nginx-1.3.9.zip">
+http://nginx.org/download/nginx-1.3.9.zip</a>
+</ol>
+
+
+<h3>Part A. Install MinGW, for compiling spawn-fcgi-win32.c (see Part B) and FastCGI applications.</h3>
+
+<ol>
+<li>Download the MinGW installer -
+<a href="http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/mingw-get-inst-20120426/mingw-get-inst-20120426.exe/download">
+http://sourceforge.net/projects/mingw/files/Installer/mingw-get-inst/mingw-get-inst-20120426/mingw-get-inst-20120426.exe/download</a>
+
+<li>Run mingw-get-inst-20120426.exe
+<ol>
+  <li>When prompted for "Repository Catalogues" select "Download latest repository catalogues".
+  <li>Accept the "License Agreement".
+  <li>Accept the default "Destination Location" (C:\MinGW)
+  <li>Accept the default "Start Folder" (MinGW).
+  <li>For "Components" select "C compiler", "Fortran compiler", and the "MSYS Basic System"
+</ol>
+Be patient. Downloading and installing the files will take several minutes, depending on the speed of your Internet connection and hard disk.
+
+<li>Add C:\MinGW\bin and C:\MinGW\msys\1.0\bin to the PATH environment variable.
+</ol>
+
+<h3>Part B. Download and compile spawn-fcgi-win32.c. The spawn-fcgi executable will be used to spawn FastCGI processes.</h3>
+
+<ol>
+<li>Download spawn-fcgi-win32.c from
+<a href="https://github.com/mkottman/lighttpd-1.5-mingw/blob/master/spawn-fcgi-win32.c">
+https://github.com/mkottman/lighttpd-1.5-mingw/blob/master/spawn-fcgi-win32.c</a>
+. Get the C-program, not the HTML page. Use cut-and-paste technique if necessary: select the C code from the web page, then paste to text file C:\temp\spawn-fcgi-win32.c
+
+<li>Open a command-line window. Change directory to C:\temp. Compile spawn-fcgi-win32.c as:
+<pre>
+  C:\temp&gt;gcc -o spawn-fcgi spawn-fcgi-win32.c -lws2_32
+</pre>
+
+<li>Test spawn-fcgi as follows:
+<pre>
+  C:\temp&gt;spawn-fcgi.exe
+</pre>
+Usage info should be displayed.
+</ol>
+
+<h3>Part C. Download and install the pre-built FastCGI library for MinGW. The library is required by FastCGI applications.</h3>
+
+<ol>
+<li>Download the FastCGI library DevPak -
+<a href="http://prdownloads.sourceforge.net/devpaks/libfcgi-2.4.0-1cm.DevPak?download">
+http://prdownloads.sourceforge.net/devpaks/libfcgi-2.4.0-1cm.DevPak?download</a>
+
+<li>Rename libfcgi-2.4.0-1cm.DevPak to libfcgi-2.4.0-1cm.tar.bz2. Extract the files in archive to a temporary directory. Copy all the extracted files to C:\MinGW (allow overwriting of the bin, doc, and include directories).
+
+<li>Copy fcgi_config_x86.h in C:\MinGW\include\ to fcgi_config.h in the same directory.
+</ol>
+
+
+<h3>Part D. Download and install nginx ("Engine X"), a high-performance web server.</h3>
+
+<ol>
+<li>Download the nginx installer -
+<a href="http://nginx.org/download/nginx-1.3.9.zip">
+http://nginx.org/download/nginx-1.3.9.zip</a>.
+Unzip to C:\
+
+<li>Open a command-line window. Change directory to C:\nginx-1.3.9. Run nginx by typing the command
+<pre>
+  C:\nginx-1.3.9&gt;start nginx.exe
+</pre>
+
+<li>Open browser, go to <a href="http://localhost">http://localhost</a>. Browser should display 'Welcome to nginx!'
+
+<li>On the command-line window, stop nginx by typing the command
+<pre>
+  C:\nginx-1.3.9&gt;nginx.exe -s stop
+</pre>
+
+<li>Edit the nginx configuration file to communicate with FastCGI processes. On the command-line window:
+<pre>
+  C:\nginx-1.3.9&gt;notepad.exe conf\nginx.conf
+</pre>
+Change section "location"
+<br>
+From:
+<pre>
+        location / {
+            root   html;
+            index  index.html index.htm;
+        }
+</pre>
+To:
+<pre>
+        location / {
+            root   html;
+            fastcgi_pass   127.0.0.1:9000;
+            fastcgi_index  index.html;
+            include        fastcgi_params;
+        }
+</pre>
+
+Save and exit editor.
+
+<li>Restart nginx with the new configuration:
+<pre>
+  C:\nginx-1.3.9&gt;start nginx.exe
+</pre>
+</ol>
+
+
+<h3>Part E. A simple FastCGI Fortran application</h3>
+
+<ol>
+<li>Save Fortran code in Section III below to C:\temp\fortran_fcgi.F90
+
+<li>On the command-line window at C:\temp, compile fortran_fcgi.F90 as
+<pre>
+  C:\temp&gt;gfortran -o fortran_fcgi fortran_fcgi.F90 -lfcgi
+</pre>
+
+<li>Execute fortran_fcgi as:
+<pre>
+  C:\temp&gt;spawn-fcgi.exe -f fortran_fcgi.exe -a 127.0.0.1 -p 9000
+</pre>
+
+<li>Restart the NGINX server, so that it can connect to the spawned process:
+<pre>
+  C:\temp&gt;start nginx -s stop
+  C:\temp&gt;start nginx
+</pre>
+
+<li>Check running process on the command-line window at C:\nginx-1.3.9
+<pre>
+  C:\nginx-1.3.9&gt;tasklist
+</pre>
+There should be two nginx.exe processes, the spawn-fcgi process, and the fortran_fcgi process.
+
+<li>Reload <a href="http://localhost">http://localhost</a> in browser. Browser should display 'fortran FastCGI', etc. Enter some text in the
+Username &amp; Password fields, then click Login. Also click on the available links.
+
+<li>Clicking 'Stop' will terminate the fortran_fcgi and the spawn_fcgi processes.
+
+<li>On the command-line window at C:\nginx-1.3.9, stop nginx by typing the command
+<pre>
+  C:\nginx-1.3.9&gt;nginx.exe -s stop
+</pre>
+</ol>
+
+
+
+
+<h2>Section III. fortran_fcgi.F90 - A simple FastCGI application in Fortran</h2>
+
+<pre>
+!
+! Demonstration Fortran FastCGI program, to run with the nginx webserver
+! By Ricolindo.Carino@gmail.com and arjen.markus895@gmail.com
+!
+! Requires:
+!    - the FLIBS modules cgi_protocol and fcgi_protocol
+!    - the FastCGI library
+! See 'readme' for setup instructions of the compiler, nignx, and FastCGI library
+!
+! See 'makefile' for compile and execute commands. In summary,
+!   To compile test_fcgi.f90      : make
+!   To execute as FastCGI process : spawn-fcgi -a 127.0.0.1 -p 9000 ./test_fcgi
+!      The "-a 127.0.0.1" and "-p 9000" options to spawn-fcgi must match the
+!          "fastcgi_pass   127.0.0.1:9000;" in nginx.conf
+!
+! Notes:
+!    1. Example 2 is from FLIBS test_cgi.f90
+!    2. Customize routine respond() for your own application
+!
+
+program test_fcgi
+
+    use fcgi_protocol
+
+    implicit none
+
+    type(DICT_STRUCT), pointer  :: dict =&gt; null() ! Initialisation is important!
+    logical                     :: stopped = .false. ! set to true in respond() to terminate program
+    integer                     :: unitNo ! unit number  for a scratch file
+
+    ! open scratch file
+    open(newunit=unitNo, status='scratch')
+    ! comment previous line AND uncomment next line for debugging;
+    !open(newunit=unitNo, file='fcgiout', status='unknown') ! file 'fcgiout' will show %REMARKS%
+
+    ! wait for environment variables from webserver
+    do while (fcgip_accept_environment_variables() &gt;= 0)
+
+        ! build dictionary from GET or POST data, environment variables
+        call fcgip_make_dictionary( dict, unitNo )
+
+        ! give dictionary to the user supplied routine
+        ! routine writes the response to unitNo
+        ! routine sets stopped to true to terminate program
+        call respond(dict, unitNo, stopped)
+
+        ! copy file unitNo to the webserver
+        call fcgip_put_file( unitNo, 'text/html' )
+
+        ! terminate?
+        if (stopped) exit
+
+    end do !  while (fcgip_accept_environment_variables() &gt;= 0)
+
+    ! before termination, it is good practice to close files that are open
+    close(unitNo)
+
+    ! webserver will return an error since this process will now terminate
+    unitNo = fcgip_accept_environment_variables()
+
+
+contains
+
+
+    subroutine respond ( dict, unitNo, stopped )
+
+        type(DICT_STRUCT), pointer        :: dict
+        integer, intent(in)               :: unitNo
+        logical, intent(out)              :: stopped
+
+        ! the following are defined in fcgi_protocol
+        !character(len=3), parameter :: AFORMAT = '(a)'
+        !character(len=2), parameter :: CRLF = achar(13)//achar(10)
+        !character(len=1), parameter :: NUL = achar(0)
+
+        ! the script name
+        character(len=80)  :: scriptName
+
+        ! variables for Example 1
+        character(len=80)  :: actionButton, username, password
+
+        ! variables for Example 2 (from test_cgi.f90 of FLIBS)
+        integer                           :: steps
+        real                              :: xmin
+        real                              :: xmax
+        character(len=20)                 :: fnName
+        character(len=20)                 :: output
+
+        real, dimension(:), allocatable   :: x
+        real, dimension(:), allocatable   :: y
+
+        integer                           :: i
+        logical                           :: okInputs
+
+        ! start of response
+        ! lines starting with %REMARK% are for debugging &amp; will not be copied to webserver
+        write(unitNo, AFORMAT) &amp;
+            '%REMARK% respond() started ...', &amp;
+            '&lt;html&gt;', &amp;
+            '&lt;head&gt;&lt;title&gt;Fortran FastCGI&lt;/title&gt;&lt;/head&gt;', &amp;
+            '&lt;body&gt;', &amp;
+            '&lt;h1&gt;Fortran FastCGI&lt;/h1&gt;'
+
+        ! retrieve script name (key=DOCUMENT_URI) from dictionary
+        call cgi_get( dict, "DOCUMENT_URI", scriptName )
+
+        if ( trim(scriptName) /= '/' ) &amp; ! a script was requested
+            write(unitNo,AFORMAT) 'Script is : '//trim(scriptName)
+
+        select case (trim(scriptName))
+
+            case ('/login') ! See form in Example 1 below
+                ! keys are: action, username, password
+
+                call cgi_get( dict, "action", actionButton)
+                write(unitNo,AFORMAT) '&lt;br&gt;Action is : '//trim(actionButton)
+
+                call cgi_get( dict, "username", username)
+                write(unitNo,AFORMAT) '&lt;br&gt;Username is : '//trim(username)
+
+                call cgi_get( dict, "password", password)
+                write(unitNo,AFORMAT) '&lt;br&gt;Password is : '//trim(password)
+
+
+            case ('/calculate') ! See form in Example 2 below
+                ! keys are: function, minimum, maximum, steps, output
+
+                fnName  = '?'
+                xmin     = 0.0
+                xmax     = 1.0
+                steps    = 10
+                call cgi_get( dict, "function", fnName  )
+                call cgi_get( dict, "minimum",  xmin     )
+                call cgi_get( dict, "maximum",  xmax     )
+                call cgi_get( dict, "steps",    steps    )
+                call cgi_get( dict, "output",   output   )
+
+                write(unitNo, AFORMAT) '%REMARK% function='//trim(fnName )
+                write(unitNo, '(a,f8.3)') '%REMARK% minimum=', xmin
+                write(unitNo, '(a,f8.3)') '%REMARK% maximum=', xmax
+                write(unitNo, '(a,i4)') '%REMARK% steps=', steps
+                write(unitNo, AFORMAT) '%REMARK% output='//trim(output)
+
+                okInputs = .true.
+                if ( trim(fnName ) == '?' ) then
+                    write(unitNo,AFORMAT) '&lt;br&gt;No function selected'
+                    okInputs = .false.
+                endif
+                if ( abs(xmin) &gt; 100.0 .or. abs(xmax) &gt; 100.0 ) then
+                    write(unitNo,AFORMAT) '&lt;br&gt;Minimum and maximum should be in the range -100 to 100'
+                    okInputs = .false.
+                endif
+                if ( trim(fnName ) == 'J0' ) then
+                    write(unitNo,AFORMAT) '&lt;br&gt;Sorry, the Bessel function is not yet implemented'
+                    okInputs = .false.
+                endif
+
+                if (okInputs) then
+                    !
+                    ! Actual processing
+                    !
+                    allocate( x(0:steps), y(0:steps) )
+
+                    x = (/ (xmin + i*(xmax-xmin)/steps, i=0,steps) /)
+                    if ( trim(fnName ) == 'sin' ) then
+                        y = sin(x)
+                    endif
+                    if ( trim(fnName ) == 'cos' ) then
+                        y = cos(x)
+                    endif
+
+                    !
+                    ! Write the HTML output or the CSV file
+                    !
+                    if ( trim(output) == 'html' ) then
+                        write( unitNo,AFORMAT ) &amp;
+                            '&lt;table&gt;', &amp;
+                            '&lt;tr&gt;&lt;td&gt;X&lt;/td&gt;&lt;td&gt;'//trim(fnName)//'(X)&lt;/td&gt;&lt;/tr&gt;'
+                        do i = 0,steps
+                            write( unitNo, '(a,f12.6,a,f12.6,a)' ) &amp;
+                                '&lt;tr&gt;&lt;td&gt;', x(i), '&lt;/td&gt;&lt;td&gt;', y(i), '&lt;/td&gt;&lt;/tr&gt;'
+                        enddo
+                        write( unitNo,AFORMAT ) &amp;
+                            '&lt;/table&gt;'
+                    else
+                        write( unitNo,AFORMAT ) &amp;
+                            '&lt;pre&gt;', '      X     ,      '//trim(fnName)//'(X)'
+                        do i = 0,steps
+                            write( unitNo, '(f12.6,a,f12.6)' ) x(i), ',', y(i)
+                        enddo
+                        write( unitNo,AFORMAT ) &amp;
+                            '&lt;/pre&gt;'
+                    endif
+
+                end if
+
+
+            case ('/shutdown') ! to terminate program
+                write(unitNo,AFORMAT) '&lt;br&gt;Program has terminated.&lt;br&gt;&lt;a href="/"&gt;Verify&lt;/a&gt;'
+                stopped = .true.
+
+        end select
+
+        ! generate page for next action
+        if (.not. stopped) then
+
+            write(unitNo,AFORMAT) &amp;
+                "&lt;hr&gt;", &amp;
+                "&lt;b&gt;Example 1: POST method&lt;/b&gt;", &amp;
+                "&lt;table&gt;", &amp;
+                "&lt;form action='login' method='post'&gt;", &amp;
+                "&lt;tr&gt;&lt;td&gt;Username:&lt;/td&gt;&lt;td&gt;Password:&lt;/td&gt;&lt;td&gt;&amp;nbsp;Action:&lt;/td&gt;&lt;/tr&gt;", &amp;
+                "&lt;tr&gt;&lt;td&gt;&lt;input type='text' name='username' value=''&gt;&lt;/td&gt;", &amp;
+                "    &lt;td&gt;&lt;input type='password' name='password' value=''&gt;&lt;/td&gt;", &amp;
+                "    &lt;td&gt;&amp;nbsp;&lt;input type='submit' name='action' value='Login'&gt;", &amp;
+                "        or &lt;input type='submit' name='action' value='Register'&gt;&lt;/td&gt;&lt;/tr&gt;", &amp;
+                "&lt;/form&gt;", &amp;
+                "&lt;/table&gt;"
+
+            write(unitNo,AFORMAT) &amp;
+                "&lt;hr&gt;", &amp;
+                "&lt;b&gt;Example 2: GET method&lt;/b&gt;", &amp;
+                "&lt;form action='calculate' method='get'&gt;", &amp;
+                "&lt;p&gt;", &amp;
+                "Function: f(x) =", &amp;
+                "&lt;select name='function'&gt;", &amp;
+                "    &lt;option value='sin' selected&gt;sin(x)&lt;/option&gt;", &amp;
+                "    &lt;option value='cos'&gt;cos(x)&lt;/option&gt;", &amp;
+                "    &lt;option value='J0'&gt;J0(x)&lt;/option&gt;", &amp;
+                "&lt;/select&gt;", &amp;
+                "&lt;br&gt;", &amp;
+                "Domain:", &amp;
+                "&lt;table&gt;", &amp;
+                "&lt;tr&gt;", &amp;
+                "&lt;td&gt;Minimum = &lt;/td&gt;&lt;td&gt;&lt;input type='text' name='minimum' value='0.0'&gt;&lt;/td&gt;", &amp;
+                "&lt;/tr&gt;", &amp;
+                "&lt;tr&gt;", &amp;
+                "&lt;td&gt;Maximum = &lt;/td&gt;&lt;td&gt;&lt;input type='text' name='maximum' value='1.0'&gt;&lt;/td&gt;", &amp;
+                "&lt;/tr&gt;", &amp;
+                "&lt;tr&gt;", &amp;
+                "&lt;td&gt;Steps = &lt;/td&gt;&lt;td&gt;&lt;input type='text' name='steps' value='10'&gt;&lt;/td&gt;", &amp;
+                "&lt;/tr&gt;", &amp;
+                "&lt;/table&gt;", &amp;
+                "&lt;p&gt;", &amp;
+                "Type of output:", &amp;
+                "&lt;input type='radio' name='output' value='html', checked&gt;HTML&lt;/input&gt;", &amp;
+                "&lt;input type='radio' name='output' value='csv'&gt;CSV&lt;/input&gt;", &amp;
+                "&lt;p&gt;", &amp;
+                "&lt;input type='submit' value='Calculate'&gt;", &amp;
+                "&lt;/form&gt;"
+
+            write(unitNo,AFORMAT) &amp;
+                "&lt;hr&gt;", &amp;
+                "&lt;b&gt;Example 3: Hyperlink&lt;/b&gt;&lt;br&gt;", &amp;
+                "&amp;nbsp;&lt;a href='shutdown'&gt;&lt;b&gt;Stop&lt;/b&gt;&lt;/a&gt; the Fortran FastCGI program."
+
+        end if
+
+        ! end of response
+        write(unitNo,AFORMAT) '&lt;/body&gt;', '&lt;/html&gt;', &amp;
+            '%REMARK% respond() completed ...'
+
+        return
+
+    end subroutine respond
+
+end program test_fcgi
+</pre>
+
+</body>
+</html>

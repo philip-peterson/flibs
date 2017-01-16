@@ -1,0 +1,416 @@
+
+<html><head>
+<title>flibs/strings - flibs</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'textstr.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;
+   -->
+<! -- CVS: $Id: textstr.html,v 1.3 2013/10/06 11:37:57 arjenmarkus Exp $ flibs/strings.n
+   -->
+<body><div class="doctools">
+<h1 class="title">flibs/strings(n) 1.1  &quot;flibs&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>flibs/strings - Manipulate and store strings</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">DATA TYPES</a></li>
+<li class="section"><a href="#section3">ROUTINES</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">type(TEXT_STRING)</b></a></li>
+<li><a href="#2"><b class="cmd">type(MULITLINE_TEXT)</b></a></li>
+<li><a href="#3"><b class="cmd">use edit_text</b></a></li>
+<li><a href="#4"><b class="cmd">call edit_delete( string, pos, length )</b></a></li>
+<li><a href="#5"><b class="cmd">call edit_insert( string, pos, substring )</b></a></li>
+<li><a href="#6"><b class="cmd">use singleline_text</b></a></li>
+<li><a href="#7"><b class="cmd">length = txt_length( text )</b></a></li>
+<li><a href="#8"><b class="cmd">call txt_cleanup( text )</b></a></li>
+<li><a href="#9"><b class="cmd">pos = txt_index( text, substring, back )</b></a></li>
+<li><a href="#10"><b class="cmd">call txt_from_string( text, string )</b></a></li>
+<li><a href="#11"><b class="cmd">call txt_from_string( text, string )</b></a></li>
+<li><a href="#12"><b class="cmd">call txt_read_from_file( lun, text, eof )</b></a></li>
+<li><a href="#13"><b class="cmd">call txt_write_to_file( lun, text )</b></a></li>
+<li><a href="#14"><b class="cmd">call txt_delete( text, pos, length )</b></a></li>
+<li><a href="#15"><b class="cmd">call txt_insert( text, pos, substring )</b></a></li>
+<li><a href="#16"><b class="cmd">use multiline_text</b></a></li>
+<li><a href="#17"><b class="cmd">length = mltxt_length( text )</b></a></li>
+<li><a href="#18"><b class="cmd">length = mltxt_number( text )</b></a></li>
+<li><a href="#19"><b class="cmd">call mltxt_cleanup( text )</b></a></li>
+<li><a href="#20"><b class="cmd">call mltxt_insert( text, pos, line )</b></a></li>
+<li><a href="#21"><b class="cmd">call mltxt_delete( text, first, last )</b></a></li>
+<li><a href="#22"><b class="cmd">call mltxt_get( text, pos, line )</b></a></li>
+<li><a href="#23"><b class="cmd">call mltxt_read_file( filename, text, error )</b></a></li>
+<li><a href="#24"><b class="cmd">call mltxt_write_file( text, filename, error )</b></a></li>
+<li><a href="#25"><b class="cmd">use multiline_text_functions</b></a></li>
+<li><a href="#26"><b class="cmd">call mltxt_iterate( text, filter, first, last )</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>The file <em>textstr.f90</em> contains three fairly small modules,
+designed for simple text manipulation and storage:</p>
+<ul class="itemized">
+<li><p><em>edit_text</em> for simple editing of text strings.</p></li>
+<li><p><em>singleline_text</em> for storing a string of arbitrary length.</p></li>
+<li><p><em>multiline_text</em> for storing a set of strings of arbitrary
+length, for instance a text file.</p></li>
+</ul>
+<p>The facilities offered by these modules are geared to storage and
+some basic manipulations. They are not meant to be a complete module for
+arbitrary-length strings.
+hence the module.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">DATA TYPES</a></h2>
+<p>The modules <em>singleline_text</em> and <em>multiline_text</em>
+each a suitable derived type:</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">type(TEXT_STRING)</b></a></dt>
+<dd><p>Type to hold a string of arbitrary length.</p></dd>
+<dt><a name="2"><b class="cmd">type(MULITLINE_TEXT)</b></a></dt>
+<dd><p>Type to hold a set of strings of arbitrary length.</p></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">ROUTINES</a></h2>
+<p>The module <em>edit_text</em> contains the following routines:</p>
+<dl class="definitions">
+<dt><a name="3"><b class="cmd">use edit_text</b></a></dt>
+<dd><p>To import the subroutines, use this module.</p></dd>
+<dt><a name="4"><b class="cmd">call edit_delete( string, pos, length )</b></a></dt>
+<dd><p>Delete a substring from a string.</p>
+<dl class="arguments">
+<dt>character(len=*), intent(inout) <i class="arg">string</i></dt>
+<dd><p>String to be modified</p></dd>
+<dt>integer, intent(in) <i class="arg">pos</i></dt>
+<dd><p>Position of the first character to be deleted</p></dd>
+<dt>integer, intent(in) <i class="arg">length</i></dt>
+<dd><p>Length of the substring to be deleted</p></dd>
+</dl></dd>
+<dt><a name="5"><b class="cmd">call edit_insert( string, pos, substring )</b></a></dt>
+<dd><p>Insert a substring into a string.</p>
+<dl class="arguments">
+<dt>character(len=*), intent(inout) <i class="arg">string</i></dt>
+<dd><p>String to be modified</p></dd>
+<dt>integer, intent(in) <i class="arg">pos</i></dt>
+<dd><p>Position after which to insert the substring (use 0
+to insert it before the string)</p></dd>
+<dt>character(len=*), intent(in) <i class="arg">substring</i></dt>
+<dd><p>Subtring to be inserted</p></dd>
+</dl></dd>
+</dl>
+<p>The module <em>singleline_text</em> contains the following routines:</p>
+<dl class="definitions">
+<dt><a name="6"><b class="cmd">use singleline_text</b></a></dt>
+<dd><p>To import the subroutines, use this module.</p></dd>
+<dt><a name="7"><b class="cmd">length = txt_length( text )</b></a></dt>
+<dd><p>Return the length of the text. As this is a <em>pure</em> function, you
+cna use it to define temporary strings of the correct length.</p>
+<dl class="arguments">
+<dt>type(TEXT_STRING), intent(in) <i class="arg">text</i></dt>
+<dd><p>Text string to be examined</p></dd>
+</dl></dd>
+<dt><a name="8"><b class="cmd">call txt_cleanup( text )</b></a></dt>
+<dd><p>Clean up the storage for a previous text string.
+The result is an empty string.</p>
+<dl class="arguments">
+<dt>type(TEXT_STRING), intent(inout) <i class="arg">text</i></dt>
+<dd><p>Text string to be examined</p></dd>
+</dl></dd>
+<dt><a name="9"><b class="cmd">pos = txt_index( text, substring, back )</b></a></dt>
+<dd><p>Return the index (position) of a substring in the text.</p>
+<dl class="arguments">
+<dt>type(TEXT_STRING), intent(in) <i class="arg">text</i></dt>
+<dd><p>Text string to be examined</p></dd>
+<dt>character(len=*), intent(in) <i class="arg">substring</i></dt>
+<dd><p>Substring to be found</p></dd>
+<dt>logical, optional, intent(in) <i class="arg">back</i></dt>
+<dd><p>Search from the start (.false.) or from the back (.true.)</p></dd>
+</dl></dd>
+<dt><a name="10"><b class="cmd">call txt_from_string( text, string )</b></a></dt>
+<dd><p>Store a string in a text_string type. Trailing blanks
+in the original string are explicitly stored.</p>
+<dl class="arguments">
+<dt>type(TEXT_STRING), intent(inout) <i class="arg">text</i></dt>
+<dd><p>Text string to be created/filled</p></dd>
+<dt>character(len=*), intent(in) <i class="arg">string</i></dt>
+<dd><p>Ordinary string to be copied into the text string</p></dd>
+</dl></dd>
+<dt><a name="11"><b class="cmd">call txt_from_string( text, string )</b></a></dt>
+<dd><p>Store the contents of a text_string type in an ordinary string.
+If the string is too short, the result will be a truncated string.</p>
+<dl class="arguments">
+<dt>type(TEXT_STRING), intent(in) <i class="arg">text</i></dt>
+<dd><p>Text string to be copied</p></dd>
+<dt>character(len=*), intent(out) <i class="arg">string</i></dt>
+<dd><p>Ordinary string to be filled</p></dd>
+</dl></dd>
+<dt><a name="12"><b class="cmd">call txt_read_from_file( lun, text, eof )</b></a></dt>
+<dd><p>Read a text string from a file (one complete line).</p>
+<dl class="arguments">
+<dt>integer, intent(in) <i class="arg">lun</i></dt>
+<dd><p>The LU-number of the file</p></dd>
+<dt>type(TEXT_STRING), intent(out) <i class="arg">text</i></dt>
+<dd><p>Text string to be created/filled</p></dd>
+<dt>logical, intent(out) <i class="arg">eof</i></dt>
+<dd><p>Indicates whether end-of-file was reached or not</p></dd>
+</dl></dd>
+<dt><a name="13"><b class="cmd">call txt_write_to_file( lun, text )</b></a></dt>
+<dd><p>Write a text string to a file (as one complete line).</p>
+<dl class="arguments">
+<dt>integer, intent(in) <i class="arg">lun</i></dt>
+<dd><p>The LU-number of the file</p></dd>
+<dt>type(TEXT_STRING), intent(in) <i class="arg">text</i></dt>
+<dd><p>Text string to be written</p></dd>
+</dl></dd>
+<dt><a name="14"><b class="cmd">call txt_delete( text, pos, length )</b></a></dt>
+<dd><p>Delete a substring from a text string.</p>
+<dl class="arguments">
+<dt>type(TEXT_STRING), intent(inout) <i class="arg">text</i></dt>
+<dd><p>Text string to be modified</p></dd>
+<dt>integer, intent(in) <i class="arg">pos</i></dt>
+<dd><p>Position of the first character to be deleted</p></dd>
+<dt>integer, intent(in) <i class="arg">length</i></dt>
+<dd><p>Length of the substring to be deleted</p></dd>
+</dl></dd>
+<dt><a name="15"><b class="cmd">call txt_insert( text, pos, substring )</b></a></dt>
+<dd><p>Insert a substring into a string.</p>
+<dl class="arguments">
+<dt>type(TEXT_STRING), intent(inout) <i class="arg">text</i></dt>
+<dd><p>String to be modified</p></dd>
+<dt>integer, intent(in) <i class="arg">pos</i></dt>
+<dd><p>Position after which to insert the substring (use 0
+to insert it before the string)</p></dd>
+<dt>character(len=*), intent(in) <i class="arg">substring</i></dt>
+<dd><p>Subtring to be inserted</p></dd>
+</dl></dd>
+</dl>
+<p>The module <em>multiline_text</em> contains the following routines:</p>
+<dl class="definitions">
+<dt><a name="16"><b class="cmd">use multiline_text</b></a></dt>
+<dd><p>To import the subroutines, use this module.</p></dd>
+<dt><a name="17"><b class="cmd">length = mltxt_length( text )</b></a></dt>
+<dd><p>Return the maximum length of all text strings stored. Useful to define
+temporary strings.</p>
+<dl class="arguments">
+<dt>type(MULTILINE_TEXT), intent(in) <i class="arg">text</i></dt>
+<dd><p>Multiline text to be examined</p></dd>
+</dl></dd>
+<dt><a name="18"><b class="cmd">length = mltxt_number( text )</b></a></dt>
+<dd><p>Return the number of text strings stored.</p>
+<dl class="arguments">
+<dt>type(MULTILINE_TEXT), intent(in) <i class="arg">text</i></dt>
+<dd><p>Multiline text to be examined</p></dd>
+</dl></dd>
+<dt><a name="19"><b class="cmd">call mltxt_cleanup( text )</b></a></dt>
+<dd><p>Cleans up a multiline text - all text strings are deleted
+temporary strings.</p>
+<dl class="arguments">
+<dt>type(MULTILINE_TEXT), intent(in) <i class="arg">text</i></dt>
+<dd><p>Multiline text to be cleaned up</p></dd>
+</dl></dd>
+<dt><a name="20"><b class="cmd">call mltxt_insert( text, pos, line )</b></a></dt>
+<dd><p>Inserts a text string or an ordinary string as a new line of text after
+the given position.</p>
+<dl class="arguments">
+<dt>type(MULTILINE_TEXT), intent(inout) <i class="arg">text</i></dt>
+<dd><p>Multiline text to be modified</p></dd>
+<dt>integer, intent(in) <i class="arg">pos</i></dt>
+<dd><p>Position after which to insert the new line (use 0
+to make it the first line)</p></dd>
+<dt>(...), intent(in) <i class="arg">line</i></dt>
+<dd><p>Ordinary string, text_string or multine_text variable holding the text that will be
+inserted.</p></dd>
+</dl></dd>
+<dt><a name="21"><b class="cmd">call mltxt_delete( text, first, last )</b></a></dt>
+<dd><p>Delete the line at the given positions.</p>
+<dl class="arguments">
+<dt>type(MULTILINE_TEXT), intent(inout) <i class="arg">text</i></dt>
+<dd><p>Multiline text to be modified</p></dd>
+<dt>integer, intent(in) <i class="arg">first</i></dt>
+<dd><p>Position of the first line to be removed.</p></dd>
+<dt>integer, intent(in) <i class="arg">last</i></dt>
+<dd><p>Position of the last line to be removed (optional, defaults to the first line).</p></dd>
+</dl></dd>
+<dt><a name="22"><b class="cmd">call mltxt_get( text, pos, line )</b></a></dt>
+<dd><p>Return a pointer (!) to the line at the given position.
+Note: no copy is made, but a pointer is returned. This means you can
+change the line of text via this pointer.</p>
+<dl class="arguments">
+<dt>type(MULTILINE_TEXT), intent(inout) <i class="arg">text</i></dt>
+<dd><p>Multiline text to be examined</p></dd>
+<dt>integer, intent(in) <i class="arg">pos</i></dt>
+<dd><p>Position of the line to be returned</p></dd>
+<dt>type(TEXT_STRING), pointer <i class="arg">line</i></dt>
+<dd><p>Variable that will <em>point</em> to the line of text</p></dd>
+</dl></dd>
+<dt><a name="23"><b class="cmd">call mltxt_read_file( filename, text, error )</b></a></dt>
+<dd><p>Read an entire file into a multiline text variable.</p>
+<dl class="arguments">
+<dt>characer(len=*), intent(in) <i class="arg">lun</i></dt>
+<dd><p>The name of the file to be read</p></dd>
+<dt>type(TEXT_STRING), intent(out) <i class="arg">text</i></dt>
+<dd><p>Text string to be created/filled</p></dd>
+<dt>logical, intent(out) <i class="arg">error</i></dt>
+<dd><p>Indicates whether an error occurred or not</p></dd>
+</dl></dd>
+<dt><a name="24"><b class="cmd">call mltxt_write_file( text, filename, error )</b></a></dt>
+<dd><p>Write a multiline text variable to a file.</p>
+<dl class="arguments">
+<dt>type(TEXT_STRING), intent(out) <i class="arg">text</i></dt>
+<dd><p>Text string to be created/filled</p></dd>
+<dt>characer(len=*), intent(in) <i class="arg">lun</i></dt>
+<dd><p>The name of the file to be written</p></dd>
+<dt>logical, intent(out) <i class="arg">error</i></dt>
+<dd><p>Indicates whether an error occurred or not</p></dd>
+</dl></dd>
+</dl>
+<p>The file <em>textstr_func.f90</em> contains a single module, multiple_line_text_functions,
+designed for filtering multiline text:</p>
+<dl class="definitions">
+<dt><a name="25"><b class="cmd">use multiline_text_functions</b></a></dt>
+<dd><p>To import the subroutines, use this module.</p></dd>
+<dt><a name="26"><b class="cmd">call mltxt_iterate( text, filter, first, last )</b></a></dt>
+<dd><p>Manipulate the contents of a multiline text variable via a user-defined subroutine or object (filter).
+Each line within the range is visited once. Lines that get inserted along the way are not examined.</p>
+<dl class="arguments">
+<dt>type(MULTILINE_TEXT), intent(in) <i class="arg">text</i></dt>
+<dd><p>Multiline text to be examined and possibly changed</p></dd>
+<dt>subroutine/object filter <i class="arg">filter</i></dt>
+<dd><p>Subroutine or object that defines the filter - see below</p></dd>
+<dt>integer, intent(in) first <i class="arg">first</i></dt>
+<dd><p>The first line to be examined (defaults to 1)</p></dd>
+<dt>integer, intent(in) first <i class="arg">last</i></dt>
+<dd><p>The last line to be examined (defaults to the last line in the variable <i class="term">text</i>)</p></dd>
+</dl>
+<p>The subroutine <i class="term">filter</i> has the following interface:</p>
+<pre class="example">
+    subroutine filter( pos, string, action, text_str, mltxt_str )
+        integer, intent(in)          :: pos
+        character(len=*), intent(in) :: string
+        integer                      :: action
+        type(text_string)            :: text_str
+        type(multiline_text)         :: mltxt_str
+    end subroutine filter
+</pre>
+<p>where:</p>
+<ul class="itemized">
+<li><p><i class="term">pos</i> is the current line number</p></li>
+<li><p><i class="term">string</i> is the entire text of that line</p></li>
+<li><p><i class="term">action</i> is the action to take:</p>
+<ul class="itemized">
+<li><p><i class="term">mltxt_insert_after_text</i>: insert the contents of the <i class="term">text_str</i> variable after the current line.</p></li>
+<li><p><i class="term">mltxt_insert_after_mltxt</i>: insert the contents of the <i class="term">mltxt_str</i> variable after the current line.</p></li>
+<li><p><i class="term">mltxt_insert_before_text</i>: insert the contents of the <i class="term">text_str</i> variable before the current line.</p></li>
+<li><p><i class="term">mltxt_insert_before_mltxt</i>: insert the contents of the <i class="term">mltxt_str</i> variable before the current line.</p></li>
+<li><p><i class="term">mltxt_delete_current</i>: delete the current line</p></li>
+<li><p><i class="term">mltxt_replace_text</i>: replace the contents of the current line by that of <i class="term">text_str</i></p></li>
+<li><p><i class="term">mltxt_replace_mltxt</i>: replace the contents of the current line by that of <i class="term">mltxt_str</i></p></li>
+<li><p><i class="term">mltxt_exit</i>: break off the loop</p></li>
+<li><p><i class="term">mltxt_continue</i>: continue with the next line (nothing is changed or added)</p></li>
+</ul>
+</li>
+</ul></dd>
+</dl>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;</p>
+</div>
+</div></body></html>

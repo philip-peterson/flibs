@@ -1,0 +1,237 @@
+
+<html><head>
+<title>flibs/m_fileunit - flibs</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'filedir/m_fileunit.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2008 Michael Baudin michael.baudin@gmail.com
+   -->
+<! -- CVS: $Id: m_fileunit.html,v 1.3 2013/05/13 08:03:15 knystrom Exp $ flibs/m_fileunit.n
+   -->
+<body><div class="doctools">
+<h1 class="title">flibs/m_fileunit(n) 1.0  &quot;flibs&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>flibs/m_fileunit - Manage file units</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">OVERVIEW</a></li>
+<li class="section"><a href="#section3">ROUTINES</a></li>
+<li class="section"><a href="#section4">TODO</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="method">fileunit_getallopen</b> ( <i class="arg">nbunits</i> <i class="arg">, units</i> )</a></li>
+<li><a href="#2"><b class="method">fileunit_displayopen</b> ( <i class="arg">reportunitnumber</i> )</a></li>
+<li><a href="#3"><b class="method">fileunit_report</b> ( <i class="arg">reportunitnumber</i> <i class="arg">iunit</i>)</a></li>
+<li><a href="#4"><b class="method">fileunit_closeallopen</b> ( )</a></li>
+<li><a href="#5"><b class="method">fileunit_getfreeunit</b> ( ) result ( freeunit )</a></li>
+<li><a href="#6"><b class="method">fileunit_set_stoponerror</b> ( <i class="arg">stoponerror</i>)</a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>The component <em>m_fileunit</em> provides services to manage fortran file units.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">OVERVIEW</a></h2>
+<p>The function fileunit_getfreeunit returns an integer representing
+a fortran unit which is available for opening a file.
+The typical use of this function is to manage the files dynamically,
+without any database of file units in the library/software.
+In the following example, one opens a file with a dynamical
+file unit.</p>
+<pre class="example">
+    integer :: fileunit
+    fileunit = fileunit_getfreeunit ()
+    open ( unit = fileunit , file = &quot;data.txt&quot; )
+    [lb]etc...[rb]
+</pre>
+<p>If several files are to be opened, the &quot;fileunit_getfreeunit&quot;
+method has to be inserted between the &quot;open&quot; statements.
+This is because two consecutive calls to &quot;fileunit_getfreeunit&quot;
+will return the same integer, as expected : if a unit is available
+the first time, it will also be available the second time.
+In the following example, several files are opened and connected
+to several files.</p>
+<pre class="example">
+    integer :: fileunit1
+    integer :: fileunit2
+    fileunit1 = fileunit_getfreeunit ()
+    open ( unit = fileunit1 , file = &quot;data.txt&quot; )
+    fileunit2 = fileunit_getfreeunit ()
+    open ( unit = fileunit2 , file = &quot;data2.txt&quot; )
+    [lb]etc...[rb]
+</pre>
+<p>In a large fortran software, it may be difficult to see if some
+bug has been introduced in the file management, especially
+when the software is the composition of several libraries.
+The subroutines fileunit_getallopen , fileunit_closeallopen ,
+fileunit_report , fileunit_displayopen allow to manage for
+the units currently used in the software.
+The fileunit_getallopen returns an array of integers which
+contains all the currently opened units. The fileunit_closeallopen
+subroutine close all currently opened units. The fileunit_report
+displays a full report about a given unit number by using the
+&quot;inquire&quot; fortran intrinsic statement.</p>
+</div>
+<div id="section3" class="section"><h2><a name="section3">ROUTINES</a></h2>
+<dl class="definitions">
+<dt><a name="1"><b class="method">fileunit_getallopen</b> ( <i class="arg">nbunits</i> <i class="arg">, units</i> )</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">integer, intent ( out ) ::</b> <i class="arg">nbunits</i></dt>
+<dd></dd>
+<dt><b class="type">integer , dimension(:) , pointer ::</b> <i class="arg">units</i></dt>
+<dd></dd>
+</dl>
+<p>Computes an array of integers made of all currently opened units.
+On output, <i class="arg">nbunits</i> is the number of opened units and 
+<i class="arg">units ( iunit )</i> is the unit number for the opened unit #iunit 
+with 1&lt;= iunit &lt;= nbunits.</p></dd>
+<dt><a name="2"><b class="method">fileunit_displayopen</b> ( <i class="arg">reportunitnumber</i> )</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">integer, intent ( in ) ::</b> <i class="arg">reportunitnumber</i></dt>
+<dd></dd>
+</dl>
+<p>Writes on unit <i class="arg">unitnumber</i> the full list of opened units and their associated 
+filenames.</p></dd>
+<dt><a name="3"><b class="method">fileunit_report</b> ( <i class="arg">reportunitnumber</i> <i class="arg">iunit</i>)</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">integer, intent ( in ) ::</b> <i class="arg">reportunitnumber</i></dt>
+<dd></dd>
+<dt><b class="type">integer, intent ( in ) ::</b> <i class="arg">iunit</i></dt>
+<dd></dd>
+</dl>
+<p>Compute report about logical unit <i class="arg">iunit</i> and write it on
+unit <i class="arg">unitnumber</i>. Note : All possible features of the &quot;inquire&quot; intrinsic are used.</p></dd>
+<dt><a name="4"><b class="method">fileunit_closeallopen</b> ( )</a></dt>
+<dd><p>Close all currently opened units.</p></dd>
+<dt><a name="5"><b class="method">fileunit_getfreeunit</b> ( ) result ( freeunit )</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">integer ::</b> <i class="arg">freeunit</i></dt>
+<dd></dd>
+</dl>
+<p>Returns a free fortran unit <i class="arg">freeunit</i> as an integer between 1 and FILEUNIT_MAX_UNIT_NUMBER,
+representing a free FORTRAN logical unit.
+If no free unit can be found, generates an error.
+Note that fileunit_getfreeunit assumes that units 5 and 6
+are special, and will never return those values.
+Original Author : John Burkardt</p></dd>
+<dt><a name="6"><b class="method">fileunit_set_stoponerror</b> ( <i class="arg">stoponerror</i>)</a></dt>
+<dd><dl class="arguments">
+<dt><b class="type">integer ::</b> <i class="arg">freeunit</i></dt>
+<dd></dd>
+</dl>
+<p>Configure the behaviour of the component whenever an 
+error is met.
+If <i class="arg">stoponerror</i> is true, then the execution stops if an error is encountered.
+If <i class="arg">stoponerror</i> is false, then the execution continues if an error is encountered.
+In both cases, a message is displayed on standard output.</p></dd>
+</dl>
+</div>
+<div id="section4" class="section"><h2><a name="section4">TODO</a></h2>
+<ul class="itemized">
+<li><p>allow to &quot;lock&quot; a collection of logical units, so that an
+ external library which may use constant units can be linked.</p></li>
+<li><p>allow to &quot;unlock&quot; one unit, or all units at once.</p></li>
+</ul>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2008 Michael Baudin michael.baudin@gmail.com</p>
+</div>
+</div></body></html>

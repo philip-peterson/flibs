@@ -1,0 +1,7 @@
+Example text file:
+- Contains empty line
+
+- Should be copied exactly
+- Including tabs and trailing blanks as in the next line:
+	    
+(Invisible, but there is one tab and three trailing blanks)

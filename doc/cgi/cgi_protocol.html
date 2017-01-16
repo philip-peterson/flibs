@@ -1,0 +1,268 @@
+
+<html><head>
+<title>cgi_protocol - flibs</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'cgi/cgi_protocol.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2008 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;
+   -->
+<! -- CVS: $Id: cgi_protocol.html,v 1.1 2013/01/21 08:12:35 arjenmarkus Exp $ cgi_protocol.n
+   -->
+<body><div class="doctools">
+<h1 class="title">cgi_protocol(n) 1.0  &quot;flibs&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>cgi_protocol - Module for supporting the Internet CGI protocol</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">DATA TYPES AND ROUTINES</a></li>
+<li class="section"><a href="#section3">NOTES</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">dict_struct</b></a></li>
+<li><a href="#2"><b class="cmd">dict_data</b></a></li>
+<li><a href="#3"><b class="cmd">call cgi_begin( html, dict, luout )</b></a></li>
+<li><a href="#4"><b class="cmd">call cgi_header( type )</b></a></li>
+<li><a href="#5"><b class="cmd">call cgi_end</b></a></li>
+<li><a href="#6"><b class="cmd">call cgi_error( msg, template )</b></a></li>
+<li><a href="#7"><b class="cmd">call cgi_get_session( dict, value )</b></a></li>
+<li><a href="#8"><b class="cmd">call cgi_get( dict, varname, value )</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>When you want to create web applications, the CGI (common gateway
+interface) is one of the means to integrate your underlying programs
+with the web server. The protocol itself is, at least superficially,
+simple enough, but you need to take care of a number of details.
+It is these details that the <em>cgi_protocol</em> module seeks to take
+care of.</p>
+<p>The global structure of a program that uses this module to
+communicate with the web server is basically:</p>
+<ul class="itemized">
+<li><p>Get the data from the web server, via <em>cgi_begin</em></p></li>
+<li><p>Handle these input data and write the corresponding HTML-file</p></li>
+<li><p>Notify the web server the result is available and stop</p></li>
+</ul>
+</div>
+<div id="section2" class="section"><h2><a name="section2">DATA TYPES AND ROUTINES</a></h2>
+<p>The module defines the following data types:</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">dict_struct</b></a></dt>
+<dd><p>A derived type holding a list of keyword-value pairs. Each value is of the
+type &quot;dict_data&quot; (see below). The routine <em>cgi_begin</em> fills such a
+structure to hold all form variables and their values.</p></dd>
+<dt><a name="2"><b class="cmd">dict_data</b></a></dt>
+<dd><p>The derived type whose contents is the string value of a particular form
+variable. It has one component: value, a string of 200 characters long
+(the actual length is set via the parameter &quot;dict_value_length&quot;, so you
+can easily change it if this should prove necessary).</p></dd>
+</dl>
+<p>The module defines the following routines:</p>
+<dl class="definitions">
+<dt><a name="3"><b class="cmd">call cgi_begin( html, dict, luout )</b></a></dt>
+<dd><p>Routine to start the interaction with the web server. It
+automatically determines the protocol to be used and fills the
+&quot;dictionary&quot; dict with the values of the form variables for easy
+retrieval. The last parameter, luout, should be used to write the
+results to the web server.</p>
+<dl class="arguments">
+<dt>integer, intent(in) <i class="arg">html</i></dt>
+<dd><p>Type of output that will be written. Should be one of the following
+parameters:</p>
+<ul class="itemized">
+<li><p>output_html - the output will be HTML text (the corresponding CGI header
+is written by this routine)</p></li>
+<li><p>output_text - the output will be plain ASCII text (the corresponding CGI
+header is written by this routine)</p></li>
+<li><p>output_no_header - it is not known yet what the output type will be -
+you can decide this on the basis of the form input. Use <em>cgi_header</em>
+to write the appropriate header later.</p></li>
+<li><p>output_html_delayed, output_text_delayed - (not implemented yet)
+indicate that the computation will take a while, so that a simple
+message is written first.</p></li>
+</ul></dd>
+<dt>type(dict_struct), pointer <i class="arg">dict</i></dt>
+<dd><p>Variable to hold alll the form variables and their values. You pass
+this variable to <em>cgi_get()</em> to retrieve these values. You can also
+store new variables and values, if this is useful (via the plain
+dictionary routines).</p>
+<p><em>Note:</em>
+Initialise it to &quot;null()&quot; before calling the routine.</p></dd>
+<dt>integer, intent(out) <i class="arg">luout</i></dt>
+<dd><p>LU-number for writing output to the web server. Always use this
+LU-number, not &quot;*&quot; to write the output.</p>
+<p><em>Note:</em>
+If &quot;standard output&quot; is used in the protocol, then this LU-number is
+set to 6 - this is not completely portable of course.</p></dd>
+</dl></dd>
+<dt><a name="4"><b class="cmd">call cgi_header( type )</b></a></dt>
+<dd><p>Write the CGI header information</p>
+<dl class="arguments">
+<dt>integer, intent(in) <i class="arg">type</i></dt>
+<dd><p>Type of output that will be written. See above</p></dd>
+</dl></dd>
+<dt><a name="5"><b class="cmd">call cgi_end</b></a></dt>
+<dd><p>Indicate to the server that we are done. The routine stops the program.</p>
+<p><em>Note:</em>
+If the run-time library produces extra output as a consequence
+of finishing the program, then you may want to use compile options to
+suppress that output. The <em>g95</em> compiler for instance reports any
+memory that has not been freed. Such output may end up in your HTML
+output!</p></dd>
+<dt><a name="6"><b class="cmd">call cgi_error( msg, template )</b></a></dt>
+<dd><p>Report a fatal error in the form of HTML text</p>
+<dl class="arguments">
+<dt>character(len=*), intent(in) <i class="arg">msg</i></dt>
+<dd><p>Message to be written</p></dd>
+<dt>character(len=*), intent(in), optional <i class="arg">template</i></dt>
+<dd><p>Name of a file to be used as a template. If not given, a simple page
+will be written instead. The string &quot;MSG&quot; in that template is replaced
+by the contents of the variable msg.</p></dd>
+</dl></dd>
+<dt><a name="7"><b class="cmd">call cgi_get_session( dict, value )</b></a></dt>
+<dd><p>Get the value of the &quot;sessionid&quot; variable. This variable is
+already present in the form or it is set by this routine to a (more or
+less) unique value.</p>
+<p>To use it as a session identifier (if your application requires a
+continued conversation with the user), make sure each subsequent HTML
+reply contains a line like:</p>
+<pre class="example">
+    &lt;input type=&quot;hidden&quot; name=&quot;sessionid&quot; value=&quot;(contents of the string)&quot;&gt;
+</pre>
+<dl class="arguments">
+<dt>character(len=*), intent(out) <i class="arg">value</i></dt>
+<dd><p>The unique session ID</p></dd>
+</dl></dd>
+<dt><a name="8"><b class="cmd">call cgi_get( dict, varname, value )</b></a></dt>
+<dd><p>Get the value of a variable defined in the HTML form. If the variable is
+not actually present, the value is left unchanged.</p>
+<p>If you want to check if a form variable by the name of <i class="term">varname</i>
+actually exists, you can use the <i class="term">dict_has_key</i> function, defined
+by the <i class="term">dictionary</i> module.</p>
+<dl class="arguments">
+<dt>type(DICT_STRUCT), pointer <i class="arg">dict</i></dt>
+<dd><p>The dictionary as returned originally by <i class="term">cgi_begin</i> (you may want
+to add new values and variables yourself for easy reference).</p></dd>
+<dt>character(len=*), intent(in) <i class="arg">varname</i></dt>
+<dd><p>The name of the variable to retrieve</p></dd>
+<dt>character(len=*)|real|integer|logical, intent(inout) <i class="arg">value</i></dt>
+<dd><p>The value (if the variable exists) - it can be a string, (single
+precision) real, integer or logical.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">NOTES</a></h2>
+<p>The current implementation assumes that the compiler supports the new
+intrinsic routine <em>get_environment_variable</em>. If this is not the
+case, then it is possible to mimick this routine (with a bit of
+trickery), but that has not been implemented yet in this version.</p>
+<p>There is no support as yet for a delayed response. The idea is that the
+program sends a short note to the web server, to inform the user that
+the final result takes a few minutes (or longer) and that he/she can
+find it at such and such a location.</p>
+<p>The <em>cgi_protocol</em> module uses the dictionary module underneath.
+For convenience the source code for that module is contained within the
+source directory for the <em>cgi_protocol</em>.</p>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2008 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;</p>
+</div>
+</div></body></html>

@@ -1,0 +1,74 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin leadzero n 1.0]
+[copyright {2012 John Harper}]
+[moddesc flibs]
+[titledesc {Flexible F0 format}]
+
+[description]
+
+Simulate the F0 format with more options, for compilers that implement NaN, Inf.
+(f0withIEEE.f90) and for compilers that do not implement these non-normal numbers
+(f0noIEEE.f90). Both versions define a Fortran 95/2003 module [strong leadzero] and
+have a corresponding test program in this file. The code was developed by
+J F Harper, Mathematics, Victoria University, Wellington, NZ 20 Jan 2012.
+
+[para]
+Compilers vary in their own treatments of leading zero and optional + sign
+because Fortran standards f90,f95,f2003 differ, and f95 was ambiguous. The
+module lets users choose their own treatment. The test program assumes
+that NAN and INF are valid inputs to a READ statement for a real variable,
+as f2003 requires for processors that support IEEE 754 features. If your
+processor does not support them, use f0noIEEE.f90 instead of this
+program. The modules in f0noIEEE.f90 and fotest.f90 are identical but
+their test programs differ. IEEE intrinsic modules are not used.
+
+[section USAGE]
+The module contains one public function and four public parameters to
+aid in their usage:
+
+[list_begin definitions]
+
+[call [cmd "string = f0( x, n, s)"]]
+Function f0(x,n,s) or f0(x,n) (the [strong s] argument is optional)
+returns the shortest possible string of characters containing x in F0.n format,
+with leading zero and + sign controlled by the character string s if it is
+present, or by SS,F0.n format as in f2003 if not, so if the processor supports
+separate positive and negative zeros then f0(-0.0,n) shall begin with
+a - sign.
+[nl]
+It returns a string of the minimum required length, which is at most [strong rspace+n].
+
+[list_begin arg]
+
+[arg_def "real(p1/p2)" x]
+Value to be written by f0
+[arg_def "integer" n]
+Number of digits to be written after the decimal point
+[arg_def "character(*)" s]
+Specifying treatment of + sign and leading zero
+[nl]
+If s is absent or contains neither LZ nor SP the effect is that of format
+SS,F0.n as in the f2003 standard. If s contains SP the effect is that of
+SP,F0.n, i.e. a + sign if x>0 or x is +0.0, a - sign if x<0 or -0.0.
+If the processor does not support separate -0.0 and +0.0 then 0.0 is
+treated as +0.0. A zero before the decimal point is inserted if the output
+would otherwise have had no digits at all, or if s contains LZ and there
+would otherwise be no digits before the decimal point. If x is infinite or
+not a number, f0 returns the appropriate one of +Inf,Inf,-Inf,NaN.
+[list_end]
+[nl]
+
+[call [cmd "integer, parameter :: p1"]]
+Kind for single-precision reals - p1 = kind(1.0).
+
+[call [cmd "integer, parameter :: p2"]]
+Kind for double-precision reals - p2 = kind(1d0).
+
+[call [cmd "integer, parameter :: ispace"]]
+The integer parameter [strong ispace] is the space needed for -huge(1) in I0 format
+
+[call [cmd "integer, parameter :: rspace"]]
+The integer parameter [strong rspace] is the space needed for -huge(1d0) in F0.0 format,
+[list_end]
+
+[manpage_end]

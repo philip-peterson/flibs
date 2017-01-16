@@ -1,0 +1,46 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin unsigned_integers n 1.0]
+[copyright {2010 Arjen Markus <arjenmarkus@sourceforge.net>}]
+[moddesc flibs]
+[titledesc {Implement operations with unsigned integers}]
+
+[description]
+
+The [strong unsigned_integers] module provides a number of operations that emulate
+unsigned integers in Fortran. For some applications unsigned integers are very useful.
+The module uses [emph ordinary] integers as the basic data type and adds only those
+operations that differ between signed and unsigned integers:
+
+[list_begin definitions]
+
+[call [cmd "use unsigned_integers"]]
+The name of the module. The module does not use any others.
+
+[call [cmd "c = a .udiv. b"]]
+Division with [emph a] and [emph b] interpreted as unsigned integers.
+(Both should be declared as ordinary integers!)
+
+[call [cmd "compare = a .ult. b"]]
+[call [cmd "compare = a .ule. b"]]
+[call [cmd "compare = a .ugt. b"]]
+[call [cmd "compare = a .uge. b"]]
+Compare two "unsigned" integers and return the result as a logical.
+The result is true if [emph a] is smaller than [emph b].
+[nl]
+Similarly: [emph .ule.], [emph .ugt.] and [emph .uge.] are the unsigned equivalents of
+[emph .le.], [emph .gt.] and [emph .ge.].
+
+[call [cmd "string = to_string( a )"]]
+Return a string representing the "unsigned" integer [emph a].
+
+[call [cmd "a = to_unsigned( string )"]]
+Return an "unsigned" integer from a string. (Accepts "-1" and "2147483648" - both
+represent the unsigned value 2147483648.)
+
+[list_end]
+
+All other operations, including left and right bit shifts (in Fortran), give the same results
+for unsigned integers as for signed integers, so that you can safely use the standard operations.
+The only caveat is that this presumes two's-complement integers, but those are ubiquitous.
+
+[manpage_end]

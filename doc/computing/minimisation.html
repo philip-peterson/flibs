@@ -1,0 +1,291 @@
+
+<html><head>
+<title>minimisation - flibs</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'minimisation.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2013 Mike Powell   -- Copyright &copy; 2013 Arjen Markus &lt;arjenmarkus at sourceforge dot net&gt;
+   -->
+<! -- CVS: $Id: minimisation.html,v 1.2 2013/10/12 15:30:35 arjenmarkus Exp $ minimisation.n
+   -->
+<body><div class="doctools">
+<h1 class="title">minimisation(n) 1.0  &quot;flibs&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>minimisation - Miminisation routines</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">ROUTINES</a></li>
+<li class="section"><a href="#section3">EXAMPLE</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">call newuoa((npt,x,rhobeg,rhoend,iprint,maxfun,calfun)</b></a></li>
+<li><a href="#2"><b class="cmd">call bobyqa((npt,x,xl,xu,rhobeg,rhoend,iprint,maxfun,calfun)</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>The <i class="term">newuoa_minimisation</i> and <i class="term">bobyqa_minimisation</i> modules provide facilities
+to minimise a function of one or more variables without the use of derivatives
+(see <a href="http://www.damtp.cam.ac.uk/user/na/NA_papers/NA2007_03.pdf">A view of algorithms for optimization without derivatives</a>.</p>
+<p>The first module provides the routine <i class="term">NEWUOA</i> which implements an unconstrained minimisation
+algorithm. The second module provides the routine <i class="term">BOBYQA</i> which implements an algorithm where
+the minimum of the function is sought within a given hyperblock.</p>
+<p><em>Note:</em> The code was developed by Mike Powell. It has been slightly adjusted so that advantage
+can be taken of a number of modern Fortran features. This has led to a slightly different interface
+than the original code. These are the changes:</p>
+<ul class="itemized">
+<li><p>Use the generic names for standard functions like <i class="term">abs</i> and <i class="term">min</i>.</p></li>
+<li><p>Use an allocatable work array, so that the user is no longer responsible for this.</p></li>
+<li><p>Wrap the code in a module, so that the interfaces can be checked by the compiler.</p></li>
+<li><p>Use a <i class="term">kind</i> parameter instead of <i class="term">REAL*8</i>.</p></li>
+<li><p>Use assumed shape arrays, so that the number of dimensions can be automatically derived from
+the size of the <i class="term">X</i> array.</p></li>
+<li><p>Make the subroutine that computes the value of the function to be minimised an argument,
+rather than requiring a fixed name. This makes the module more flexible.</p></li>
+</ul>
+</div>
+<div id="section2" class="section"><h2><a name="section2">ROUTINES</a></h2>
+<p>There are two public routines, one in each module:</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">call newuoa((npt,x,rhobeg,rhoend,iprint,maxfun,calfun)</b></a></dt>
+<dd><p>This subroutine seeks the least value of a function of many variables,
+by a trust region method that forms quadratic models by interpolation.
+There can be some freedom in the interpolation conditions, which is
+taken up by minimizing the Frobenius norm of the change to the second
+derivative of the quadratic model, beginning with a zero matrix. The
+arguments of the subroutine are as follows.</p>
+<p>Initial values of the variables must be set in <i class="term">X(1),X(2),...,X(N)</i>. They
+will be changed to the values that give the least calculated <i class="term">F</i>.</p>
+<dl class="arguments">
+<dt>integer <i class="arg">npt</i></dt>
+<dd><p><i class="term">NPT</i> is the number of interpolation conditions. Its value must be in the
+interval [<i class="term">N+2,(N+1)(N+2)/2</i>].</p></dd>
+<dt>real(kind=wp), dimension(:) <i class="arg">x</i></dt>
+<dd><p>Array with coordinate values. On input the initial values, on output the vector
+for which the minimum function value was found.</p></dd>
+<dt>real(kind=wp) <i class="arg">rhobeg, rhoend</i></dt>
+<dd><p><i class="term">RHOBEG</i> and <i class="term">RHOEND</i> must be set to the initial and final values of a trust
+region radius, so both must be positive with <i class="term">RHOEND&lt;=RHOBEG</i>. Typically
+<i class="term">RHOBEG</i> should be about one tenth of the greatest expected change to a
+variable, and <i class="term">RHOEND</i> should indicate the accuracy that is required in
+the final values of the variables.</p></dd>
+<dt>integer <i class="arg">iprint</i></dt>
+<dd><p>The value of <i class="term">IPRINT</i> should be set to 0, 1, 2 or 3, which controls the
+amount of printing. Specifically, there is no output if <i class="term">IPRINT=0</i> and
+there is output only at the return if <i class="term">IPRINT=1</i>. Otherwise, each new
+value of <i class="term">RHO</i> is printed, with the best vector of variables so far and
+the corresponding value of the objective function. Further, each new
+value of <i class="term">F</i> with its variables are output if <i class="term">IPRINT=3</i>.</p></dd>
+<dt>integer <i class="arg">maxfun</i></dt>
+<dd><p><i class="term">MAXFUN</i> must be set to an upper bound on the number of calls of <i class="term">CALFUN</i>.</p></dd>
+<dt>subroutine <i class="arg">calfun</i></dt>
+<dd><p>Subroutine <i class="term">CALFUN</i> must be provided by the user. It must set <i class="term">F</i> to
+the value of the objective function for the variables <i class="term">X(1),X(2),...,X(N)</i>.</p>
+<p>Its interface is:</p>
+<pre class="example">
+    subroutine calfun( x, f )
+        import wp
+        real(kind=wp), dimension(:)  :: x
+        real(kind=wp)                :: f
+    end subroutine calfun
+</pre>
+</dd>
+</dl></dd>
+<dt><a name="2"><b class="cmd">call bobyqa((npt,x,xl,xu,rhobeg,rhoend,iprint,maxfun,calfun)</b></a></dt>
+<dd><p>This subroutine seeks the least value of a function of many variables,
+by applying a trust region method that forms quadratic models by
+interpolation. There is usually some freedom in the interpolation
+conditions, which is taken up by minimizing the Frobenius norm of
+the change to the second derivative of the model, beginning with the
+zero matrix. The values of the variables are constrained by upper and
+lower bounds. The arguments of the subroutine are as follows.</p>
+<p>Initial values of the variables must be set in <i class="term">X(1),X(2),...,X(N)</i>. They
+will be changed to the values that give the least calculated <i class="term">F</i>.</p>
+<dl class="arguments">
+<dt>integer <i class="arg">npt</i></dt>
+<dd><p><i class="term">NPT</i> is the number of interpolation conditions. Its value must be in the
+interval [<i class="term">N+2,(N+1)(N+2)/2</i>].</p></dd>
+<dt>real(kind=wp), dimension(:) <i class="arg">x</i></dt>
+<dd><p>Array with coordinate values. On input the initial values, on output the vector
+for which the minimum function value was found.</p></dd>
+<dt>real(kind=wp), dimension(:) <i class="arg">xl, xu</i></dt>
+<dd><p>For <i class="term">I=1,2,...,N</i>, <i class="term">XL(I)</i> and <i class="term">XU(I)</i> must provide the lower and upper
+bounds, respectively, on <i class="term">X(I)</i>. The construction of quadratic models
+requires <i class="term">XL(I)</i> to be strictly less than <i class="term">XU(I)</i> for each <i class="term">I</i>. Further,
+the contribution to a model from changes to the <i class="term">I</i>-th variable is
+damaged severely by rounding errors if <i class="term">XU(I)-XL(I)</i> is too small.</p></dd>
+<dt>real(kind=wp) <i class="arg">rhobeg, rhoend</i></dt>
+<dd><p><i class="term">RHOBEG</i> and <i class="term">RHOEND</i> must be set to the initial and final values of a trust
+region radius, so both must be positive with <i class="term">RHOEND</i> no greater than
+<i class="term">RHOBEG</i>. Typically, <i class="term">RHOBEG</i> should be about one tenth of the greatest
+expected change to a variable, while <i class="term">RHOEND</i> should indicate the
+accuracy that is required in the final values of the variables. An
+error return occurs if any of the differences <i class="term">XU(I)-XL(I), I=1,...,N</i>
+is less than <i class="term">2*RHOBEG</i>.</p></dd>
+<dt>integer <i class="arg">iprint</i></dt>
+<dd><p>The value of <i class="term">IPRINT</i> should be set to 0, 1, 2 or 3, which controls the
+amount of printing. Specifically, there is no output if <i class="term">IPRINT=0</i> and
+there is output only at the return if <i class="term">IPRINT=1</i>. Otherwise, each new
+value of <i class="term">RHO</i> is printed, with the best vector of variables so far and
+the corresponding value of the objective function. Further, each new
+value of <i class="term">F</i> with its variables are output if <i class="term">IPRINT=3</i>.</p></dd>
+<dt>integer <i class="arg">maxfun</i></dt>
+<dd><p><i class="term">MAXFUN</i> must be set to an upper bound on the number of calls of <i class="term">CALFUN</i>.</p></dd>
+<dt>subroutine <i class="arg">calfun</i></dt>
+<dd><p>Subroutine <i class="term">CALFUN</i> must be provided by the user. It must set <i class="term">F</i> to
+the value of the objective function for the variables <i class="term">X(1),X(2),...,X(N)</i>.</p>
+<p>Its interface is the same for routine <i class="term">NEWUOA</i>.</p></dd>
+</dl></dd>
+</dl>
+</div>
+<div id="section3" class="section"><h2><a name="section3">EXAMPLE</a></h2>
+<p>The functon to be minimised does not need to be a straightforward mathematical function.
+The only requirements are that it is continuous in its arguments and more or less smooth.</p>
+<p>Here is an example of a minimisation problem that would be very difficult to solve when
+derivatives are required. The problem is to find the values for the coefficients <i class="term">a</i> and
+<i class="term">b</i> in the system of ordinary differential equations below that lead to a final vector
+<i class="term">(x,y) = (0.5,0.25)</i> at time <i class="term">t = 1</i>:</p>
+<pre class="example">
+    dx/dt = - a x
+    dy/dt = + a x - b y
+    (x,y) = (1,0) at time t = 0
+</pre>
+<p>The subroutine to compute the function to be minimised is shown below. It computes the
+solution at <i class="term">t = 1</i> for the above system and computes the sum of square differences with the
+target vector. This sum is the function value to be minimised:</p>
+<pre class="example">
+! compute_diff --
+!     Compute the solution and determine how close it is to the required solution
+!
+! Arguments:
+!     param          Vector of parameters
+!     f              Value of the function to be minimized
+!
+subroutine compute_diff( param, f )
+    use bobyqa_minimisation, only: wp
+    implicit none
+    real(kind=wp), dimension(:) :: param
+    real(kind=wp)               :: f
+    integer                     :: i
+    real(kind=wp), dimension(2) :: x
+    real(kind=wp), dimension(2) :: dx
+    real(kind=wp)               :: dt
+    !
+    ! Initial condition: x = [1.0, 0.0]
+    ! We want x = [0.5, 0.25] at time = 1
+    !
+    dt   = 0.01
+    x(1) = 1.0
+    x(2) = 0.0
+    do i = 1,100
+        dx(1) = -param(1) * x(1)
+        dx(2) = +param(1) * x(1) - param(2) * x(2)
+        x(1)  = x(1) + dx(1) * dt
+        x(2)  = x(2) + dx(2) * dt
+    enddo
+    f = (x(1)-0.5)**2 + (x(2)-0.25)**2
+end subroutine calfun</pre>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2013 Mike Powell<br>
+Copyright &copy; 2013 Arjen Markus &lt;arjenmarkus at sourceforge dot net&gt;</p>
+</div>
+</div></body></html>

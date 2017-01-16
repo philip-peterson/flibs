@@ -1,0 +1,238 @@
+
+<html><head>
+<title>keyvars - flibs</title>
+<style type="text/css"><!--
+    HTML {
+	background: 	#FFFFFF;
+	color: 		black;
+    }
+    BODY {
+	background: 	#FFFFFF;
+	color:	 	black;
+    }
+    DIV.doctools {
+	margin-left:	10%;
+	margin-right:	10%;
+    }
+    DIV.doctools H1,DIV.doctools H2 {
+	margin-left:	-5%;
+    }
+    H1, H2, H3, H4 {
+	margin-top: 	1em;
+	font-family:	sans-serif;
+	font-size:	large;
+	color:		#005A9C;
+	background: 	transparent;
+	text-align:		left;
+    }
+    H1.title {
+	text-align: center;
+    }
+    UL,OL {
+	margin-right: 0em;
+	margin-top: 3pt;
+	margin-bottom: 3pt;
+    }
+    UL LI {
+	list-style: disc;
+    }
+    OL LI {
+	list-style: decimal;
+    }
+    DT {
+	padding-top: 	1ex;
+    }
+    UL.toc,UL.toc UL, UL.toc UL UL {
+	font:		normal 12pt/14pt sans-serif;
+	list-style:	none;
+    }
+    LI.section, LI.subsection {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding: 	0em;
+    }
+    PRE {
+	display: 	block;
+	font-family:	monospace;
+	white-space:	pre;
+	margin:		0%;
+	padding-top:	0.5ex;
+	padding-bottom:	0.5ex;
+	padding-left:	1ex;
+	padding-right:	1ex;
+	width:		100%;
+    }
+    PRE.example {
+	color: 		black;
+	background: 	#f5dcb3;
+	border:		1px solid black;
+    }
+    UL.requirements LI, UL.syntax LI {
+	list-style: 	none;
+	margin-left: 	0em;
+	text-indent:	0em;
+	padding:	0em;
+    }
+    DIV.synopsis {
+	color: 		black;
+	background: 	#80ffff;
+	border:		1px solid black;
+	font-family:	serif;
+	margin-top: 	1em;
+	margin-bottom: 	1em;
+    }
+    UL.syntax {
+	margin-top: 	1em;
+	border-top:	1px solid black;
+    }
+    UL.requirements {
+	margin-bottom: 	1em;
+	border-bottom:	1px solid black;
+    }
+--></style>
+</head>
+<! -- Generated from file 'keyvars.man' by tcllib/doctools with format 'html'
+   -->
+<! -- Copyright &copy; 2015 Arjen Markus &lt;arjenmarkus at sourceforge dot net&gt;
+   -->
+<! -- CVS: $Id: keyvars.html,v 1.1 2016/08/10 07:55:05 arjenmarkus Exp $ keyvars.n
+   -->
+<body><div class="doctools">
+<h1 class="title">keyvars(n) 1.0  &quot;flibs&quot;</h1>
+<div id="name" class="section"><h2><a name="name">Name</a></h2>
+<p>keyvars - Input facility</p>
+</div>
+<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
+<ul class="toc">
+<li class="section"><a href="#toc">Table Of Contents</a></li>
+<li class="section"><a href="#synopsis">Synopsis</a></li>
+<li class="section"><a href="#section1">Description</a></li>
+<li class="section"><a href="#section2">ROUTINES</a></li>
+<li class="section"><a href="#copyright">Copyright</a></li>
+</ul>
+</div>
+<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
+<div class="synopsis">
+<ul class="syntax">
+<li><a href="#1"><b class="cmd">call get_values( filename, args )</b></a></li>
+<li><a href="#2"><b class="cmd">arg = keyvar( keyword, var, description )</b></a></li>
+<li><a href="#3"><b class="cmd">arg = keyvar( section, keyword, var, description )</b></a></li>
+</ul>
+</div>
+</div>
+<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
+<p>The <i class="term">keyvars</i> module was inspired by the observations that auxiliary programs that you create
+for doing your job, such as converting one type of file into another, because that is more conventient
+for the task at hand, often require a small amount of input, say four or five parameters. It is easy
+enough to use a few read statements to read them from a file, but that often means fairly little
+checking, because it is &quot;just&quot; an auxiliary program, to be used by yourself only and documentation
+is more often than not only contained in the source code (or more honestly: the source code is the
+documentation).
+To solve the problem of documenting the input and checking that all is there, at least partly,
+you can use this module:</p>
+<ul class="itemized">
+<li><p>You specify which variables are to be read from the input file.</p></li>
+<li><p>Each input variable is associated with a short meaningful name and a short description.</p></li>
+<li><p>Reading the data is handled by a single subroutine call, as is the reporting of the values that
+were read and providing support.</p></li>
+<li><p>The input file format is either that of a simple INI file or of an INI file without sections.
+A &quot;#&quot; indicates the start of a comment. Here is a simple illustration:</p>
+<pre class="example">
+# Example of an input file for keyvars
+# Text after a # is comment
+#
+int = 2
+real = 1.234
+char = A string of several words
+</pre>
+<p>where space around the equal sign are not significant.</p></li>
+</ul>
+<p>Here is a simple example:</p>
+<pre class="example">
+program demo
+    use keyvars
+    implicit none
+    integer :: x
+    real    :: y
+    character(len=20) :: string
+    x = -1
+    y = -1.0
+    call get_values( 'keyvars.inp', [keyvar(&quot;int&quot;,  x, &quot;Integer value&quot;), &amp;
+                                     keyvar(&quot;real&quot;, y, &quot;Real value&quot;), &amp;
+                                     keyvar(&quot;char&quot;, string, &quot;Some text&quot;)] )
+    write(*,*) 'x = ', x
+    write(*,*) 'y = ', y
+    write(*,*) 'string = ', string
+end program demo
+</pre>
+<p>The subroutine <i class="term">get_values</i> first looks at the command-line arguments:</p>
+<ul class="itemized">
+<li><p>Arguments <i class="term">-?, /?, -h, -help, --help</i> are all recognised as a request for displaying some
+help text. It will print the keywords and the description and then stop.</p></li>
+<li><p>Arguments <i class="term">-i, -input, --input</i> must be followed by the name of the input file the user
+wants to use. It then reads that particular file instead of the file name that was passed.</p></li>
+<li><p>Arguments <i class="term">-o, -output, --output</i> indicate that the user wants a template of the input.
+The argument must be followed by the name of that file. The routine will simply write the
+template and stop. The template includes the descriptions as comments.
+The array of variables (!) is formed via the <i class="term">keyvar</i> function. Basically, this function
+returns a <i class="term">keyvar_data</i> value that contains all there is to know about the variable.
+For its proper functioning it stores a pointer to the variable.</p></li>
+</ul>
+<p><em>Note:</em> The algorithm was implemented without any consideration of duplicate keys either
+in the array or the input file. What happens if a key is not unique therefore depends on the
+exact implementation.</p>
+</div>
+<div id="section2" class="section"><h2><a name="section2">ROUTINES</a></h2>
+<p>There are two public routines:</p>
+<dl class="definitions">
+<dt><a name="1"><b class="cmd">call get_values( filename, args )</b></a></dt>
+<dd><p>This subroutine reads the given input file and stores the values it found in the variables
+defined in the array <i class="term">args</i>. More details provided above.</p>
+<dl class="arguments">
+<dt>character(len=*) <i class="arg">filename</i></dt>
+<dd><p>Name of the file to be read, unless overwritten via the <i class="term">-input</i> option.</p></dd>
+<dt>type(keyvar_data), dimension(:) <i class="arg">args</i></dt>
+<dd><p>Array specifying the variables as well as the associated keywords and descriptive texts. Construct
+or fill it using the <i class="term">keyvar</i> function.</p></dd>
+</dl></dd>
+<dt><a name="2"><b class="cmd">arg = keyvar( keyword, var, description )</b></a></dt>
+<dd><p>This function returns a value of type <i class="term">keyvar_data</i>. It fills the components
+of this derived type with a pointer to the variable <i class="term">var</i>, so that it can be
+set automatically. The variable itself is one of the basic types: integer,
+single and double precision real, logical or a character string of any length.</p>
+<dl class="arguments">
+<dt>character(len=*) <i class="arg">keyword</i></dt>
+<dd><p>The keyword by which the variable is to be found in the input.</p></dd>
+<dt>scalar <i class="arg">var</i></dt>
+<dd><p>The variable to be assigned a value from the input file.</p></dd>
+<dt>character(len=*) <i class="arg">description</i></dt>
+<dd><p>The description of the variable, serves as documentation in the template.</p></dd>
+</dl></dd>
+<dt><a name="3"><b class="cmd">arg = keyvar( section, keyword, var, description )</b></a></dt>
+<dd><p>Alternative form of the <i class="term">keyvar</i> function. In this case you can specify the section the variable
+should come from. Section names appear in the input file as &quot;[section]&quot;.</p>
+<dl class="arguments">
+<dt>character(len=*) <i class="arg">section</i></dt>
+<dd><p>The section the keyword belongs to.</p></dd>
+<dt>character(len=*) <i class="arg">keyword</i></dt>
+<dd><p>The keyword by which the variable is to be found in the input.</p></dd>
+<dt>scalar <i class="arg">var</i></dt>
+<dd><p>The variable to be assigned a value from the input file.</p></dd>
+<dt>character(len=*) <i class="arg">description</i></dt>
+<dd><p>The description of the variable, serves as documentation in the template.</p></dd>
+</dl></dd>
+</dl>
+<p><em>Notes:</em></p>
+<ul class="itemized">
+<li><p>The module uses deferred-length characters and this requires a recent version of the Fortran
+compiler. For <i class="term">gfortran</i> you need at least 4.9.</p></li>
+<li><p>The implementation does not care about duplicate keys, as remarked above. This basically means
+that what happens if you use duplicate keys, depends on the details of the implementation and
+is therefore not documented here.</p></li>
+</ul>
+</div>
+<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
+<p>Copyright &copy; 2015 Arjen Markus &lt;arjenmarkus at sourceforge dot net&gt;</p>
+</div>
+</div></body></html>

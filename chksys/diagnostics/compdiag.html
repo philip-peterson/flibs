@@ -1,0 +1,111 @@
+<html>
+<head>
+    <title>Diagnostic capabilities of the compiler</title>
+</head>
+<body>
+<h2>Program to check the compiler's diagnostic capabilities</h2>
+
+<p>The program <i>compdiag</i> is intended to check the diagnostic
+capabilities of a Fortran compiler. It does so by writing
+small programs and passing them to the compiler. The output
+is analysed and a report is generated from the findings.
+</p><p>
+The program is not meant to check whether the compiler
+correctly identifies syntactical mistakes (though it does
+not really matter, as the generated programs could easily
+be adapted for this purpose).
+</p>
+
+<h2>Test programs</h2>
+Each test program in the file <i>compdiag.inp</i> starts with a
+description and a category:
+<ul>
+<li>
+<tt>@desc</tt> - short textual description (also start of new test program)
+</li><li>
+<tt>@category</tt> - one of:
+<ul>
+<li>
+<tt>basic</tt> - basic checks of certain aspects
+</li><li>
+<tt>medium</tt> - checks that require more analysis
+</li><li>
+<tt>advanced</tt> - checks for trickier aspects
+</li><li>
+<tt>limitation</tt> - known limitations of certain compilers (success means the
+current compiler supports that feature)
+</li><li>
+<tt>extension</tt> - checks whether popular extensions are supported
+</li><li>
+<tt>f2003</tt> - checks for Fortran 2003 features
+</li>
+</ul>
+</li>
+</ul>
+
+<p>Here is an example:</p>
+<pre>
+@desc Function that does not always set the value
+@category medium
+real function check( x )
+    real :: x
+    if ( x > 0 ) then
+        check = 2.0
+    endif
+end function check
+</pre>
+<p>This code shows a function <tt>check</tt> that properly returns a
+value only if the argument x is positive. The line with "@desc"
+gives the description for this test case and the line with "@category"
+defines it to be of "medium" difficulty for the compiler to find.</p>
+
+<p>This code may result in a message from the compiler or it may
+not - this depends on the compiler options. For instance, the
+<i>gfortran</i> compiler (version 4.3.2) does not report anything
+with default options, but when given the options <tt>-Wall -O2</tt> (all
+warnings <i>and</i> optimisation on), it will complain:
+
+<pre>
+check.f90: In function 'check':
+check.f90:3: warning: '__result_check' is used uninitialized in this function
+</pre>
+
+Optimisation typically forces the compiler to check the code more
+thoroughly and therefore more warnings can be issued.
+
+<p>Note that the categories basic, medium and advanced are fairly
+subjective.</p>
+
+<p>Success in the first three categories means the compiler did not
+accept the program or wrote a warning. Success in all other categories
+means the compiler did accept it. (Note: internal compiler errors are
+not distinguished!)
+
+<h2>Output</h2>
+<p>The program produces two output files: <i>compdiag.summary</i> with a
+summary of the results only and <iL>compdiag.log</i> with the code for
+each test program and the compiler output, if any.</p>
+
+<p>Both files contain a table of the number of successes per category.
+
+<h2>Directory contents</h2>
+<ul>
+<li>
+compdiag.f90 -- source code for the program
+</li><li>
+rundiag.bat  -- Windows batch file to run the program
+</li><li>
+rundiag.sh   -- Linux/UNIX/OSX shell script to run it
+</li><li>
+compdiag.inp -- file containing the code for the test programs
+</li><li>
+compile.bat  -- small batch file to run the compiler of choice
+</li><li>
+compile.sh   -- small shell script to run the compiler of choice
+</li>
+</ul>
+
+<hr>
+Copyright &copy; 2009, Arjen Markus
+</body>
+</html>

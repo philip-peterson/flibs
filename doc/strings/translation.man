@@ -1,0 +1,113 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin translation n 1.0]
+[copyright {2016 Arjen Markus <arjenmarkus at sourceforge dot net>}]
+[moddesc flibs]
+[titledesc {Provide in-source lookup tables for strings in different languages}]
+
+[description]
+
+The purpose of the [term translation] module is to embed text strings in different languages in the
+source code and to look them up for a particular language. The strings are characterised by a keyword.
+The module comes with an auxiliary program, [term mktranslation.f90], that converts an input
+file into Fortran source code to populate the arrays that hold the strings.
+[para]
+The input file for the auxiliary program is very simple in structure:
+[list_begin bullet]
+[item]
+The hash character(\#) introduces a comment, anything after that is ignored.
+[item]
+A line starting with "default:" indicates the default language to use.
+[item]
+A line containing the word "key:" at the start is considered the start of a new keyword.
+[item]
+Any other line holding a colon (:) is considered the string to be used for the previous keyword and
+the language given by the substring before the colon.
+[list_end]
+
+Here is a small example:
+
+[example {
+# Note: The translations are not necessarily correct - just serve as illustrations
+# Note: The keywords are case-sensitive!
+#
+default: EN
+key: FileNotFound
+EN: The file was not found:
+NL: Het bestand is niet gevonden:
+DE: Die Datei ist nicht gefunden:
+FR: Le fichier n'etait pas trouve:
+
+key: ErrorReadingFile
+EN: Error while reading the file
+NL: Fout bij het lezen van het bestand
+DE: Fehler weil das Datei wurde gelesen
+FR: Erreur pendant que le fichier etait lu
+}]
+[para]
+
+This file is then read by the [term mktranslation] program and the result is in the file [term translation.inc]
+for inclusion in the [term translation] module. Using the functions [term set_language] and [term get_text]
+the program can then select in which language the text strings should be displayed:
+
+[example {
+    use translation
+
+    call set_language( 'FR' )
+
+    ...
+    if ( file_not_found ) then
+        call get_text( 'FileNotFound', text, found )
+        write(*,*) trim(text)
+    endif
+}]
+
+[section "ROUTINES"]
+There are two public routines:
+
+[list_begin definitions]
+
+[call [cmd "call set_language( lang )"]]
+This subroutine sets the language to be used for looking up the required translation. If such a translation
+is not available, the string belonging to the default language will be returned instead.
+
+[list_begin arg]
+[arg_def "character(len=*), intent(in)" lang]
+Language to be used (nothing more than a convenient string, like "EN" or "FR"). It is used as case-sensitive.
+[list_end]
+
+
+[call [cmd "call get_text( keyword, text, found )"]]
+This subroutine looks up the string that belongs to the combination of keyword and language.
+If that combination is not found, it returns the string for the keyword and the default language.
+If no such string is available either, the keyword is returned and the argument [term found] is set to [term false].
+
+[list_begin arg]
+[arg_def "character(len=*), intent(in)" keyword]
+The keyword to be looked up.
+
+[arg_def "character(len=*), intent(out)" text]
+The variable to hold the text string that was to be looked up.
+
+[arg_def "logical, intent(out), optional" found]
+If present, set to [term false] if the keyword was not found, otherwise to [term true].
+[list_end]
+
+[list_end]
+
+[emph Note:] In combination with the [term flexoutput] module, you can use it to create format strings
+that are adapted to the language of choice.
+
+[section "AUXILIARY PROGRAM"]
+The auxiliary program can be used to convert an input file using the described keywords into an
+include file as used by the [term translation] module.
+[para]
+
+The use of the program is very simple:
+
+[example {
+    mktranslation "name-of-input-file"
+}]
+
+It writes the file [term translation.inc] based on the information in the input file.
+
+[manpage_end]

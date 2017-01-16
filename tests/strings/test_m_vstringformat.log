@@ -1,0 +1,52 @@
+  Number of strings :           0
+  -> Test #           1 PASS
+  Number of strings :           0
+  -> Test #           2 PASS
+ Test #format : format a logical
+  -> Test #           3 PASS
+ Test #format : format a logical
+  -> Test #           4 PASS
+ Test #format : format a logical
+  -> Test #           5 PASS
+ Test #format : format a logical
+  -> Test #           6 PASS
+  Number of strings :           0
+  -> Test #           7 PASS
+  Number of strings :           0
+  -> Test #           8 PASS
+ Test #format : format an integer 0
+  -> Test #           9 PASS
+ Test #format : format an integer 1
+  -> Test #          10 PASS
+ Test #format : format an integer -1
+  -> Test #          11 PASS
+ Test #format : format an integer 2008
+  -> Test #          12 PASS
+ Test #format : format an integer -2008
+  -> Test #          13 PASS
+ Test #format : format aan integer with kind=1
+  -> Test #          14 PASS
+ Test #format : format an integer with kind=2
+  -> Test #          15 PASS
+ Test #format : format an integer with kind=4
+  -> Test #          16 PASS
+ Test #format : format an integer with kind=8
+  -> Test #          17 PASS
+ Test #format : format an integer 0 with given format
+  -> Test #          18 PASS
+ Test #format : format an integer 0 with given format
+  -> Test #          19 PASS
+ Test #format : format an integer 0 with given format
+  -> Test #          20 PASS
+ Test #format : format an integer 0 with given format
+  -> Test #          21 PASS
+  Number of strings :           0
+  -> Test #          22 PASS
+  Number of strings :           0
+  -> Test #          23 PASS
+ Test suite completed
+ **********************
+ End of tests.
+  Total number of tests :           23
+  Total number of success tests :           23
+  Total number of failing tests :            0

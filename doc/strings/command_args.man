@@ -1,0 +1,135 @@
+[comment {-*- flibs -*- doctools manpage}]
+[manpage_begin command_argst n 1.0]
+[copyright {2016 Arjen Markus <arjenmarkus at sourceforge dot net>}]
+[moddesc flibs]
+[titledesc {Handle command-line arguments}]
+
+[description]
+
+The [term command_args] module can automatically handle the command-line arguments that are passed to the program.
+For example, if you run the test program like:
+[example {
+    test_command_args --real 1.2 -l
+}]
+
+it will set the variables [term real_var] and [term l_var] to respectively [term 1.2] and [term .true.]. It will not
+set the variable [term int_var], but it will set the other two logical variables [term m_var] and [term n_var] to [term .false.],
+because these are turned on by the options [term -m] and [term -n].
+[para]
+The module supports the following types of command options:
+[list_begin bullet]
+[bullet]
+Short options, consisting of a single letter, for instance: [term -i]. These options can be followed
+by a value as the next argument: [term "-i 12"] or the value can be concatenated: [term "-i12"].
+[bullet]
+If the option represents a logical value, then several options may be combined: [term -lmn] would
+be interpreted as [term "-l -m -n"]. This is [emph only] for logical options.
+[bullet]
+Long options, consisting of an entire word, for instance: [term --integer]. These options can be
+followed by a value as the next argument: [term "--integer 12"]. Concatenation is not supported though,
+as it might lead to ambiguities.
+[bullet]
+Options to print usage information. If no explicit option is defined, then [term "-h, -?"] and [term "--help"]
+will be used.
+[bullet]
+Options to stop processing further options. If no explicit option is defined, then [term "--"]
+is used for this purpose.
+[list_end]
+
+For each command argument it is possible to ask whether it was processed by the [term handle_command_options]
+routine, so that special processing that is not covered by this routine, is made easier. To this end it
+is also possible to define options that are explicitly ignored.
+
+[section "ROUTINES"]
+There are three public routines:
+
+[list_begin definitions]
+
+[call [cmd "call handle_command_options( options )"]]
+This subroutine handles the command-line arguments as options defined in the array [term options].
+The entries of this array describe how options should be treated and - in many cases - which variables
+should be set. See the description below
+
+[list_begin arg]
+[arg_def "type(cmd_options), dimension(:)" options]
+Description of the options.
+[list_end]
+
+
+[call [cmd "arg = optarg( var, type, short, long, description )"]]
+This function returns a value of type [term cmd_option], so that an array can be formed
+to be passed to [term handle_command_options]. The argument [term var] is one of the basic types: integer,
+single and double precision real, logical or a character string of any length.
+
+[list_begin arg]
+[arg_def scalar var]
+The variable to be assigned a value from the command-line arguments.
+
+[arg_def integer type]
+The type of command-line argument:
+[list_begin bullet]
+[bullet]
+[term opt_value_next] is used to indicate that the next argument is the associated value
+[bullet]
+[term opt_value_next] is used to indicate that the value is concatenated (for the short version of the
+command-line argument) or that the next argument is the associated value (for the long version).
+[bullet]
+[term opt_true] is used to indicate that the presence of this option means the associated logical variable
+should be set to [term .true.]. If this option is not present, the variable is set to [term .false.].
+[bullet]
+[term opt_false] is used to indicate that the presence of this option means the associated logical variable
+should be set to [term .false.]. If this option is not present, the variable is set to [term .true.].
+[list_end]
+
+[arg_def "character(len=1)" short]
+The one-letter short option. On the command line, such an option starts with "-", but the dash is not given.
+
+[arg_def "character(len=*)" long]
+The long option - on the command line, this should start with "--". Only the word after the two dashes
+should be specified.
+
+[arg_def "character(len=*)" decription]
+A descriptive string which will be printed if the help option is used.
+
+[list_end]
+
+[call [cmd "arg = optarg( type, short, long, description )"]]
+This is a variant to be used if no variable is associated with the option.
+
+[list_begin arg]
+[arg_def integer type]
+The type of command-line argument:
+[list_begin bullet]
+[bullet]
+[term opt_help] is used to indicate that the usage information should be printed.
+[bullet]
+[term opt_stop] is used to indicate that further arguments should not be examined.
+[bullet]
+[term opt_ignore] is used to indicate that this argument should be ignored.
+[bullet]
+[term opt_ignore_next] is used to indicate that this argument and the next should be ignored.
+[list_end]
+
+[arg_def "character(len=1)" short]
+The one-letter short option. On the command line, such an option starts with "-", but the dash is not given.
+
+[arg_def "character(len=*)" long]
+The long option - on the command line, this should start with "--". Only the word after the two dashes
+should be specified.
+
+[arg_def "character(len=*)" decription]
+A descriptive string which will be printed if the help option is used.
+
+[list_end]
+
+[call [cmd "ignored = argument_ignored( indx )"]]
+Use this function to find out if the argument was ignored during processing or not.
+
+[list_begin arg]
+[arg_def integer type]
+The index of the command-line argument:
+[list_end]
+
+[list_end]
+
+[manpage_end]

@@ -1,0 +1,36 @@
+# translations.inp
+#     Example of the input file required by the mktranslation program to generate
+#     the initialisation code for the translations module
+#
+#     Note:
+#     No particular support for accented characters and such yet
+#     Nor for substitution codes
+#
+#     Note:
+#     The translations are not necessarily correct - just serve as illustrations
+#
+#     Note:
+#     The keywords are case-sensitive!
+#
+default: EN
+key: FileNotFound
+EN: The file was not found:
+NL: Het bestand is niet gevonden:
+DE: Die Datei ist nicht gefunden:
+FR: Le fichier n'etait pas trouve:
+
+key: ErrorReadingFile
+EN: Error while reading the file
+NL: Fout bij het lezen van het bestand
+DE: Fehler weil das Datei wurde gelesen
+FR: Erreur pendant que le fichier etait lu
+
+key: AQuotedStringShouldWorkFine
+EN: Error while "doing some task"
+#EN: Error while 'doing some task'
+
+key: BackupMessage
+EN: There is only an English version of this message
+
+key: NoTranslationAtAll
+# Just what it says

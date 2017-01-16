@@ -1,0 +1,34 @@
+# Makefile_linux --
+#     Make file for the Windows version of the test programs
+#
+
+include ../../config/config.mk
+include ../../config/options.mk
+
+PROGRAMS	=	test_raw_password$(EXEEXT) \
+	test_password$(EXEEXT) \
+
+
+all:	$(PROGRAMS)
+
+test_raw_password$(OBJEXT):	test_raw_password.f90 raw_password_windows$(OBJEXT)
+	$(FC) $(FFLAGS) test_raw_password.f90
+
+raw_password_windows$(OBJEXT):	../../src/sysutils/raw_password_windows.f90
+	$(FC) $(FFLAGS) ../../src/sysutils/raw_password_windows.f90
+
+test_raw_password$(EXEEXT):	test_raw_password$(OBJEXT) raw_password_windows$(OBJEXT)
+	$(LD) $(LDFLAGS) $(LDOUTPUT) test_raw_password$(OBJEXT) raw_password_windows$(OBJEXT)
+
+
+test_password$(OBJEXT):	test_password.f90 password$(OBJEXT)
+	$(FC) $(FFLAGS) test_password.f90
+
+password$(OBJEXT):	../../src/sysutils/password.f90 raw_password_windows$(OBJEXT)
+	$(FC) $(FFLAGS) ../../src/sysutils/password.f90
+
+test_password$(EXEEXT):	test_password$(OBJEXT) password$(OBJEXT) raw_password_windows$(OBJEXT)
+	$(LD) $(LDFLAGS) $(LDOUTPUT) test_password$(OBJEXT) password$(OBJEXT) raw_password_windows$(OBJEXT)
+
+clean:
+	del *.o *.obj *.exe *.mod
