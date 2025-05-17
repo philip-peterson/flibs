@@ -1,4 +1,4 @@
-#!/usr/bin/sh
+#!/usr/bin/env sh
 #    Configuration for Flibs: find a suitable compiler and set build options
 #
 if test @$1 = "@-help" -o @$1 = "@-?" ;then
