@@ -32,4 +32,6 @@ endif
 ifeq ($(OPERATING_SYSTEM),Linux)
 F90OPTS += -D_PLATFORM_OS_LINUX
 endif
-
+ifeq ($(OPERATING_SYSTEM),Darwin)
+F90OPTS += -D_PLATFORM_OS_MAC
+endif

@@ -33,7 +33,7 @@ subroutine qsort_array( array, compare )
   interface
      integer function compare(f,g)
        use _QSORTARRAY_MODULE , only : _QSORTARRAY_TYPE
-       type( _QSORTARRAY_TYPE ) :: f, g
+       type( _QSORTARRAY_TYPE ), intent(in) :: f, g
      end function compare
   end interface
   type ( _QSORTARRAY_TYPE ) , dimension(:), allocatable :: backup
@@ -69,7 +69,7 @@ recursive subroutine qsort_sort( array, order, left, right, compare )
   interface
      integer function compare ( f , g )
        use _QSORTARRAY_MODULE, only : _QSORTARRAY_TYPE
-       type(_QSORTARRAY_TYPE) :: f, g
+       type(_QSORTARRAY_TYPE), intent(in) :: f, g
      end function compare
   end interface
   integer                                    :: i

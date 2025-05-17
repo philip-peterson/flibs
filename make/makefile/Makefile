@@ -5,6 +5,7 @@ srcdir = $(PROJECTDIR)/src
 # General configuration
 #
 include Makefile-cfg
+
 #
 # Objects
 #
