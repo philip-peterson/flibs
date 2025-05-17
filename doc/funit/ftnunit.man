@@ -1,6 +1,6 @@
 [comment {-*- flibs -*- doctools manpage}]
-[manpage_begin flibs/ftnunit n 1.2]
-[copyright {2009 Arjen Markus <arjenmarkus@sourceforge.net>}]
+[manpage_begin flibs/ftnunit n 1.1]
+[copyright {2006 Arjen Markus <arjenmarkus@sourceforge.net>}]
 [moddesc flibs]
 [titledesc {Unit testing}]
 
@@ -11,7 +11,7 @@ tests in Java programs. The [emph ftnunit] framework was inspired by
 that facility. It is not as good-looking as JUnit, by no means:
 [list_begin bullet]
 [bullet]
-It has a simple graphical user-interface that does not group the tests.
+It has no graphical user-interface
 
 [bullet]
 As Fortran does not allow introspection, the test routines can not
@@ -78,7 +78,7 @@ the program.
 
 [list_end]
 
-The source file "test_ftnunit.f90" illustrates how to use the [emph ftnunit]
+The source file "test_ftnunit.f90" illustrates how to use the ftnunit
 framework:
 
 [list_begin bullet]
@@ -132,7 +132,7 @@ The assertion is used to check that the result is as expected.
 
 [bullet]
 The program contains some deliberate errors and the resulting
-log file looks like this:
+log file looks like this":
 
 [example {
 Test: Read non-existent file
@@ -176,29 +176,11 @@ A Bourne shell script for use under UNIX/Linux or similar systems, like
 Cygwin or Mingw.
 [call runtests.tcl]
 A Tcl program that presents a simple graphical user-interface
-[call ftnunitgui.tcl]
-A Tcl-based graphical user-interface that allows you to run tests one at a time
 
 [list_end]
-
-
-[section OUTPUT]
-When you run a program in test mode via the batch file/shell script,
-it produces two output files:
-
-[list_begin bullet]
-
-[bullet]
-[emph "runtests.log"] contains all the output that was written to the screen.
-[bullet]
-[emph "ftnunit.html"] is an HTML file with a summary of the tests and a colour
-encoding to indicate the test cases that succeeded or failed.
-
-[list_end]
-
 
 [section ROUTINES]
-The module [emph ftnunit] contains the following subroutines and functions:
+The module ftnunit contains the following subroutines and functions:
 
 [list_begin definitions]
 
@@ -211,37 +193,37 @@ execution may continue.
 If the subroutine testproc returns, the program stops, unless you have
 called the subroutine [emph runtests_init] before [emph runtests].
 
+[call [cmd "call runtests_init"]]
+Routine to initialise the ftnunit system, so that you call [emph runtests]
+more than once. To complete the tests, call [emph runtests_final], as
+this will print the final statistics and stop the program.
+
+[call [cmd "call runtests_final"]]
+Routine to finalise the ftnunit system: it will print the final statistics
+and stop the program, but only if the file "ftnunit.run" is present.
+
 [list_begin arg]
 [arg_def "subroutine" testproc]
 Subroutine that calls the individual test routines. It takes no
 arguments. It wil generally exist of a series of calls to the
 routine [emph test] - see below.
 [list_end]
-[nl]
 
-[call [cmd "call runtests_init"]]
-Routine to initialise the ftnunit system, so that you call [emph runtests]
-more than once. To complete the tests, call [emph runtests_final], as
-this will print the final statistics and stop the program.
-[nl]
 
-[call [cmd "call runtests_final( stop )"]]
-Routine to finalise the ftnunit system: it will print the final statistics
-and stop the program, but only if the file "ftnunit.run" is present.
-
-[list_begin arg]
-[arg_def "logical, optional, intent(in)" stop]
-If present and set to true, the routine will not stop the program.
-Instead it returns and the program continues working.
-[list_end]
-[nl]
-
-[call [cmd "call test( proc, text, ignore )"]]
+[call [cmd "call test( proc, text )"]]
 Routine to run the individual unit test routine (emph proc). It decides
 if the test has not run yet and if so, the test routine is called.
 Otherwise it is skipped.
 [nl]
 [emph test] takes care of all administrative details.
+[nl]
+Note: to make it possible to use [emph private] unit test routines,
+the source code of this subroutine is kept in a separate file,
+[emph ftnunit_test.f90] that should be included in an appropriate
+place in the program's sources. This way, you can make it a private
+routine in each module. The only public access to the unit testing
+routines is then via the subroutine [emph testproc] that is passed to
+[emph runtests].
 
 [list_begin arg]
 [arg_def "subroutine" proc]
@@ -251,14 +233,7 @@ arguments. Within each such subroutine the complete unit test is run.
 [arg_def "character(len=*), intent(in)" text]
 Text describing the particular unit test. It is printed in the log
 file.
-
-[arg_def "logical, optional, intent(in)" ignore]
-If present and set to true, the test routine will not be actually run.
-Instead it is shown as "ignored". This feature is useful if the code to
-be tested is not yet ready for testing.
-file.
 [list_end]
-[nl]
 
 
 [call [cmd "call assert_true( cond, text )"]]
@@ -272,7 +247,6 @@ The condition to be checked
 [arg_def "character(len=*), intent(in)" text]
 Text describing the condition
 [list_end]
-[nl]
 
 
 [call [cmd "call assert_false( cond, text )"]]
@@ -286,26 +260,12 @@ The condition to be checked
 [arg_def "character(len=*), intent(in)" text]
 Text describing the condition
 [list_end]
-[nl]
 
 
 [call [cmd "call assert_equal( value1, value2, text )"]]
-Routine to check that two logicals, two strings, or two integers are equal
-or if two one-dimensional integer, logical or string arrays are equal. If not, a message is
-printed, along with the values that were different.
-
-[list_begin arg]
-[arg_def "<type>" value1]
-The first integer/logical/string value
-
-[arg_def "<type>" value2]
-The second integer/logical/string value
-
-[arg_def "character(len=*), intent(in)" text]
-Text describing the condition
-[list_end]
-
-Or:
+Routine to check that two integers are equal or if two one-dimensional
+integer arrays are equal. If not, a message is printed, along with the
+values that were different.
 
 [list_begin arg]
 [arg_def "integer \[, dimension(:)\]" value1]
@@ -317,17 +277,18 @@ The second integer value or array
 [arg_def "character(len=*), intent(in)" text]
 Text describing the condition
 [list_end]
-[nl]
 
 
 [call [cmd "call assert_comparable( value1, value2, margin, text )"]]
 Routine to check that two reals are almost equal or if two one-dimensional
-real arrays (single or double precision) are almost equal. If not, a message
-is printed, along with the values that were different.
+real arrays are almost equal. If not, a message is printed, along with
+the values that were different.
 [nl]
 The margin is taken as a relative tolerance. Two values are
 considered almost equal if:
-[example {    abs( v1 - v2 ) < margin * (abs(v1)+abs(v2)) / 2 }]
+[example {
+    abs( v1 - v2 ) < margin * (abs(v1)+abs(v2)) / 2
+}]
 
 [list_begin arg]
 [arg_def "real \[, dimension(:)\]" value1]
@@ -339,51 +300,6 @@ The second real value or array
 [arg_def "character(len=*), intent(in)" text]
 Text describing the condition
 [list_end]
-[nl]
-
-
-[call [cmd "call assert_inbetween( value, vmin, vmax, text )"]]
-Routine to check that a (single or double precision) real value lies between
-two given bounds. This establishes an absolute range for the values, rather than
-a relative.
-
-[list_begin arg]
-[arg_def "real" value]
-The real value to be tested
-
-[arg_def "real" vmin]
-The minimum value that is allowed
-
-[arg_def "real" vmax]
-The maximum value that is allowed
-[list_end]
-[nl]
-
-
-[call [cmd "call assert_files_comparable( filename1, filename2, margin, text )"]]
-Routine to check that two files are equal or almost equal. The files are scanned
-line by line and item by item. If an item can be interpreted as a number, then
-the comparison is done using a margin, otherwise the corresponding items are
-considered strings and should be exactly equal.
-[nl]
-A report is produced of all differing lines.
-[nl]
-The margin is taken as a relative tolerance. Two numerical values are
-considered almost equal if:
-[example {
-    abs( v1 - v2 ) < margin * (abs(v1)+abs(v2)) / 2 }]
-
-[list_begin arg]
-[arg_def "character(len=*)" filename1]
-The name of the first file to read
-
-[arg_def "character(len=*)" filename2]
-The name of the second file to read
-
-[arg_def "character(len=*), intent(in)" text]
-Text describing the condition
-[list_end]
-[nl]
 
 
 [call [cmd "exists = ftnunit_file_exists( filename )"]]
@@ -393,7 +309,6 @@ Logical function to check that a particular file exists
 [arg_def "character(len=*), intent(in)" filename]
 Name of the file to be checked
 [list_end]
-[nl]
 
 
 [call [cmd "call ftnunit_get_lun( lun )"]]
@@ -403,7 +318,6 @@ Subroutine to get a free LU-number
 [arg_def "integer, intent(out)" lun]
 Next free LU-number
 [list_end]
-[nl]
 
 
 [call [cmd "call ftnunit_remove_file( filename )"]]
@@ -413,7 +327,6 @@ Subroutine to remove (delete) a file
 [arg_def "character(len=*), intent(in)" filename]
 Name of the file to be removed
 [list_end]
-[nl]
 
 
 [call [cmd "call ftnunit_make_empty_file( filename )"]]
@@ -425,63 +338,6 @@ Name of the file to be created
 [list_end]
 
 [list_end]
-
-
-
-
-[section "CUSTOMISATION"]
-The module [emph ftnunit_hooks] can be used to customise the output
-of [emph ftnunit] to a certain extent. It provides four routines
-that you can easily adapt to your needs:
-
-[list_begin definitions]
-[call cmd "call ftnunit_hook_test_start( text )"]]
-Routine to signal the start of a test.
-
-[list_begin arg]
-[arg_def string text]
-The descriptive text passed to the routine [emph test].
-[list_end]
-
-[call cmd "call ftnunit_hook_test_stop( text )"]]
-Routine to signal the end of a test.
-
-[list_begin arg]
-[arg_def string text]
-The descriptive text passed to the routine [emph test].
-[list_end]
-
-[call [cmd "call ftnunit_hook_test_failure( text, assert_text, failure_text )"]]
-Routine to signal that an assertion has failed (and therefore the test).
-
-[list_begin arg]
-[arg_def string text]
-The descriptive text passed to the routine [emph test].
-[arg_def string assert_text]
-Text describing the assertion
-[arg_def string failure_text]
-The text describing the reason of the failure
-[list_end]
-
-[call [cmd "call ftnunit_hook_test_complete"]]
-Routine called after the tests have been run (for instance to start and
-Internet browser to view the HTML report).
-
-[list_end]
-
-Note that the default implementation consists of empty routine.
-
-[para]
-As an example of customisation, under Windows, you could start the
-default Internet browser showing the HTML file like this:
-
-    subroutine ftnunit_hook_test_complete
-
-        call system( "ftnunit.html" )
-
-    end subroutine ftnunit_hook_test_complete
-
-provided an association for files with extension "html" exists.
 
 
 [section "GENERATING TESTS FROM A TABLE"]

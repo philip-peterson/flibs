@@ -140,10 +140,10 @@ function _INTEGER_COMPUTE_CHARNB ( value ) result ( nbchar )
      valueanalyzed = value
   end if
   do
-     if ( valueanalyzed < int(10,_INTEGER_KIND) ) then
+     if ( valueanalyzed < 10 ) then
         exit
      endif
-     valueanalyzed = valueanalyzed / int(10,_INTEGER_KIND)
+     valueanalyzed = valueanalyzed / 10
      nbchar = nbchar + 1
   end do
 end function _INTEGER_COMPUTE_CHARNB

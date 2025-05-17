@@ -1,170 +1,140 @@
-
+<! -- -*- flibs -*- doctools manpage
+   -->
 <html><head>
-<title>flibs/tools - flibs</title>
-<style type="text/css"><!--
-    HTML {
-	background: 	#FFFFFF;
-	color: 		black;
-    }
-    BODY {
-	background: 	#FFFFFF;
-	color:	 	black;
-    }
-    DIV.doctools {
-	margin-left:	10%;
-	margin-right:	10%;
-    }
-    DIV.doctools H1,DIV.doctools H2 {
-	margin-left:	-5%;
-    }
-    H1, H2, H3, H4 {
-	margin-top: 	1em;
-	font-family:	sans-serif;
-	font-size:	large;
-	color:		#005A9C;
-	background: 	transparent;
-	text-align:		left;
-    }
-    H1.title {
-	text-align: center;
-    }
-    UL,OL {
-	margin-right: 0em;
-	margin-top: 3pt;
-	margin-bottom: 3pt;
-    }
-    UL LI {
-	list-style: disc;
-    }
-    OL LI {
-	list-style: decimal;
-    }
-    DT {
-	padding-top: 	1ex;
-    }
-    UL.toc,UL.toc UL, UL.toc UL UL {
-	font:		normal 12pt/14pt sans-serif;
-	list-style:	none;
-    }
-    LI.section, LI.subsection {
-	list-style: 	none;
-	margin-left: 	0em;
-	text-indent:	0em;
-	padding: 	0em;
-    }
-    PRE {
-	display: 	block;
-	font-family:	monospace;
-	white-space:	pre;
-	margin:		0%;
-	padding-top:	0.5ex;
-	padding-bottom:	0.5ex;
-	padding-left:	1ex;
-	padding-right:	1ex;
-	width:		100%;
-    }
-    PRE.example {
-	color: 		black;
-	background: 	#f5dcb3;
-	border:		1px solid black;
-    }
-    UL.requirements LI, UL.syntax LI {
-	list-style: 	none;
-	margin-left: 	0em;
-	text-indent:	0em;
-	padding:	0em;
-    }
-    DIV.synopsis {
-	color: 		black;
-	background: 	#80ffff;
-	border:		1px solid black;
-	font-family:	serif;
-	margin-top: 	1em;
-	margin-bottom: 	1em;
-    }
-    UL.syntax {
-	margin-top: 	1em;
-	border-top:	1px solid black;
-    }
-    UL.requirements {
-	margin-bottom: 	1em;
-	border-bottom:	1px solid black;
-    }
---></style>
+<title>flibs/tools - flibs </title>
 </head>
-<! -- Generated from file 'tools/editcode.man' by tcllib/doctools with format 'html'
+<! -- Generated from file 'editcode.man' by tcllib/doctools with format 'html'
    -->
 <! -- Copyright &copy; 2008 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;
    -->
-<! -- CVS: $Id: editcode.html,v 1.2 2013/05/13 08:03:20 knystrom Exp $ flibs/tools.n
+<! -- CVS: $Id: editcode.html,v 1.1 2008/10/02 10:17:20 arjenmarkus Exp $ flibs/tools.n
    -->
-<body><div class="doctools">
-<h1 class="title">flibs/tools(n) 1.0  &quot;flibs&quot;</h1>
-<div id="name" class="section"><h2><a name="name">Name</a></h2>
-<p>flibs/tools - Modify program code</p>
-</div>
-<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
-<ul class="toc">
-<li class="section"><a href="#toc">Table Of Contents</a></li>
-<li class="section"><a href="#section1">Description</a></li>
-<li class="section"><a href="#section2">EXAMPLES</a></li>
-<li class="section"><a href="#copyright">Copyright</a></li>
-</ul>
-</div>
-<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
-<p>The <i class="term">editcode</i> program is a specialised preprocessor for Fortran code:
+
+<body>
+<h1> flibs/tools(n) 1.0  &quot;flibs&quot;</h1>
+<h2><a name="name">NAME</a></h2>
+<p>
+<p> flibs/tools - Modify program code
+
+
+
+
+<h2><a name="table_of_contents">TABLE OF CONTENTS</a></h2>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#table_of_contents">TABLE OF CONTENTS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#description">DESCRIPTION</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#examples">EXAMPLES</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#copyright">COPYRIGHT</a><br>
+<h2><a name="description">DESCRIPTION</a></h2>
+<p>
+The <em>editcode</em> program is a specialised preprocessor for Fortran code:
 its purpose is to transform
-the code according to certain simple rules:</p>
-<ul class="itemized">
-<li><p>Add an &quot;IMPLICIT NONE&quot; statement at the beginning of a module or
-routine.</p></li>
-<li><p>Replace one type by another (for instance: real ==&gt; real(dp)).</p></li>
-<li><p>Instrument the code (add extra statements).</p></li>
-<li><p>Enable preconditions/postconditions/assertions.</p></li>
+the code according to certain simple rules:
+
+<ul>
+<li>
+Add an &quot;IMPLICIT NONE&quot; statement at the beginning of a module or
+routine.
+
+<br><br>
+<li>
+Replace one type by another (for instance: real ==&gt; real(dp)).
+
+<br><br>
+<li>
+Instrument the code (add extra statements).
+
+<br><br>
+<li>
+Enable preconditions/postconditions/assertions.
+
 </ul>
-<p>It reads an input file called &quot;editcode.inp&quot; which should contain
+
+It reads an input file called &quot;editcode.inp&quot; which should contain
 keywords and possibly parameters, steering the transformation of
-the code.</p>
-<p>Here is a list of the keywords and their parameters:</p>
-<ul class="itemized">
-<li><p><i class="term">INPUT-DIRECTORY dirname</i> - Directory to expect the input source files</p></li>
-<li><p><i class="term">OUTPUT-DIRECTORY dirname</i> - Directory to put the output source files in</p></li>
-<li><p><i class="term">FILE filename</i> - Name of the source file to process</p></li>
-<li><p><i class="term">ADD-CODE-START code</i> - Line of code to add at the start of a routine.</p></li>
-<li><p>If more than one line is required, then just use several such keywords
-<i class="term">ADD-CODE-END code</i> - Ditto at the end of a routine (this includes: RETURN, STOP and END)</p></li>
-<li><p><i class="term">ADD-CODE-STATEMENT code</i> - Line of code to add _after_ each statement</p></li>
-<li><p><i class="term">ADD-USE code</i> - Add a USE statement</p></li>
-<li><p><i class="term">REPLACE-TYPE old new</i> - Replace variable type &quot;old&quot; by variable type &quot;new&quot;</p></li>
-<li><p><i class="term">REPLACE-STRING old new</i> - Replace any string &quot;old&quot; by string &quot;new&quot;</p></li>
-<li><p><i class="term">ENABLE-IMPLICIT-NONE yes/no</i> - Add an IMPLICIT NONE statement if none is present</p></li>
-<li><p><i class="term">ENABLE-PRECONDITIONS yes/no</i> - Enable preconditions</p></li>
-<li><p><i class="term">ENABLE-POSTCONDITIONS yes/no</i> - Ditto for postconditions</p></li>
-<li><p><i class="term">ENABLE-ASSERTIONS yes/no</i> - Ditto for assertions</p></li>
-<li><p><i class="term">CLEAR-ALL-SETTINGS</i> - Re-initialise the preprocessing information (everything is set to the default again)</p></li>
-<li><p><i class="term">INCLUDE filename</i> - Read keywords from the given file before processing the rest
-of this input file (multiple levels possible)</p></li>
-<li><p><i class="term">__FILE__</i> - Macro replaced by the name of the current source file</p></li>
-<li><p><i class="term">__LINE__</i> - Macro replaced by the current line number</p></li>
-<li><p><i class="term">__ROUTINE__</i> - Macro replaced by the current routine name</p></li>
-<li><p><i class="term">__MODULE__</i> - Macro replaced by the current module name</p></li>
+the code.
+
+<p>
+Here is a list of the keywords and their parameters:
+<ul>
+<li>
+<em>INPUT-DIRECTORY dirname</em> - Directory to expect the input source files
+<br><br>
+<li>
+<em>OUTPUT-DIRECTORY dirname</em> - Directory to put the output source files in
+<br><br>
+<li>
+<em>FILE filename</em> - Name of the source file to process
+<br><br>
+<li>
+<em>ADD-CODE-START code</em> - Line of code to add at the start of a routine.
+<br><br>
+<li>
+If more than one line is required, then just use several such keywords
+<em>ADD-CODE-END code</em> - Ditto at the end of a routine (this includes: RETURN, STOP and END)
+<br><br>
+<li>
+<em>ADD-CODE-STATEMENT code</em> - Line of code to add _after_ each statement
+<br><br>
+<li>
+<em>ADD-USE code</em> - Add a USE statement
+<br><br>
+<li>
+<em>REPLACE-TYPE old new</em> - Replace variable type &quot;old&quot; by variable type &quot;new&quot;
+<br><br>
+<li>
+<em>REPLACE-STRING old new</em> - Replace any string &quot;old&quot; by string &quot;new&quot;
+<br><br>
+<li>
+<em>ENABLE-IMPLICIT-NONE yes/no</em> - Add an IMPLICIT NONE statement if none is present
+<br><br>
+<li>
+<em>ENABLE-PRECONDITIONS yes/no</em> - Enable preconditions
+<br><br>
+<li>
+<em>ENABLE-POSTCONDITIONS yes/no</em> - Ditto for postconditions
+<br><br>
+<li>
+<em>ENABLE-ASSERTIONS yes/no</em> - Ditto for assertions
+<br><br>
+<li>
+<em>CLEAR-ALL-SETTINGS</em> - Re-initialise the preprocessing information (everything is set to the default again)
+<br><br>
+<li>
+<em>INCLUDE filename</em> - Read keywords from the given file before processing the rest
+of this input file (multiple levels possible)
+<br><br>
+<li>
+<em>__FILE__</em> - Macro replaced by the name of the current source file
+<br><br>
+<li>
+<em>__LINE__</em> - Macro replaced by the current line number
+<br><br>
+<li>
+<em>__ROUTINE__</em> - Macro replaced by the current routine name
+<br><br>
+<li>
+<em>__MODULE__</em> - Macro replaced by the current module name
+
 </ul>
-<p>Preconditions, postconditions and assertions are implemented as
-special comments:</p>
-<pre class="example">
+
+Preconditions, postconditions and assertions are implemented as
+special comments:
+<p><table><tr><td bgcolor=black>&nbsp;</td><td><pre class='sample'>
     ! pre: x &gt; 0.0
     ! post: x &gt; 0.0
     ! assert: x &gt; 0.0
-</pre>
-<p>If a condition is longer than one line, simply use &amp; like any
-ordinary continuation line:</p>
-<pre class="example">
+</pre></td></tr></table></p>
+
+If a condition is longer than one line, simply use &amp; like any
+ordinary continuation line:
+<p><table><tr><td bgcolor=black>&nbsp;</td><td><pre class='sample'>
     ! assert: x &gt; 0.0 .and. &amp;
     !         y &lt; 0.0
-</pre>
-<p>If the condition type is enabled, the condition is transformed
-into code like this:</p>
-<pre class="example">
+</pre></td></tr></table></p>
+
+If the condition type is enabled, the condition is transformed
+into code like this:
+<p><table><tr><td bgcolor=black>&nbsp;</td><td><pre class='sample'>
 if ( .not. ( &amp;
     x &gt; 0.0 .and. &amp;
     y &gt; 0.0 &amp;
@@ -172,41 +142,58 @@ if ( .not. ( &amp;
     write(*,*) 'Assertion failed at line 10 in file myprog.f90:'
     write(*,*) 'x &gt; 0.0 .and. &amp;'
     write(*,*) 'y &gt; 0.0'
-endif</pre>
-<p>The program also handles a simple form of exceptions via
-try/catch statements:</p>
-<pre class="example">
+endif</pre></td></tr></table></p>
+
+The program also handles a simple form of exceptions via
+try/catch statements:
+<p><table><tr><td bgcolor=black>&nbsp;</td><td><pre class='sample'>
     try
         ... code to handle the ordinary case ...
     catch
         ... code to handle an exception ...
     endtry
-</pre>
-<p>(Within a catch section you can use the routines of the
-<i class="term">exception_handling</i> module)</p>
-<p><em>Note:</em></p>
-<ul class="itemized">
-<li><p>Each argument must be surrounded by &quot; or ' if it contains spaces.
-(The lines are read via list-directed input)</p></li>
-<li><p>The INCLUDE statement is treated in the main program, all the
-others are treated by the preprocessor module.</p></li>
-<li><p>Comment lines begin with !</p></li>
-<li><p>The default settings are such that _nothing_ is done.</p></li>
+</pre></td></tr></table></p>
+(Within a catch section you can use the routines of the
+<em>exception_handling</em> module)
+<p>
+<em>Note:</em>
+<ul>
+<li>
+Each argument must be surrounded by &quot; or ' if it contains spaces.
+(The lines are read via list-directed input)
+<br><br>
+<li>
+The INCLUDE statement is treated in the main program, all the
+others are treated by the preprocessor module.
+<br><br>
+<li>
+Comment lines begin with !
+<br><br>
+<li>
+The default settings are such that _nothing_ is done.
 </ul>
-<p>To make this preprocessing facility flexible, it consists of a
-main program and a module that does the actual work:</p>
-<ul class="itemized">
-<li><p>preprocess_init sets or resets the preprocessor data</p></li>
-<li><p>preprocess_input takes a line of code and handles the
-information it contains</p></li>
-<li><p>preprocess_file processes the given input file</p></li>
+
+To make this preprocessing facility flexible, it consists of a
+main program and a module that does the actual work:
+<ul>
+<li>
+preprocess_init sets or resets the preprocessor data
+<br><br>
+<li>
+preprocess_input takes a line of code and handles the
+information it contains
+<br><br>
+<li>
+preprocess_file processes the given input file
 </ul>
-</div>
-<div id="section2" class="section"><h2><a name="section2">EXAMPLES</a></h2>
-<p>The <i class="term">tests/tools</i> directory contains several examples and a
-detailed explanation, but here is the input file <i class="term">editcode.inp</i>
-for these examples:</p>
-<pre class="example">
+
+<h2><a name="examples">EXAMPLES</a></h2>
+<p>
+The <em>tests/tools</em> directory contains several examples and a
+detailed explanation, but here is the input file <em>editcode.inp</em>
+for these examples:
+
+<p><table><tr><td bgcolor=black>&nbsp;</td><td><pre class='sample'>
 INPUT-DIRECTORY   in
 OUTPUT-DIRECTORY  out
 ADD-CODE-START    &quot;write(*,*) 'In __ROUTINE__ (__MODULE__)'&quot;
@@ -219,12 +206,16 @@ ENABLE-IMPLICIT-NONE  yes
 !
 ! Does this cause an error?
 ENABLE-PRECONDITIONS
+
 ENABLE-PRECONDITIONS yes
+
 FILE              example.f90
+
 !
 ! Now the check_init/check_reals example
 !
 CLEAR-ALL-SETTINGS
+
 INPUT-DIRECTORY   in
 OUTPUT-DIRECTORY  out
 REPLACE-TYPE real type(checked_real)
@@ -234,12 +225,13 @@ ADD-CODE-STATEMENT &quot;call check_assignment( __LINE__, '__FILE__' )&quot;
 ! List of files to treat
 !
 FILE &quot;check_init.f90&quot;
-</pre>
-<p>While mainly meant to test the correct working of the program, it does
+</pre></td></tr></table></p>
+
+While mainly meant to test the correct working of the program, it does
 in fact illustrate its capabilities. The README file contains more
-information.</p>
-</div>
-<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
-<p>Copyright &copy; 2008 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;</p>
-</div>
-</div></body></html>
+information.
+<h2><a name="copyright">COPYRIGHT</a></h2>
+<p>
+Copyright &copy; 2008 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;<br>
+</body></html>
+

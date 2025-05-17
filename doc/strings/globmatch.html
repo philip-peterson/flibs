@@ -1,194 +1,147 @@
 
 <html><head>
-<title>flibs/strings - flibs</title>
-<style type="text/css"><!--
-    HTML {
-	background: 	#FFFFFF;
-	color: 		black;
-    }
-    BODY {
-	background: 	#FFFFFF;
-	color:	 	black;
-    }
-    DIV.doctools {
-	margin-left:	10%;
-	margin-right:	10%;
-    }
-    DIV.doctools H1,DIV.doctools H2 {
-	margin-left:	-5%;
-    }
-    H1, H2, H3, H4 {
-	margin-top: 	1em;
-	font-family:	sans-serif;
-	font-size:	large;
-	color:		#005A9C;
-	background: 	transparent;
-	text-align:		left;
-    }
-    H1.title {
-	text-align: center;
-    }
-    UL,OL {
-	margin-right: 0em;
-	margin-top: 3pt;
-	margin-bottom: 3pt;
-    }
-    UL LI {
-	list-style: disc;
-    }
-    OL LI {
-	list-style: decimal;
-    }
-    DT {
-	padding-top: 	1ex;
-    }
-    UL.toc,UL.toc UL, UL.toc UL UL {
-	font:		normal 12pt/14pt sans-serif;
-	list-style:	none;
-    }
-    LI.section, LI.subsection {
-	list-style: 	none;
-	margin-left: 	0em;
-	text-indent:	0em;
-	padding: 	0em;
-    }
-    PRE {
-	display: 	block;
-	font-family:	monospace;
-	white-space:	pre;
-	margin:		0%;
-	padding-top:	0.5ex;
-	padding-bottom:	0.5ex;
-	padding-left:	1ex;
-	padding-right:	1ex;
-	width:		100%;
-    }
-    PRE.example {
-	color: 		black;
-	background: 	#f5dcb3;
-	border:		1px solid black;
-    }
-    UL.requirements LI, UL.syntax LI {
-	list-style: 	none;
-	margin-left: 	0em;
-	text-indent:	0em;
-	padding:	0em;
-    }
-    DIV.synopsis {
-	color: 		black;
-	background: 	#80ffff;
-	border:		1px solid black;
-	font-family:	serif;
-	margin-top: 	1em;
-	margin-bottom: 	1em;
-    }
-    UL.syntax {
-	margin-top: 	1em;
-	border-top:	1px solid black;
-    }
-    UL.requirements {
-	margin-bottom: 	1em;
-	border-bottom:	1px solid black;
-    }
---></style>
+<title>flibs/strings - flibs </title>
 </head>
-<! -- Generated from file 'strings/globmatch.man' by tcllib/doctools with format 'html'
+<! -- Generated from file 'globmatch.man' by tcllib/doctools with format 'html'
    -->
 <! -- Copyright &copy; 2006 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;
    -->
-<! -- CVS: $Id: globmatch.html,v 1.2 2013/05/13 08:03:20 knystrom Exp $ flibs/strings.n
+<! -- CVS: $Id: globmatch.html,v 1.1 2008/06/13 10:22:49 relaxmike Exp $ flibs/strings.n
    -->
-<body><div class="doctools">
-<h1 class="title">flibs/strings(n) 1.1  &quot;flibs&quot;</h1>
-<div id="name" class="section"><h2><a name="name">Name</a></h2>
-<p>flibs/strings - Glob matching</p>
-</div>
-<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
-<ul class="toc">
-<li class="section"><a href="#toc">Table Of Contents</a></li>
-<li class="section"><a href="#synopsis">Synopsis</a></li>
-<li class="section"><a href="#section1">Description</a></li>
-<li class="section"><a href="#section2">ROUTINES</a></li>
-<li class="section"><a href="#section3">BUGS</a></li>
-<li class="section"><a href="#copyright">Copyright</a></li>
-</ul>
-</div>
-<div id="synopsis" class="section"><h2><a name="synopsis">Synopsis</a></h2>
-<div class="synopsis">
-<ul class="syntax">
-<li><a href="#1"><b class="cmd">use glob_matching</b></a></li>
-<li><a href="#2"><b class="cmd">matches = string_match( string, pattern)</b></a></li>
-</ul>
-</div>
-</div>
-<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
-<p>The <em>glob_matching</em> module provides a string matching method
+
+<body>
+<h1> flibs/strings(n) 1.1  &quot;flibs&quot;</h1>
+<h2><a name="name">NAME</a></h2>
+<p>
+<p> flibs/strings - Glob matching
+
+
+
+
+<h2><a name="table_of_contents">TABLE OF CONTENTS</a></h2>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#table_of_contents">TABLE OF CONTENTS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#synopsis">SYNOPSIS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#description">DESCRIPTION</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#routines">ROUTINES</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#bugs">BUGS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#copyright">COPYRIGHT</a><br>
+<h2><a name="synopsis">SYNOPSIS</a></h2>
+<p>
+<table border=1 width=100% cellspacing=0 cellpadding=0><tr            bgcolor=lightyellow><td bgcolor=lightyellow><table 0 width=100% cellspacing=0 cellpadding=0><tr valign=top ><td ><a href="#1"><b class='cmd'>use glob_matching</b> </a></td></tr>
+<tr valign=top ><td ><a href="#2"><b class='cmd'>matches = string_match( string, pattern)</b> </a></td></tr>
+</table></td></tr></table>
+<h2><a name="description">DESCRIPTION</a></h2>
+<p>
+
+The <em>glob_matching</em> module provides a string matching method
 known as <em>glob matching</em>: it is used for instance under UNIX,
 Linux and DOS to select files whose names match a certain pattern -
-strings like &quot;*.f90&quot; describe all file swhose names end in &quot;.f90&quot;.</p>
-<p>The method implemented in the module is somewhat simplified than the
+strings like &quot;*.f90&quot; describe all file swhose names end in &quot;.f90&quot;.
+<p>
+
+The method implemented in the module is somewhat simplified than the
 full glob matching possible under UNIX: it does not support character
-classes.</p>
-<p>Glob patterns are intended to match the entire string. In this
+classes.
+<p>
+
+Glob patterns are intended to match the entire string. In this
 implementation, however, trailing blanks in both the string and the
-pattern are ignored, so that it is a bit easier to use in Fortran.</p>
-<p>The module supports both &quot;*&quot; and &quot;?&quot; as wild cards, where &quot;*&quot; means any
+pattern are ignored, so that it is a bit easier to use in Fortran.
+<p>
+
+The module supports both &quot;*&quot; and &quot;?&quot; as wild cards, where &quot;*&quot; means any
 sequence of characters, including zero and &quot;?&quot; means a single character.
 If you need to match the <em>characters</em> &quot;*&quot; or &quot;?&quot;, then precede
 them with a backslash (&quot;\&quot;). If you need to match a backslash, you will
-need to use two:</p>
-<pre class="example">
+need to use two:
+
+<p><table><tr><td bgcolor=black>&nbsp;</td><td><pre class='sample'>
     match = string_match( &quot;c:\somedir&quot; &quot;c:\\*&quot; )
-</pre>
-<p>will return <em>.true.</em>, while:</p>
-<pre class="example">
+</pre></td></tr></table></p>
+
+will return <em>.true.</em>, while:
+
+<p><table><tr><td bgcolor=black>&nbsp;</td><td><pre class='sample'>
     match = string_match( &quot;c:\somedir&quot; &quot;c:\*&quot; )
-</pre>
-<p>will not match, as the backslash &quot;escapes&quot; the asterisk, which then
-becomes an ordinary character.</p>
-</div>
-<div id="section2" class="section"><h2><a name="section2">ROUTINES</a></h2>
-<p>The module contains a single function:</p>
-<dl class="definitions">
-<dt><a name="1"><b class="cmd">use glob_matching</b></a></dt>
-<dd><p>To import the glob matching function, use this module.</p></dd>
-<dt><a name="2"><b class="cmd">matches = string_match( string, pattern)</b></a></dt>
-<dd><p>Check whether the (entire) string matches the given &quot;glob&quot; pattern.
+</pre></td></tr></table></p>
+
+will not match, as the backslash &quot;escapes&quot; the asterisk, which then
+becomes an ordinary character.
+
+
+<h2><a name="routines">ROUTINES</a></h2>
+<p>
+The module contains a single function:
+
+<dl>
+
+<dt><a name="1"><b class='cmd'>use glob_matching</b> </a><dd>
+
+To import the glob matching function, use this module.
+
+<br><br>
+<dt><a name="2"><b class='cmd'>matches = string_match( string, pattern)</b> </a><dd>
+
+Check whether the (entire) string matches the given &quot;glob&quot; pattern.
 Trailing blanks in both the string and the pattern are ignored.
 The function returns .true. if the string matches the pattern, .false.
-otherwise.</p>
-<dl class="arguments">
-<dt>character(len=*) <i class="arg">string</i></dt>
-<dd><p>The string to be examined</p></dd>
-<dt>character(len=*) <i class="arg">pattern</i></dt>
-<dd><p>The string containing the pattern</p></dd>
-</dl></dd>
+otherwise.
+
+<br><br>
+<dl>
+
+<dt>character(len=*) <i class='arg'>string</i><dd>
+The string to be examined
+
+<br><br>
+<dt>character(len=*) <i class='arg'>pattern</i><dd>
+The string containing the pattern
+
 </dl>
-</div>
-<div id="section3" class="section"><h2><a name="section3">BUGS</a></h2>
-<p>The matching algorithm is not flawless:</p>
-<ul class="itemized">
-<li><p>Patterns like &quot;e* *&quot; may fail, because trailing blanks are removed. The
+
+
+</dl>
+
+<h2><a name="bugs">BUGS</a></h2>
+<p>
+The matching algorithm is not flawless:
+
+<ul>
+
+<li>
+Patterns like &quot;e* *&quot; may fail, because trailing blanks are removed. The
 string &quot;e &quot; ought to match this pattern, but because only the substring
 &quot;e&quot; will be considered, the trailing blank that is necessary for
-matching between the two asterisks is removed from the matching process.</p>
-<p>The test program contains a case that should fail on this, but it does
-not, oddly enough.</p></li>
-<li><p>Patterns like &quot;b*ba&quot; fail on a string like &quot;babababa&quot; because the
+matching between the two asterisks is removed from the matching process.
+<br><br>
+The test program contains a case that should fail on this, but it does
+not, oddly enough.
+
+<br><br>
+<li>
+Patterns like &quot;b*ba&quot; fail on a string like &quot;babababa&quot; because the
 algorithm finds an early match (the substring at 3:4) for the last
 literal substring &quot;ba&quot; in the pattern. It should instead skip
-over that substring and search for the substring 7:8.</p>
-<p>There are two ways to deal with this:</p>
-<ul class="itemized">
-<li><p>Insert an extra character at the end, which does not occur anywhere in
-the pattern.</p></li>
-<li><p>If the match fails, continue at a point after the position of the
-literal substring where matching failed.</p></li>
+over that substring and search for the substring 7:8.
+<br><br>
+
+There are two ways to deal with this:
+<br><br>
+<ul>
+<li>
+Insert an extra character at the end, which does not occur anywhere in
+the pattern.
+<br><br>
+<li>
+If the match fails, continue at a point after the position of the
+literal substring where matching failed.
 </ul>
-<p>The second is probably the way to go, but it may be a bit slower.</p></li>
+<br><br>
+The second is probably the way to go, but it may be a bit slower.
+
 </ul>
-</div>
-<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
-<p>Copyright &copy; 2006 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;</p>
-</div>
-</div></body></html>
+
+<h2><a name="copyright">COPYRIGHT</a></h2>
+<p>
+Copyright &copy; 2006 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;<br>
+</body></html>

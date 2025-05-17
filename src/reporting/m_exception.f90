@@ -147,7 +147,7 @@
 !
 ! Copyright (c) 2008 Michael Baudin
 !
-! $Id: m_exception.f90,v 1.5 2013/05/13 08:03:21 knystrom Exp $
+! $Id: m_exception.f90,v 1.4 2008/06/18 10:35:22 relaxmike Exp $
 !
 module m_exception
   implicit none
@@ -385,14 +385,17 @@ contains
   !
   ! exception_setlogunit --
   !   Set the unit number onto which the messages are output.
-  !   If the unitnumber is 0, the messages are written
+  !   If the unitnumber is negative or 0, the messages are written
   !   to the standard output (unit *).
   ! Arguments :
   !   unitnumber : the unit number
+  ! Note :
+  !   A unitnumber equals to 6 is generally the standard output, 
+  !   but this may depend on the fortran compiler.
   !
   subroutine exception_setlogunit ( unitnumber )
     integer, intent(in) :: unitnumber
-    if ( unitnumber == 0 ) then
+    if ( unitnumber <= 0 ) then
        exception_log_unit_active = .false.
        exception_log_unit = unitnumber
     else

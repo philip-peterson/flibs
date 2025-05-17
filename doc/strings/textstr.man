@@ -1,23 +1,23 @@
 [comment {-*- flibs -*- doctools manpage}]
-[manpage_begin flibs/strings n 1.1]
-[copyright {2013 Arjen Markus <arjenmarkus@sourceforge.net>}]
+[manpage_begin flibs/strings n 1.0]
+[copyright {2005 Arjen Markus <arjenmarkus@sourceforge.net>}]
 [moddesc flibs]
 [titledesc {Manipulate and store strings}]
 
 [description]
 
-The file [emph textstr.f90] contains three fairly small modules,
+The file [strong textstr.f90] contains three fairly small modules,
 designed for simple text manipulation and storage:
 
 [list_begin bullet]
 [bullet]
-[emph edit_text] for simple editing of text strings.
+[strong edit_text] for simple editing of text strings.
 
 [bullet]
-[emph singleline_text] for storing a string of arbitrary length.
+[strong singleline_text] for storing a string of arbitrary length.
 
 [bullet]
-[emph multiline_text] for storing a set of strings of arbitrary
+[strong multiline_text] for storing a set of strings of arbitrary
 length, for instance a text file.
 
 [list_end]
@@ -29,7 +29,7 @@ hence the module.
 
 
 [section "DATA TYPES"]
-The modules [emph singleline_text] and [emph multiline_text]
+The modules [strong singleline_text] and [strong multiline_text]
 each a suitable derived type:
 
 [list_begin definitions]
@@ -43,7 +43,7 @@ Type to hold a set of strings of arbitrary length.
 [list_end]
 
 [section ROUTINES]
-The module [emph edit_text] contains the following routines:
+The module [strong edit_text] contains the following routines:
 
 [list_begin definitions]
 
@@ -90,7 +90,7 @@ Subtring to be inserted
 [list_end]
 
 
-The module [emph singleline_text] contains the following routines:
+The module [strong singleline_text] contains the following routines:
 
 [list_begin definitions]
 
@@ -99,7 +99,7 @@ To import the subroutines, use this module.
 
 
 [call [cmd "length = txt_length( text )"]]
-Return the length of the text. As this is a [emph pure] function, you
+Return the length of the text. As this is a [strong pure] function, you
 cna use it to define temporary strings of the correct length.
 
 [list_begin arg]
@@ -194,6 +194,8 @@ Indicates whether end-of-file was reached or not
 
 [call [cmd "call txt_write_to_file( lun, text )"]]
 Write a text string to a file (as one complete line).
+If the LU-number is smaller/equal 0, it is written to
+the screen.
 
 [list_begin arg]
 
@@ -246,7 +248,7 @@ Subtring to be inserted
 [list_end]
 
 
-The module [emph multiline_text] contains the following routines:
+The module [strong multiline_text] contains the following routines:
 
 [list_begin definitions]
 
@@ -306,26 +308,23 @@ Position after which to insert the new line (use 0
 to make it the first line)
 
 [arg_def "(...), intent(in)" line]
-Ordinary string, text_string or multine_text variable holding the text that will be
+Ordinary string or text_string variable holding the text that will be
 inserted.
 
 [list_end]
 [nl]
 
 
-[call [cmd "call mltxt_delete( text, first, last )"]]
-Delete the line at the given positions.
+[call [cmd "call mltxt_delete( text, pos )"]]
+Delete the line at the given position.
 
 [list_begin arg]
 
 [arg_def "type(MULTILINE_TEXT), intent(inout)" text]
 Multiline text to be modified
 
-[arg_def "integer, intent(in)" first]
-Position of the first line to be removed.
-
-[arg_def "integer, intent(in)" last]
-Position of the last line to be removed (optional, defaults to the first line).
+[arg_def "integer, intent(in)" pos]
+Position of the line to be removed.
 
 [list_end]
 [nl]
@@ -345,120 +344,11 @@ Multiline text to be examined
 Position of the line to be returned
 
 [arg_def "type(TEXT_STRING), pointer" line]
-Variable that will [emph point] to the line of text
+Variable that will [strong point] to the line of text
 
 [list_end]
 
 
-[call [cmd "call mltxt_read_file( filename, text, error )"]]
-Read an entire file into a multiline text variable.
-
-[list_begin arg]
-
-[arg_def "characer(len=*), intent(in)" lun]
-The name of the file to be read
-
-[arg_def "type(TEXT_STRING), intent(out)" text]
-Text string to be created/filled
-
-[arg_def "logical, intent(out)" error]
-Indicates whether an error occurred or not
-
 [list_end]
-
-
-[call [cmd "call mltxt_write_file( text, filename, error )"]]
-Write a multiline text variable to a file.
-
-[list_begin arg]
-
-[arg_def "type(TEXT_STRING), intent(out)" text]
-Text string to be created/filled
-
-[arg_def "characer(len=*), intent(in)" lun]
-The name of the file to be written
-
-[arg_def "logical, intent(out)" error]
-Indicates whether an error occurred or not
-
-[list_end]
-
-[list_end]
-
-The file [emph textstr_func.f90] contains a single module, multiple_line_text_functions,
-designed for filtering multiline text:
-
-[list_begin definitions]
-
-[call [cmd "use multiline_text_functions"]]
-To import the subroutines, use this module.
-
-
-[call [cmd "call mltxt_iterate( text, filter, first, last )"]]
-Manipulate the contents of a multiline text variable via a user-defined subroutine or object (filter).
-Each line within the range is visited once. Lines that get inserted along the way are not examined.
-
-[list_begin arg]
-
-[arg_def "type(MULTILINE_TEXT), intent(in)" text]
-Multiline text to be examined and possibly changed
-
-[arg_def "subroutine/object filter" filter]
-Subroutine or object that defines the filter - see below
-
-[arg_def "integer, intent(in) first" first]
-The first line to be examined (defaults to 1)
-
-[arg_def "integer, intent(in) first" last]
-The last line to be examined (defaults to the last line in the variable [term text])
-
-[list_end]
-[nl]
-
-The subroutine [term filter] has the following interface:
-
-[example {
-    subroutine filter( pos, string, action, text_str, mltxt_str )
-        integer, intent(in)          :: pos
-        character(len=*), intent(in) :: string
-        integer                      :: action
-        type(text_string)            :: text_str
-        type(multiline_text)         :: mltxt_str
-    end subroutine filter
-}]
-where:
-
-[list_begin bullet]
-[bullet]
-[term pos] is the current line number
-[bullet]
-[term string] is the entire text of that line
-[bullet]
-[term action] is the action to take:
-
-[list_begin bullet]
-[bullet]
-[term mltxt_insert_after_text]: insert the contents of the [term text_str] variable after the current line.
-[bullet]
-[term mltxt_insert_after_mltxt]: insert the contents of the [term mltxt_str] variable after the current line.
-[bullet]
-[term mltxt_insert_before_text]: insert the contents of the [term text_str] variable before the current line.
-[bullet]
-[term mltxt_insert_before_mltxt]: insert the contents of the [term mltxt_str] variable before the current line.
-[bullet]
-[term mltxt_delete_current]: delete the current line
-[bullet]
-[term mltxt_replace_text]: replace the contents of the current line by that of [term text_str]
-[bullet]
-[term mltxt_replace_mltxt]: replace the contents of the current line by that of [term mltxt_str]
-[bullet]
-[term mltxt_exit]: break off the loop
-[bullet]
-[term mltxt_continue]: continue with the next line (nothing is changed or added)
-[list_end]
-[list_end]
-
-[list_end]
-
 
 [manpage_end]

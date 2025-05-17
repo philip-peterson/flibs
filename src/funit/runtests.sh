@@ -1,9 +1,9 @@
-#!/bin/sh
+#!/usr/bin/sh
 # runtests.sh --
 #    Bourne shell script to control a program that uses funit
 #    Name of the program: first argument
 #
-#    $Id: runtests.sh,v 1.3 2010/02/12 07:32:43 arjenmarkus Exp $
+#    $Id: runtests.sh,v 1.2 2008/01/26 11:15:10 arjenmarkus Exp $
 #
 if test -f runtests.log ; then
     rm runtests.log

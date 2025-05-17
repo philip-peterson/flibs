@@ -266,8 +266,8 @@ if { $cfg >= 0 } {
 }
 
 if { [file readable $cfgfile] } {
-    puts "Using configuration file $cfgfile"
-    source $cfgfile
+    puts "Using configuration file $cgfile"
+    source $cgifile
 }   else {
     puts "Using default configuration"
 }

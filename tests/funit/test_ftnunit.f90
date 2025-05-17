@@ -25,7 +25,7 @@
 !     To illustrate the way run-time errors are handled via
 !     the framework, some of these tests result in runtime errors
 !
-!     $Id: test_ftnunit.f90,v 1.8 2012/03/13 13:01:37 arjenmarkus Exp $
+!     $Id: test_ftnunit.f90,v 1.2 2008/01/27 09:08:31 arjenmarkus Exp $
 !
 module data_processing
     implicit none
@@ -148,11 +148,16 @@ module dataproc_testing
     implicit none
     private                 ! This is needed to make sure we can easily
     public :: test_all      ! use several such modules. The only external
-                            ! names are "test_all" and "test_extra"
-    public :: test_extra
+                            ! name is "test_all"
 
     character(len=40) :: datafile
 contains
+
+!
+! The code is generic, but this way we can access the private routines
+! in this testing module. And we do not get any name conflicts
+!
+include "ftnunit_test.f90"
 
 subroutine prolog
     ! Nothing in this case
@@ -174,20 +179,10 @@ subroutine test_all
 
     call test( test_no_file, "Read non-existent file" )
     call test( test_empty_file, "Read an empty file" )
-    call test( test_program_stop, "Stop the program - and expect it to stop" )
-    call test( test_program_does_not_stop, "Stop the program - but it does not" )
     call test( test_invalid_file, "Read an invalid file" )
     call test( test_ordinary_file, "Read an ordinary file" )
-    call test( test_compare_files, "Comparing two files" )
+
 end subroutine test_all
-
-subroutine test_extra
-    call test( test_ignored_test, "Test is skipped", .true. )
-    call test( test_deliberate_failure, "Test fails deliberately" )
-    call test( test_compare_reals, "Comparing real numbers" )
-    call test( test_deliberate_stop, "Expected stop" )
-
-end subroutine test_extra
 
 ! write_name --
 !     Small auxiliary routine (write the file with the file name)
@@ -247,38 +242,6 @@ subroutine test_empty_file
 
 end subroutine test_empty_file
 
-! test_program_stop --
-!     Test: the test indicates the program should stop -
-!     this is to be expected and it must be recorded as such
-! Arguments:
-!     None
-!
-subroutine test_program_stop
-
-    call expect_program_stop
-
-    !
-    ! Typical situation:
-    ! The program stops because it has detected a fatal
-    ! error of some kind
-    ! The ftnunit framework should report this as OK
-    !
-    stop
-
-end subroutine test_program_stop
-
-! test_program_does_not_stop --
-!     Test: the test indicates the program should stop -
-!     but it does not - this should be recorded as a failure
-! Arguments:
-!     None
-!
-subroutine test_program_does_not_stop
-
-    call expect_program_stop
-
-end subroutine test_program_does_not_stop
-
 ! test_invalid_file --
 !     Test: try to read a file that is not valid
 ! Arguments:
@@ -332,105 +295,6 @@ subroutine test_ordinary_file
 
 end subroutine test_ordinary_file
 
-
-! test_compare_files --
-!     Test: compare two files (with some tolerance for numerical values)
-! Arguments:
-!     None
-!
-subroutine test_compare_files
-
-    open( 11, file = 'test1.out' )
-    open( 12, file = 'test2.out' )
-
-    write( 11, '(a)' ) 'Line 1 is the same in both files'
-    write( 12, '(a)' ) 'Line 1 is the same in both files'
-    write( 11, '(a)' ) 'Line 2 differs'
-    write( 12, '(a)' ) 'Line 2 differs ...'
-    write( 11, '(a)' ) 'Line 3 differs only slightly: pi = 3.1415926 ...'
-    write( 12, '(a)' ) 'Line 3 differs only slightly: pi = 3.1415927 ...'
-    write( 11, '(a)' ) 'Line 4 differs significantly: pi = 3.1415926 ...'
-    write( 12, '(a)' ) 'Line 4 differs significantly: pi = 3.1       ...'
-
-    close( 11 )
-    close( 12 )
-
-    call assert_files_comparable( 'test1.out', 'test2.out', 'Files should be equal' )
-
-end subroutine test_compare_files
-
-
-! test_compare_reals --
-!     Test: compare real values
-! Arguments:
-!     None
-!
-subroutine test_compare_reals
-    integer, parameter :: dp = kind(1.0d0)
-
-    real               :: value
-    real               :: vmin
-    real               :: vmax
-    real(kind=dp)      :: dvalue
-    real(kind=dp)      :: dvmin
-    real(kind=dp)      :: dvmax
-
-    vmin  = 1.0
-    vmax  = 1.01
-    value = 2.0
-    dvmin  = 1.0_dp
-    dvmax  = 1.01_dp
-    dvalue = 2.0_dp
-
-    call assert_inbetween( value,  vmin,  vmax,  "Value slightly larger than 1" )
-    call assert_inbetween( dvalue, dvmin, dvmax, "Double-precision value slightly larger than 1" )
-
-end subroutine test_compare_reals
-
-
-! test_ignore_test --
-!     Test: only check that ignored tests are treated correctly
-! Arguments:
-!     None
-!
-subroutine test_ignored_test
-
-    call assert_true( .false.,  "This test should NOT be run" )
-
-end subroutine test_ignored_test
-
-
-! test_deliberate_failure --
-!     Test: deliberate failure - check HTML formatting after ignored test
-! Arguments:
-!     None
-! Note:
-!     Should be run after test_ignore_test!
-!
-subroutine test_deliberate_failure
-
-    call assert_true( .false.,  "Deliberate failure" )
-
-    if ( assertions_failed() ) then
-        call assertion_report( "Deliberate failure occurred" )
-    endif
-
-end subroutine test_deliberate_failure
-
-
-! test_deliberate_stop --
-!     Test: deliberate stop - this should not be marked as a failure
-! Arguments:
-!     None
-!
-subroutine test_deliberate_stop
-
-    call expect_program_stop
-    stop
-
-end subroutine test_deliberate_stop
-
-
 end module dataproc_testing
 
 ! program ---
@@ -457,7 +321,6 @@ program dataproc
 !
     call runtests_init
     call runtests( test_all )
-    call runtests( test_extra )
     call runtests_final
 
 !

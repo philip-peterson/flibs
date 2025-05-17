@@ -1,16 +1,11 @@
 ! test_logging.f90 --
 !     Small test program for the report module
 !
-!     $Id: test_m_logger.f90,v 1.2 2012/11/27 07:36:53 arjenmarkus Exp $
+!     $Id: test_m_logger.f90,v 1.1 2008/06/18 09:00:51 relaxmike Exp $
 !
 program test_logging
   use m_logger
-  implicit none
-
-  integer :: logunit, i
-
-  integer, pointer :: stop_program => null()
-
+  integer :: logunit
   !
   ! Initialize the log file with append disabled.
   !
@@ -62,27 +57,5 @@ program test_logging
   call log_startup( 'test_m_logger2.log' )
   call log_startup( 'test_m_logger2.log' )
   call log_shutdown ()
-
-  !
-  ! Abort the program to test that the log file is properly flushed
-  !
-  call log_startup( 'test_m_logger.log', append = .true. )
-  call log_msg( 'Before expressly aborting the program' )
-  write( *, '(a)' ) ' '
-  write( *, '(a)' ) 'Warning: the program will abort now - this is intentional'
-  write( *, '(a)' ) 'On some systems an error or even a trace back will be printed,'
-  write( *, '(a)' ) 'on others you may invited to use the debugger to see what went wrong'
-  write( *, '(a)' ) ' '
-  write( *, '(a)' ) 'Check that the log file "test_m_logger.log" is complete, whereas the'
-  write( *, '(a)' ) 'file "test_m_logger.out" is not'
-
-  open( 10, file = 'test_m_logger.out' )
-  do i = 1,100
-      write( 10, * ) 'This file is supposed to be truncated - hopefully it is'
-  enddo
-  stop_program = 10 ! Uninitialised pointer - it will cause the program to fail
-  write( 10, * ) 'Value: ', stop_program
-  write( 10, * ) 'End of program'
-  call log_msg( 'Program aborted - this will not appear in the log' )
-
 end program test_logging
+

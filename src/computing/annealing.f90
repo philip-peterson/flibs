@@ -2,7 +2,7 @@
 !     Module for a simple implementation of
 !     simulated annealing
 !
-!     $Id: annealing.f90,v 1.4 2009/05/05 17:17:42 arjenmarkus Exp $
+!     $Id: annealing.f90,v 1.3 2008/09/22 18:41:28 arjenmarkus Exp $
 !
 
 module simulated_annealing
@@ -112,7 +112,7 @@ subroutine determine_new_vector( range, x, idx, oldx )
     real(wp)                                  :: y
 
     call random_number( y )
-    idx = min( 1 + int(size(x) * y), size(x) )
+    idx = min( 1 + size(x) * y, size(x) )
     oldx = x(idx)
 
     call random_number( y )

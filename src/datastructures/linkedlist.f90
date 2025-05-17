@@ -11,7 +11,7 @@
 !     are designed to minimize mistakes (for instance: using
 !     = instead of =>)
 !
-!     $Id: linkedlist.f90,v 1.4 2009/08/17 04:26:12 arjenmarkus Exp $
+!     $Id: linkedlist.f90,v 1.3 2007/01/26 09:56:43 arjenmarkus Exp $
 !
 ! Define the linked-list data type
 !
@@ -91,13 +91,13 @@ subroutine list_destroy( list )
     type(LINKED_LIST), pointer  :: list
 
     type(LINKED_LIST), pointer  :: current
-    type(LINKED_LIST), pointer  :: elem
+    type(LINKED_LIST), pointer  :: next
 
-    elem => list
-    do while ( associated(elem) )
-        current => elem
-        elem => current%next
+    current => list
+    do while ( associated(current%next) )
+        next => current%next
         deallocate( current )
+        current => next
     enddo
 end subroutine list_destroy
 

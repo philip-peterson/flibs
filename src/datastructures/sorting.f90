@@ -23,7 +23,7 @@
 !     Algorithm translated from Kernighan and Pike,
 !     The Practice of Programming.
 !
-!     $Id: sorting.f90,v 1.4 2010/06/16 07:36:18 arjenmarkus Exp $
+!     $Id: sorting.f90,v 1.3 2008/04/21 17:45:48 arjenmarkus Exp $
 !
 
 !
@@ -145,4 +145,3 @@ integer function qsort_rand( lower, upper )
     qsort_rand =  lower + nint(r * (upper-lower))
 end function qsort_rand
 
->>>>>>> 1.3

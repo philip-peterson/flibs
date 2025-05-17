@@ -29,7 +29,7 @@
 !    With the appropriate compilation options (if needed)
 !    the code should be thread-safe, as no data are shared.
 !
-!    $Id: fsqlite.f90,v 1.5 2011/01/19 11:36:46 arjenmarkus Exp $
+!    $Id: fsqlite.f90,v 1.4 2008/11/20 05:35:11 arjenmarkus Exp $
 !
 module sqlite_types
 
@@ -855,7 +855,8 @@ end subroutine sqlite3_step
 
 
 ! sqlite3_prepare --
-!    Prepare the SQL statement for actual use
+!    Reset the prepared SQL statement so that it can
+!    be used again
 ! Arguments:
 !    stmt          Handle to the prepared statement
 !

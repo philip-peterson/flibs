@@ -11,7 +11,7 @@
 !     TODO:
 !     Make find_root more robust!
 !
-!     $Id: interval_simple.f90,v 1.4 2013/12/27 11:36:01 arjenmarkus Exp $
+!     $Id: interval_simple.f90,v 1.3 2008/10/26 12:16:43 arjenmarkus Exp $
 !
 module interval_arithmetic
     use select_precision
@@ -661,6 +661,8 @@ subroutine find_root( f, fprime, xinit, tolerance, root, found )
     integer, parameter          :: maxiter = 1000
     real(kind=wp)               :: fvalue   ! Real valued!
     type(INTERVAL)              :: fpvalue
+    real(kind=wp)               :: fleft
+    real(kind=wp)               :: fright
     real(kind=wp)               :: fpleft
     real(kind=wp)               :: fpright
 

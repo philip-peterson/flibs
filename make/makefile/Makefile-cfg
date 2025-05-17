@@ -21,9 +21,6 @@ endif
 ifeq ($(OPERATING_SYSTEM),Linux)
 	include Makefile-linux
 endif
-ifeq ($(OPERATING_SYSTEM),Darwin)
-	include Makefile-mac
-endif
 #
 # Debug or release ? 
 # Warning: this option does have an impact on the compiler options
@@ -52,6 +49,6 @@ endif
 #
 # Options specific to the fortran compiler
 #
-#include Makefile-g95
-include Makefile-gfortran
+include Makefile-g95
+#include Makefile-gfortran
 

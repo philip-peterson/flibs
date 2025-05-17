@@ -1,5 +1,5 @@
 [comment {-*- flibs -*- doctools manpage}]
-[manpage_begin flibs/m_exception n 1.0]
+[manpage_begin flibs/m_vfile n 1.0]
 [copyright {2008 Michael Baudin michael.baudin@gmail.com}]
 [copyright {2008 Arjen Markus arjenmarkus@sourceforge.net}]
 [moddesc flibs]
@@ -253,15 +253,17 @@ all counters.
 [arg_def [type "integer, intent(in) ::"] unitnumber]
 [list_end]
 Set the unit number onto which the messages are output.
-If the unitnumber is 0, the messages are written
+If the unitnumber is negative or 0, the messages are written
 to the standard output (unit *).
+Note : a unitnumber equals to 6 is generally the standard output, 
+but this may depend on the fortran compiler.
 
 [call [method "exception_getlogunit"] ( ) result ( logunit )]
 [list_begin arg]
 [arg_def [type "integer ::"] logunit]
 [list_end]
-Returns the unit number onto which the messages are output,
-if enabled or 0 if the feature is disabled.
+Returns the positive unit number onto which the messages are output,
+if enabled or a negative integer if the feature is disabled.
 
 
 [call [method "exception_logactive"] ( [arg bool] )]

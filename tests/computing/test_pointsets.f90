@@ -6,16 +6,15 @@ program test_pointsets
     use pointsets
     implicit none
 
-    real, dimension(20)    :: x
-    real, dimension(1000)  :: x2d
-    real, dimension(1000)  :: y2d
-    real, dimension(10000) :: x3d, y3d, z3d
-    real                   :: ratio
-    real                   :: xb
-    real                   :: xe
-    real                   :: yb
-    real                   :: ye
-    integer                :: i
+    real, dimension(20)   :: x
+    real, dimension(1000) :: x2d
+    real, dimension(1000) :: y2d
+    real                  :: ratio
+    real                  :: xb
+    real                  :: xe
+    real                  :: yb
+    real                  :: ye
+    integer               :: i
 
 !
 ! One-dimensional:
@@ -87,62 +86,6 @@ program test_pointsets
         write(*,'(2f10.4,i6)') xb, xe, &
             count( x2d >= xb .and. x2d <= xe )
     enddo
-
-!
-! Disk:
-! There should be about the same number of points in a slice
-! of the disk with x > 0.8, y > 0.8 and z > 0.8. Ditto
-! for points inside or outside the disk with radius 0.5**1/2
-!
-    write(*,*) 'Random points in a disk:'
-    call random_disk( x2d, y2d, 1.0 )
-    write(*,*) 'x > 0.8:', count( x2d > 0.8 )
-    write(*,*) 'y > 0.8:', count( y2d > 0.8 )
-    write(*,*) 'Margin: ', int(sqrt(real( count(x2d > 0.8) )))
-
-    write(*,*) 'Distance < 0.5**1/2:', count( sqrt(x2d**2 + y2d**2) < sqrt(0.5_wp) )
-    write(*,*) 'Distance > 0.5**1/2:', count( sqrt(x2d**2 + y2d**2) > sqrt(0.5_wp) )
-    write(*,*) 'Margin:             ', int(sqrt(real(size(x2d)/2)))
-
-!
-! Circle:
-! There should be about the same number of points in a slice
-! of the circle with x > 0.8, y > 0.8 and z > 0.8.
-!
-    write(*,*) 'Random points in a circle:'
-    call random_circle( x2d, y2d, 1.0 )
-    write(*,*) 'x > 0.8:', count( x2d > 0.8 )
-    write(*,*) 'y > 0.8:', count( y2d > 0.8 )
-    write(*,*) 'Margin: ', int(sqrt(real( count(x2d > 0.8) )))
-
-!
-! Ball:
-! There should be about the same number of points in a slice
-! of the ball with x > 0.8, y > 0.8 and z > 0.8. Ditto
-! for points inside or outside the ball with radius 0.5**1/3
-!
-    write(*,*) 'Random points in a 3D ball:'
-    call random_ball( x3d, y3d, z3d, 1.0 )
-    write(*,*) 'x > 0.8:', count( x3d > 0.8 )
-    write(*,*) 'y > 0.8:', count( y3d > 0.8 )
-    write(*,*) 'z > 0.8:', count( z3d > 0.8 )
-    write(*,*) 'Margin: ', int(sqrt(real( count(x3d > 0.8) )))
-
-    write(*,*) 'Distance < 0.5**1/3:', count( sqrt(x3d**2 + y3d**2 +z3d**2) < 0.5**0.333333 )
-    write(*,*) 'Distance > 0.5**1/3:', count( sqrt(x3d**2 + y3d**2 +z3d**2) > 0.5**0.333333 )
-    write(*,*) 'Margin:             ', int(sqrt(real(size(x3d)/2)))
-
-!
-! Sphere:
-! There should be about the same number of points in a slice
-! of the ball with x > 0.8, y > 0.8 and z > 0.8.
-!
-    write(*,*) 'Random points in a 3D sphere:'
-    call random_sphere( x3d, y3d, z3d, 1.0 )
-    write(*,*) 'x > 0.8:', count( x3d > 0.8 )
-    write(*,*) 'y > 0.8:', count( y3d > 0.8 )
-    write(*,*) 'z > 0.8:', count( z3d > 0.8 )
-    write(*,*) 'Margin: ', int(sqrt(real( count(x3d > 0.8) )))
 
 contains
 logical function differ( x, y )

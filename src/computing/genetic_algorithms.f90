@@ -1,7 +1,7 @@
 ! genetic_algorithms.f90 --
 !     Basic framework for genetic algorithms
 !
-!     $Id: genetic_algorithms.f90,v 1.3 2009/05/05 17:17:42 arjenmarkus Exp $
+!     $Id: genetic_algorithms.f90,v 1.2 2008/10/02 09:02:33 arjenmarkus Exp $
 !
 module genetic_algorithms
 
@@ -160,7 +160,7 @@ subroutine random_index( maxidx, idx )
     real(wp)                                  :: y
 
     call random_number( y )
-    idx = min( 1 + int(maxidx * y), maxidx )
+    idx = min( 1 + maxidx * y, maxidx )
 
 end subroutine random_index
 

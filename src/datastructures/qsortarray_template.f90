@@ -2,10 +2,10 @@
 ! qsortarray_template.f90 --
 !     QuickSort for arrays:
 !
-!     This template has to be preprocessed by defining the
+!     This template has to be preprocessed by defining the 
 !     two following macros :
 !     - "_QSORTARRAY_TYPE" is the name of the derived type
-!     - "_QSORTARRAY_MODULE" is the module defining the
+!     - "_QSORTARRAY_MODULE" is the module defining the 
 !       derived type
 !
 !     Note:
@@ -18,7 +18,7 @@
 !     Algorithm translated from Kernighan and Pike,
 !     The Practice of Programming.
 !
-!     $Id: qsortarray_template.f90,v 1.2 2013/12/27 11:36:01 arjenmarkus Exp $
+!     $Id: qsortarray_template.f90,v 1.1 2008/04/17 14:39:08 relaxmike Exp $
 !
 ! Routines and functions specific to dictionaries
 !
@@ -33,7 +33,7 @@ subroutine qsort_array( array, compare )
   interface
      integer function compare(f,g)
        use _QSORTARRAY_MODULE , only : _QSORTARRAY_TYPE
-       type( _QSORTARRAY_TYPE ), intent(in) :: f, g
+       type( _QSORTARRAY_TYPE ) :: f, g
      end function compare
   end interface
   type ( _QSORTARRAY_TYPE ) , dimension(:), allocatable :: backup
@@ -69,7 +69,7 @@ recursive subroutine qsort_sort( array, order, left, right, compare )
   interface
      integer function compare ( f , g )
        use _QSORTARRAY_MODULE, only : _QSORTARRAY_TYPE
-       type(_QSORTARRAY_TYPE), intent(in) :: f, g
+       type(_QSORTARRAY_TYPE) :: f, g
      end function compare
   end interface
   integer                                    :: i

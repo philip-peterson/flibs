@@ -113,7 +113,7 @@ contains
     ! 1073741824 = 2**31
     integer (kind=4) :: integerkind4 = 1073741824
     ! 4611686018427387904 = 2**63
-    integer (kind=8) :: integerkind8 = 4611686018427387904_8
+    integer (kind=8) :: integerkind8 = 4611686018427387904
     integer (kind=1) :: maxkind1
     integer (kind=2) :: maxkind2
     integer (kind=4) :: maxkind4

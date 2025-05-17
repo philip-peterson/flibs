@@ -1,17 +1,17 @@
 ! m_logger.f90 --
 !
-!   The module m_logger provides static methods to manage a log file,
+!   The module m_logger provides static methods to manage a log file, 
 !   which is an execution report of the program.
 !
 ! Overview
 !
 !   The goal of this component is to provide a way to write messages
-!   both on standard output and on a log file, so that a trace
+!   both on standard output and on a log file, so that a trace 
 !   of the execution can be read by the user after the execution.
-!   The module m_logger therefore provides static methods to
+!   The module m_logger therefore provides static methods to 
 !   - connect a file to the logger,
 !   - configure the logging process, for example disable the standard
-!     output messages,
+!     output messages, 
 !   - log messages.
 !
 !   The logger must be started up with "log_startup()" and shut down
@@ -32,9 +32,9 @@
 !    By default, the logging is done both on file and on standard output.
 !    The user may want to configure the behaviour of the logger so that message
 !    are not written on standard output.
-!    The static method "log_configure(option,value)" is the central point to configure the
+!    The static method "log_configure(option,value)" is the central point to configure the 
 !    logger. It takes a character "option" string and a "value" as arguments.
-!    In the following example, one selectively writes
+!    In the following example, one selectively writes 
 !    messages on standard output or on file, or both.
 !
 !      call log_startup ( 'test_m_logger.log' )
@@ -53,7 +53,7 @@
 ! Author: Michael Baudin, 2008, michael.baudin@gmail.com
 ! Changes: Arjen Markus, 2008, arjenmarkus@sourceforge.net
 !
-!     $Id: m_logger.f90,v 1.5 2012/11/27 07:36:52 arjenmarkus Exp $
+!     $Id: m_logger.f90,v 1.3 2008/06/18 08:55:45 relaxmike Exp $
 !
 module m_logger
   implicit none
@@ -81,7 +81,7 @@ module m_logger
   ! Static fields
   !
   ! Logical unit associated with the log file
-  integer :: log_fileunit
+  integer :: log_fileunit = 6
   ! Logical unit associated with the standard output
   integer :: log_stdout = -1
   ! Logical set to false if the user wants to inactivate
@@ -132,7 +132,7 @@ module m_logger
 
 contains
   ! log_startup --
-  !     Initialises the logging management and connect it to the
+  !     Initialises the logging management and connect it to the 
   !     given filename.
   !
   ! Arguments:
@@ -159,11 +159,12 @@ contains
     if ( logger_initialized ) then
        call log_error ( "Logger is allready initialized in log_startup." )
     else
+       log_fileunit = log_get_freeunit()
        if ( append_real ) then
-          open (NEWUNIT=log_fileunit, FILE=log_file , ACTION='WRITE', STATUS='UNKNOWN', &
+          open (log_fileunit, FILE= log_file , ACTION='WRITE', STATUS='UNKNOWN', &
                POSITION ='APPEND')
        else
-          open (NEWUNIT=log_fileunit, FILE=log_file , ACTION='WRITE', STATUS='UNKNOWN')
+          open (log_fileunit, FILE= log_file , ACTION='WRITE', STATUS='UNKNOWN')
        endif
        logger_initialized = .true.
     endif
@@ -191,12 +192,12 @@ contains
   !   Log the given character string to the logging units.
   !   If the logging to standard output is enabled, writes the message
   !   on standard output.
-  !   If the logging to the log file is enabled, writes the message
+  !   If the logging to the log file is enabled, writes the message 
   !   into the log file.
   !   Before outputting directly the message string, the string is
   !   trimmed, that is to say that all trailing blanks are removed from
   !   the string.
-  !   If the time stamp option is enabled, a time stamp with
+  !   If the time stamp option is enabled, a time stamp with 
   !   format "year-month-day hh:mm:ss" is inserted before the message.
   !
   ! Arguments:
@@ -245,7 +246,7 @@ contains
   !     msg              Message
   !
   subroutine log_write( unit, msg )
-    integer, intent(in out) :: unit
+    integer, intent(in) :: unit
     character(len=*), intent(in) :: msg
     character(len=500)           :: filename
     if (  unit == -1 ) then
@@ -255,13 +256,16 @@ contains
        !
        ! Flush the file
        !
-       flush( unit )
+       inquire( unit, name = filename )
+       close( unit )
+       open( unit, FILE=filename, ACTION='WRITE', STATUS='UNKNOWN', &
+            POSITION ='APPEND')
     endif
   end subroutine log_write
   ! log_delimiter --
   !   Log a delimiter of given level, to make so that the log file
   !   contain different visual parts.
-  !   Available values for level are : LOG_LEVEL_VOLUME,
+  !   Available values for level are : LOG_LEVEL_VOLUME, 
   !   LOG_LEVEL_CHAPTER, LOG_LEVEL_SECTION, LOG_LEVEL_SUBSECTION.
   !   If level is not provided, the default value for level is LOG_LEVEL_VOLUME.
   !
@@ -280,6 +284,37 @@ contains
     call log_get_delimiter( used_level , msg )
     call log_msg( msg )
   end subroutine log_delimiter
+  !
+  ! log_get_freeunit --
+  !   Returns a free logical unit.
+  ! Note:
+  !   Duplicated from m_fileunit so that m_logger is a stand-alone module.
+  !   Do not maintain.
+  !
+  integer function log_get_freeunit ( )
+    integer :: iunit
+    integer :: ios
+    logical :: lopen
+    logical :: unit_found
+    iunit = 0
+    unit_found = .false.
+    log_get_freeunit = 0
+    do iunit = 1, 100
+       if ( iunit /= 5 .and. iunit /= 6 .and. iunit /= 9 ) then
+          inquire ( UNIT = iunit, opened = lopen, iostat = ios )
+          if ( ios == 0 ) then
+             if ( .not. lopen ) then
+                log_get_freeunit = iunit
+                unit_found = .true.
+                exit
+             endif
+          endif
+       endif
+    enddo
+    if (.NOT.unit_found) then
+       write(*,*) "Logging: No free logical unit for log file"
+    endif
+  end function log_get_freeunit
   !
   ! log_isinitialized --
   !   Returns true if the logger is allready initialized.
@@ -312,9 +347,9 @@ contains
        stop
     endif
   end subroutine log_error_stop
-  !
+  ! 
   ! log_set_stoponerror --
-  !
+  ! 
   subroutine log_set_stoponerror ( stoponerror )
     logical , intent(in) :: stoponerror
     logger_stoponerror = stoponerror
@@ -325,7 +360,7 @@ contains
   !   The "option" may be one of the following.
   ! option = "timestamp"
   !   Disable or enable the insertion of time stamps.
-  !   If the time stamp option is enabled, a time stamp with
+  !   If the time stamp option is enabled, a time stamp with 
   !   format "year-month-day hh:mm:ss" is inserted before the message.
   ! option = "writeonstdout"
   !   Disable or enable the writing on standard output.
@@ -488,9 +523,9 @@ contains
     character ( len = 500 ) :: message
     select case ( option )
     case ( "level_string_volume" )
-       value = log_level_string_volume
+       value = log_level_string_volume 
     case ( "level_string_chapter" )
-       value = log_level_string_chapter
+       value = log_level_string_chapter 
     case ( "level_string_section" )
        value = log_level_string_chapter
     case ( "level_string_subsection" )
@@ -539,7 +574,7 @@ contains
   !
   ! log_init --
   !   Deprecated, use log_startup instead.
-  !   Initialises the logging management and connect it to the
+  !   Initialises the logging management and connect it to the 
   !   given filename.
   !
   subroutine log_init (log_file, append )
@@ -551,7 +586,7 @@ contains
   ! log_get_delimiter --
   !   Deprecated : use log_cget instead.
   !   Fills msg with a log delimiter of given level.
-  !   Available values for level are : LOG_LEVEL_VOLUME,
+  !   Available values for level are : LOG_LEVEL_VOLUME, 
   !   LOG_LEVEL_CHAPTER, LOG_LEVEL_SECTION, LOG_LEVEL_SUBSECTION
   !
   ! Arguments:

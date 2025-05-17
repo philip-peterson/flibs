@@ -1,6 +1,6 @@
 # Makefile for "computing" tests and examples
 #
-# $Id: makefile,v 1.11 2013/12/30 07:16:26 arjenmarkus Exp $
+# $Id: makefile,v 1.4 2008/09/28 11:03:11 arjenmarkus Exp $
 #
 include ../../config/config.mk
 include ../../config/options.mk
@@ -12,15 +12,6 @@ PROGRAMS	=	test_diff$(EXEEXT) \
 		test_intervals$(EXEEXT) \
 		test_annealing$(EXEEXT) \
 		test_genalg$(EXEEXT) \
-		test_pointsets$(EXEEXT) \
-		test_unsigned$(EXEEXT) \
-		test_f0noIEEE$(EXEEXT) \
-		test_f0withIEEE$(EXEEXT) \
-		test_random_permutation$(EXEEXT) \
-		test_enum_space$(EXEEXT) \
-		test_traverse_grid$(EXEEXT) \
-		test_bobyqa$(EXEEXT) \
-		test_newuoa$(EXEEXT) \
 
 all:	$(PROGRAMS)
 
@@ -95,104 +86,6 @@ test_genalg$(OBJEXT):	test_genalg.f90 genetic_algorithms$(OBJEXT)
 
 test_genalg$(EXEEXT):	test_genalg$(OBJEXT) genetic_algorithms$(OBJEXT)
 	$(LD) $(LDFLAGS) $(LDOUTPUT) test_genalg$(OBJEXT) genetic_algorithms$(OBJEXT)
-
-
-pointsets$(OBJEXT):	../../src/computing/pointsets.f90 select_precision$(OBJEXT)
-	$(FC) $(FFLAGS) ../../src/computing/pointsets.f90
-
-test_pointsets$(OBJEXT):	test_pointsets.f90 pointsets$(OBJEXT)
-	$(FC) $(FFLAGS) test_pointsets.f90
-
-test_pointsets$(EXEEXT):	test_pointsets$(OBJEXT) pointsets$(OBJEXT)
-	$(LD) $(LDFLAGS) $(LDOUTPUT) test_pointsets$(OBJEXT) pointsets$(OBJEXT)
-
-
-#
-# Note: the program to generate the test input file is not dealt with
-# - it would require a C compiler and therefore the test input file is
-# stored in the repository
-#
-unsigned_integers$(OBJEXT):	../../src/computing/unsigned_integers.f90
-	$(FC) $(FFLAGS) ../../src/computing/unsigned_integers.f90
-
-test_unsigned$(OBJEXT):	test_unsigned.f90 unsigned_integers$(OBJEXT)
-	$(FC) $(FFLAGS) test_unsigned.f90
-
-test_unsigned$(EXEEXT):	test_unsigned$(OBJEXT) unsigned_integers$(OBJEXT)
-	$(LD) $(LDFLAGS) $(LDOUTPUT) test_unsigned$(OBJEXT) unsigned_integers$(OBJEXT)
-
-#
-# Note: the leadzero module comes in two versions. The names are identical
-# but one expects compiler support for IEEE NaN and Inf, the other does not.
-#
-f0noIEEE$(OBJEXT):	../../src/computing/f0noIEEE.f90
-	$(FC) $(FFLAGS) ../../src/computing/f0noIEEE.f90
-
-f0withIEEE$(OBJEXT):	../../src/computing/f0withIEEE.f90
-	$(FC) $(FFLAGS) ../../src/computing/f0withIEEE.f90
-
-test_f0noIEEE$(OBJEXT):	test_f0noIEEE.f90 f0noIEEE$(OBJEXT)
-	$(FC) $(FFLAGS) test_f0noIEEE.f90
-
-test_f0withIEEE$(OBJEXT):	test_f0withIEEE.f90 f0withIEEE$(OBJEXT)
-	$(FC) $(FFLAGS) test_f0withIEEE.f90
-
-test_f0noIEEE$(EXEEXT):	test_f0noIEEE$(OBJEXT) f0noIEEE$(OBJEXT)
-	$(LD) $(LDFLAGS) $(LDOUTPUT) test_f0noIEEE$(OBJEXT) f0noIEEE$(OBJEXT)
-
-test_f0withIEEE$(EXEEXT):	test_f0withIEEE$(OBJEXT) f0withIEEE$(OBJEXT)
-	$(LD) $(LDFLAGS) $(LDOUTPUT) test_f0withIEEE$(OBJEXT) f0withIEEE$(OBJEXT)
-
-
-random_permutation$(OBJEXT):	../../src/computing/random_permutation.f90
-	$(FC) $(FFLAGS) ../../src/computing/random_permutation.f90
-
-test_random_permutation$(OBJEXT):	test_random_permutation.f90 random_permutation$(OBJEXT)
-	$(FC) $(FFLAGS) test_random_permutation.f90
-
-test_random_permutation$(EXEEXT):	test_random_permutation$(OBJEXT) random_permutation$(OBJEXT)
-	$(LD) $(LDFLAGS) $(LDOUTPUT) test_random_permutation$(OBJEXT) random_permutation$(OBJEXT)
-
-
-enum_space$(OBJEXT):	../../src/computing/enum_space.f90
-	$(FC) $(FFLAGS) ../../src/computing/enum_space.f90
-
-test_enum_space$(OBJEXT):	test_enum_space.f90 enum_space$(OBJEXT)
-	$(FC) $(FFLAGS) test_enum_space.f90
-
-test_enum_space$(EXEEXT):	test_enum_space$(OBJEXT) enum_space$(OBJEXT)
-	$(LD) $(LDFLAGS) $(LDOUTPUT) test_enum_space$(OBJEXT) enum_space$(OBJEXT)
-
-
-traverse_grid$(OBJEXT):	../../src/computing/traverse_grid.f90 select_precision$(OBJEXT)
-	$(FC) $(FFLAGS) ../../src/computing/traverse_grid.f90
-
-test_traverse_grid$(OBJEXT):	test_traverse_grid.f90 traverse_grid$(OBJEXT) select_precision$(OBJEXT)
-	$(FC) $(FFLAGS) test_traverse_grid.f90
-
-test_traverse_grid$(EXEEXT):	test_traverse_grid$(OBJEXT) traverse_grid$(OBJEXT)
-	$(LD) $(LDFLAGS) $(LDOUTPUT) test_traverse_grid$(OBJEXT) traverse_grid$(OBJEXT)
-
-
-bobyqa$(OBJEXT):	../../src/computing/bobyqa.f
-	$(FC) $(FFLAGS) ../../src/computing/bobyqa.f
-
-test_bobyqa$(OBJEXT):	test_bobyqa.f90 bobyqa$(OBJEXT)
-	$(FC) $(FFLAGS) test_bobyqa.f90
-
-test_bobyqa$(EXEEXT):	test_bobyqa$(OBJEXT) bobyqa$(OBJEXT)
-	$(LD) $(LDFLAGS) $(LDOUTPUT) test_bobyqa$(OBJEXT) bobyqa$(OBJEXT)
-
-
-newuoa$(OBJEXT):	../../src/computing/newuoa.f
-	$(FC) $(FFLAGS) ../../src/computing/newuoa.f
-
-test_newuoa$(OBJEXT):	test_newuoa.f90 newuoa$(OBJEXT)
-	$(FC) $(FFLAGS) test_newuoa.f90
-
-test_newuoa$(EXEEXT):	test_newuoa$(OBJEXT) newuoa$(OBJEXT)
-	$(LD) $(LDFLAGS) $(LDOUTPUT) test_newuoa$(OBJEXT) newuoa$(OBJEXT)
-
 
 clean:	
 	$(DELETE) *$(OBJEXT)

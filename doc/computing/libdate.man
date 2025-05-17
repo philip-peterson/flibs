@@ -230,58 +230,9 @@ The pattern may contain any of the following format codes:
 [bullet]
 [term MS] - Minutes within the hour (0-59)
 [bullet]
-[term YY] - Year without the century
+[term YY] - Year with the century
 [bullet]
 [term yyyy] - Year with the century
-[list_end]
-
-[list_begin arg]
-
-[arg_def "type(DATETYPE)" date]
-Date to be converted
-
-[arg_def "character(len=*)" pattern]
-String containing the format pattern
-
-[arg_def "character(len=*)" datestring]
-String containing the result. The contents will not be longer
-than the pattern.
-
-[list_end]
-[nl]
-
-
-[call [cmd "call scan_date( pattern, string, date, error )"]]
-Scan a string and extract the date/time information according to the given pattern.
-[nl]
-The pattern may contain any of the following format codes:
-[list_begin bullet]
-[bullet]
-[term dd] - Day of month ("01" for instance)
-[bullet]
-[term ds] - Day of month ("1" for instance, s for space)
-[bullet]
-[term HH] - Hour (00-23)
-[bullet]
-[term HS] - Hour (0-23)
-[bullet]
-[term mm] - Month ("01" for january)
-[bullet]
-[term ms] - Month ("1" for january, s for space)
-[bullet]
-[term MM] - Minutes within the hour (00-59)
-[bullet]
-[term MS] - Minutes within the hour (0-59)
-[bullet]
-[term YY] - Year without the century (two digits)
-[bullet]
-[term yyyy] - Year with the century (one to four digits)
-[bullet]
-[term (space)] - Skip one or more spaces in the string to be scanned
-[bullet]
-[term ?] - Skip exactly one character in the string to be scanned
-[bullet]
-(any other character) - Character in the format string and the string to be scanned must match
 [list_end]
 
 [list_begin arg]

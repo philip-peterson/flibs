@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/sh
 #    Configuration for Flibs: find a suitable compiler and set build options
 #
 if test @$1 = "@-help" -o @$1 = "@-?" ;then
@@ -9,7 +9,6 @@ if test @$1 = "@-help" -o @$1 = "@-?" ;then
     echo Available compilers:
     echo - gfortran - Gnu\'s Fortran 95 compiler
     echo - g95      - Alternative Fortran 95 compiler
-    echo - ifort    - Intel Fortran compiler
     echo - f95      - generic Fortran 95 compiler
     echo ""
     echo Available build options:
@@ -22,7 +21,6 @@ if test @$1 = "@-help" -o @$1 = "@-?" ;then
 fi
 
 cd config
-makefilecfg='../make/makefile/Makefile-cfg'
 
 #
 # Clean up
@@ -44,11 +42,8 @@ fi
 if test @$1 == "@-optimise" -o @$2 == "@-optimise" ;then
     options=optimise
 fi
-#
-# Copy build options
-#
+
 cp $options.mk options.mk
-echo "$makefilecfg" |  sed "s|VERSION = .*$|VERSION = $options|g"
 
 #
 # Identify the compiler
@@ -60,9 +55,6 @@ if test @$1 == "@gfortran" -o @$2 == "@gfortran" ;then
 fi
 if test @$1 == "@g95" -o @$2 == "@g95" ;then
     check=g95
-fi
-if test @$1 == "@ifort" -o @$2 == "@ifort" ;then
-    check=ifort
 fi
 if test @$1 == "@f95" -o @$2 == "@f95" ;then
     check=f95
@@ -95,18 +87,6 @@ if test $found -eq 0 -a \( "$check" == "" -o "$check" == "g95" \) ;then
 fi
 
 # -------------------------------------------------------------------------
-# Compiler: ifort
-# -------------------------------------------------------------------------
-if test $found -eq 0 -a \( "$check" == "" -o "$check" == "ifort" \) ;then
-    echo Checking ifort ...
-    ifort idc.f90
-    if test $? -eq 0 ;then
-        found=1
-        compiler=ifort
-    fi
-fi
-
-# -------------------------------------------------------------------------
 # Compiler: f95
 # -------------------------------------------------------------------------
 if test $found -eq 0 -a \( "$check" == "" -o "$check" == "f95" \) ;then
@@ -124,12 +104,8 @@ fi
 if test $found -eq 1 ;then
     echo Compiler: $compiler
     cp $compiler.mk config.mk
-    # Ugly; this is to avoid replacing Makefile-linux/win32-NT
-    echo "$makefilecfg" | sed "s|include Makefile-gfortran|include Makefile-$compiler|g"
-    echo "$makefilecfg" | sed "s|include Makefile-g95|include Makefile-$compiler|g"
-    echo "$makefilecfg" | sed "s|include Makefile-ifort|include Makefile-$compiler|g"
 else
-    echo 'No suitable compiler found!'
+    echo No suitable compiler found!
 fi
 
 cd ..

@@ -1,7 +1,7 @@
 ! test_dict.f90 --
 !     Test program for dictionaries
 !
-!     $Id: test_dict.f90,v 1.4 2009/05/09 14:35:56 arjenmarkus Exp $
+!     $Id: test_dict.f90,v 1.3 2007/01/26 09:56:44 arjenmarkus Exp $
 !
 module MYDATA_MODULE
 
@@ -76,11 +76,10 @@ program test_dict
     call dict_add_key( dict, "Piano2", data )
     call dict_add_key( dict, "Piano-forte is long ", data )
     !                         12345678901234567890
-    write(*,*) 'Has key "Piano"? ', dict_has_key(dict, 'Piano')
-    write(*,*) 'Has key "Piano2"? ', dict_has_key(dict, 'Piano2')
+    write(*,*) 'Has key "Piano"? ', dict_has_key(dict, 'Piano' )
+    write(*,*) 'Has key "Piano2"? ', dict_has_key(dict, 'Piano2' )
     write(*,*) 'Has key "Piano-forte is long "? ', &
-        dict_has_key(dict, 'Piano-forte is long ')
-    write(*,*) 'Has key "Flute"? ', dict_has_key(dict, 'Flute')
+        dict_has_key(dict, 'Piano-forte is long ' )
     !
     ! Destroy the dictionary
     !

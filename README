@@ -67,15 +67,6 @@ to set up the macros for the makefiles:
 - configure.sh probes various compilers under Linux, Cygwin or MinGW
 - configure.bat is meant for Windows
 
-You can select the compiler you prefer, g95, gfortran, f95, cvf,
-for instance:
-
-   > configure.sh gfortran
-
-Or you can select a type of build (normal, debug, optimise):
-
-   > configure.sh -optimise
-
 
 Status of the modules
 ---------------------

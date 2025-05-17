@@ -3,21 +3,21 @@
 !   This module provides OO services to manage strings of dynamic length.
 !   The goal of the current component is to provide higher-level
 !   services that the standard fortran currently provides.
-!   The component provides methods which mimic the services
+!   The component provides methods which mimic the services 
 !   available in the Tcl language.
-!   It provides string comparison, string search and string
+!   It provides string comparison, string search and string 
 !   matching methods.
-!   See in test_m_vstring to see a complete example of the
+!   See in test_m_vstring to see a complete example of the 
 !   services provided.
 !
 !   Overview
-!   A vstring is an array of characters.
-!   The simplest way to create a vstring is with vstring_new
+!   A vstring is an array of characters. 
+!   The simplest way to create a vstring is with vstring_new 
 !   from a "character(len=<something>)" string.
 !   The length of the vstring is computed dynamically,
 !   depending on the current number of characters, with vstring_length.
 !   In the following example, the length is 9.
-!
+!  
 !     use m_vstring, only : &
 !       vstring_new, &
 !       vstring_free, &
@@ -30,15 +30,15 @@
 !     call vstring_free( string1 )
 !
 !   Creating a string
-!   With vstring_new, one can also create a new vstring as a copy
+!   With vstring_new, one can also create a new vstring as a copy 
 !   of an existing vstring.
-!   With vstring_new, one can also create a new vstring with an
+!   With vstring_new, one can also create a new vstring with an 
 !   array of characters or with a repeated copy of an existing vstring.
 !   Destroy the vstring with vstring_free.
 !
 !   Concatenate two strings
 !   Two vstrings can be concatenated in two ways.
-!   The vstring_concat method returns a new vstring computed by the
+!   The vstring_concat method returns a new vstring computed by the 
 !   concatenation of the two strings.
 !   The vstring_append allows to add the characters of the 2nd vstring
 !   at the end of the current string.
@@ -56,7 +56,7 @@
 !   upper case and all the other characters to lower case.
 !
 !   The user can know if two vstrings are equal with vstring_equals.
-!   Two vstrings can be compared with vstring_compare, which
+!   Two vstrings can be compared with vstring_compare, which 
 !   is based on the lexicographic order.
 !
 !   One can transform one vstring into a new one using a map with
@@ -64,7 +64,7 @@
 !
 !   Pattern matching
 !   The vstring_match method provides string-matching services in the glob-style.
-!   It manages "*" pattern (which matches 0 or more characters),
+!   It manages "*" pattern (which matches 0 or more characters), 
 !   the "?" pattern (which matches exactly one character),
 !   escape sequences and character ranges.
 !   The following example show how to compare a file name against a pattern :
@@ -74,10 +74,10 @@
 !     match = vstring_match ( string1 , pattern )
 !
 !   Validating a string
-!   The vstring_is method provides a way of validating data by
-!   computing whether the vstring is in a class of data, for example
+!   The vstring_is method provides a way of validating data by 
+!   computing whether the vstring is in a class of data, for example 
 !   integer, real, digit, alphanumeric, etc...
-!   In the following example, the user can check whether the
+!   In the following example, the user can check whether the 
 !   string read on standard input is an integer :
 !
 !     read ( 5 , * ) charstring
@@ -87,15 +87,15 @@
 !       ! Generate an error
 !     endif
 !
-!   If the character set under use is not in one the pre-defined classes
-!   of vstring_is, the user can directly call vstring_isincharset or
+!   If the character set under use is not in one the pre-defined classes 
+!   of vstring_is, the user can directly call vstring_isincharset or 
 !   vstring_isinasciirange, which are the basic blocks of vstring_is.
 !
 !   Second string argument may be character string
 !   The design choice has been made to design the subroutines/functions
 !   so that their dummy arguments are generally only of type t_vstring.
 !   Another choice would have been to allways take as dummy arguments both
-!   t_vstring and "character (len=*)" strings, with module procedure
+!   t_vstring and "character (len=*)" strings, with module procedure 
 !   interfaces to make them generic.
 !   The last choice ease the work of the client of the current component,
 !   which can use directly standard fortran constant strings (for example,
@@ -111,25 +111,25 @@
 !
 !   that is to say 5 lines instead of 1.
 !
-!   The main drawback is that the number of interfaces is at least
-!   multiplied by 2, if not 4 or 8 when the number of string arguments is more
-!   than 2. This makes the unit tests multiplied by the same number, if one
+!   The main drawback is that the number of interfaces is at least 
+!   multiplied by 2, if not 4 or 8 when the number of string arguments is more 
+!   than 2. This makes the unit tests multiplied by the same number, if one 
 !   want to exercise all the possible interfaces. That way was chosen
 !   by the original iso_varying_string module and lead to a heavy component,
-!   with a large number of lines and a small number of features, because
+!   with a large number of lines and a small number of features, because 
 !   all the time was lost in the management of such an heavy module.
 !   The other drawback is that is breaks the object oriented design
 !   so that the "type bound" procedure of F2003 cannot be used.
 !   The current choice is to focus mainly on the services provided,
 !   not the ease of use. That allows to provide much more features than
-!   in the original component, but complicates a little more the
-!   use in the client code.
-!   The choice done here is that the first argument is allways of type
-!   vstring (and called "this"), while the second argument (if any), mays
+!   in the original component, but complicates a little more the 
+!   use in the client code. 
+!   The choice done here is that the first argument is allways of type 
+!   vstring (and called "this"), while the second argument (if any), mays 
 !   by either of type vstring or of type "character (len=*).
-!   That solution allows to keep both consistency and ease of use at
+!   That solution allows to keep both consistency and ease of use at 
 !   the maximum possible level.
-!   Several methods are designed this way, for example, vstring_equals,
+!   Several methods are designed this way, for example, vstring_equals, 
 !   vstring_compare, vstring_append, vstring_concat and others.
 !
 !   Allocatable or pointer
@@ -141,10 +141,10 @@
 !   But the "allocatable" implementation allows to manage the vstring
 !   which are going out of the current scope so that the use of vstring_free
 !   is not necessary and memory leaks do not occur.
-!   Instead, with the pointer implementation, the call to vstring_free is
+!   Instead, with the pointer implementation, the call to vstring_free is 
 !   strictly necessary (if not, memory is lost each time a new vstring is
 !   created).
-!   The current version of m_vstring has been tested with the
+!   The current version of m_vstring has been tested with the 
 !   following compilers and versions !
 !   - Intel Visual Fortran 8 : tested with _VSTRING_ALLOCATABLE and _VSTRING_POINTER
 !       But the allocatable version allows to debug more easily.
@@ -153,45 +153,45 @@
 !   - g95 May  3 2007 : tested with _VSTRING_POINTER, OK
 !
 !   Dynamic or static buffer
-!   The internal algorithms provided by m_vstrings are based on
-!   basic fortran character strings. In several situations, the
+!   The internal algorithms provided by m_vstrings are based on 
+!   basic fortran character strings. In several situations, the 
 !   dynamic vstring has to be converted into a basic fortran character
-!   buffer string, which size has to be given explicitely in the source
-!   code, with the len = <something> statement (in the
-!   character ( len = <something>) ). Two solutions are provided,
-!   and the user can define the pre-processing macro
+!   buffer string, which size has to be given explicitely in the source 
+!   code, with the len = <something> statement (in the 
+!   character ( len = <something>) ). Two solutions are provided, 
+!   and the user can define the pre-processing macro 
 !   _VSTRING_STATIC_BUFFER to configure that :
 !   - the first solution is to set the size of the buffer statically,
 !     to a constant integer value VSTRING_BUFFER_SIZE.
-!   - the second solution is to compute the size
+!   - the second solution is to compute the size 
 !     of the buffer dynamicaly, with the fortran 90 len = vstring_length(this)
 !     statement,
-!   If the _VSTRING_STATIC_BUFFER is defined, then character strings of
+!   If the _VSTRING_STATIC_BUFFER is defined, then character strings of 
 !   constant size are used as buffers.
-!   If the _VSTRING_STATIC_BUFFER is not defined (which is the default),
+!   If the _VSTRING_STATIC_BUFFER is not defined (which is the default), 
 !   then character strings of dynamic size are used as buffers.
-!   The second solution is more efficient, because the strings are not
+!   The second solution is more efficient, because the strings are not 
 !   oversized or undersized, depending on the real number of characters
-!   in the dynamic string. But the feature may not be provided
-!   by the compiler at hand. For example, problems with the dynamic
+!   in the dynamic string. But the feature may not be provided 
+!   by the compiler at hand. For example, problems with the dynamic 
 !   length character string have been experienced with Intel Fortran 8.
 !
 !   Design
 !   This component has been designed with OO principles in mind.
 !   This is why the first argument of every method is named "this",
 !   which is the current object.
-!   If another string is required as a second argument, it may be either
+!   If another string is required as a second argument, it may be either 
 !   of type dynamic or as a character(len=*) type, to improve
 !   usability.
-!   This component is meant to evolve following the fortran 2003 standard
+!   This component is meant to evolve following the fortran 2003 standard 
 !   and OO type-bound procedures.
 !
 !   Limitations
 !     - No regular expression algorithm is provided.
 !       But vstring_match allows to do string matching in glob-style.
-!     - The vstring_match does not work with gfortran 2007/04/16 because
+!     - The vstring_match does not work with gfortran 2007/04/16 because 
 !       of a limitation in gfortran for zero-size arrays
-!     - the vstring_adjustl, vstring_adjustr, vstring_scan,
+!     - the vstring_adjustl, vstring_adjustr, vstring_scan, 
 !       vstring_adjustl, vstring_adjustr, vstring_is methods does not
 !       work with IVF8 because strings declared like this :
 !         character (len = vstring_length(this) :: character
@@ -205,7 +205,7 @@
 !   _VSTRING_ALLOCATABLE or _VSTRING_POINTER : see the section "Allocatable or pointer"
 !
 !   History
-!   This module was originally based on the iso_varying_string.f90 module
+!   This module was originally based on the iso_varying_string.f90 module 
 !   by Rich Townsend.
 !
 !   TODO
@@ -245,7 +245,7 @@
 ! Copyright (c) 2008 Michael Baudin michael.baudin@gmail.com
 ! Copyright (c) 2008 Arjen Markus arjenmarkus@sourceforge.net
 !
-! $Id: m_vstring.f90,v 1.10 2013/12/27 11:36:01 arjenmarkus Exp $
+! $Id: m_vstring.f90,v 1.9 2008/07/16 09:24:42 relaxmike Exp $
 !
 ! Thanks    : Lawrie Schonfelder (bugfixes and design pointers), Walt Brainerd
 !             (conversion to F).
@@ -260,9 +260,9 @@ module m_vstring
   ! t_vstring --
   !   A vstring is implemented as an array of characters.
   !   The length of the string is not stored. Instead,
-  !   it is computed by vstring_length each time it is
+  !   it is computed by vstring_length each time it is 
   !   necessary with the intrinsic "size". It the length
-  !   was stored explicitely, it should be managed, which
+  !   was stored explicitely, it should be managed, which 
   !   could lead to bugs.
   !
   ! Choose your dynamic string system between _VSTRING_ALLOCATABLE , _VSTRING_POINTER
@@ -335,7 +335,7 @@ module m_vstring
   end interface vstring_new
   !
   ! vstring_cast --
-  !   Generic converter from a vstring to a basic fortran data type
+  !   Generic converter from a vstring to a basic fortran data type 
   !
   interface vstring_cast
      module procedure vstring_cast_charstringfixed
@@ -466,7 +466,7 @@ module m_vstring
   !
   ! Set to true to stop whenever an error comes in the vstring component.
   logical, save :: vstring_stoponerror = .true.
-  !
+  ! 
   ! TODO : Flags for error management.
   !
   integer, parameter :: VSTRING_ERROR_OK = 0
@@ -486,7 +486,7 @@ contains
   ! vstring_new_from_charstring --
   !   Constructor based on a character(len=*).
   ! Arguments
-  !   char_string : the new vstring is filled with the
+  !   char_string : the new vstring is filled with the 
   !     characters found in char_string.
   !
   subroutine vstring_new_from_charstring ( this , char_string )
@@ -650,7 +650,7 @@ contains
   !   Destructor.
   ! NOTE :
   !   The use of the destructor is OPTIONAL.
-  !   See the thread " New ISO_VARYING_STRING implementation
+  !   See the thread " New ISO_VARYING_STRING implementation 
   !   (without memory leaks)" on comp.lang.fortran :
   !   "On most systems, memory is memory :-).  However, there is a
   !   difference between how ALLOCATABLE variables and POINTER
@@ -765,8 +765,6 @@ contains
     !
     ! Process options
     !
-    equals = .false.
-
     if ( present ( nocase ) ) then
        nocase_real = nocase
     else
@@ -851,8 +849,8 @@ contains
   ! vstring_cast_charstringfixed --
   !   Convert a varying string into a character string
   !   (fixed length)
-  !   If the number of characters in the target charstring
-  !   is not large enough, the target charstring is truncated, that is,
+  !   If the number of characters in the target charstring 
+  !   is not large enough, the target charstring is truncated, that is, 
   !   contains only the first characters of the current dynamic string.
   !
   subroutine vstring_cast_charstringfixed ( this , length , char_string )
@@ -876,8 +874,8 @@ contains
   ! vstring_cast_charstringauto --
   !   Convert a varying string into a character string
   !   (automatic length)
-  !   If the number of characters in the target charstring
-  !   is not large enough, the target charstring is truncated, that is,
+  !   If the number of characters in the target charstring 
+  !   is not large enough, the target charstring is truncated, that is, 
   !   contains only the first characters of the current dynamic string.
   !
   subroutine vstring_cast_charstringauto ( this , char_string )
@@ -1061,8 +1059,6 @@ contains
   !   The default behaviour is to take into account for case of characters.
   !   If length is specified, then only the first length characters are used in the comparison.
   !
-  !   A value of 999 means that either string was not properly initialized.
-  !
   function vstring_compare_vstring ( this , string2 , nocase , length ) result ( compare )
     type ( t_vstring ) , intent(in) :: this
     type ( t_vstring ) , intent(in) :: string2
@@ -1083,8 +1079,6 @@ contains
     !
     ! Process options
     !
-    compare = 999
-
     if ( present ( nocase ) ) then
        nocase_real = nocase
     else
@@ -1189,9 +1183,9 @@ contains
   end function vstring_compare_charstring
   !
   ! vstring_trim_vstring --
-  !   Returns a new string except that any leading or trailing characters
+  !   Returns a new string except that any leading or trailing characters 
   !   from the set given by chars are removed.
-  !   If chars is not specified then white space is removed (spaces, tabs,
+  !   If chars is not specified then white space is removed (spaces, tabs, 
   !   newlines, and carriage returns).
   !
   function vstring_trim_vstring ( this , chars ) result ( trim_string )
@@ -1243,9 +1237,9 @@ contains
   end function vstring_trim_charstring
   !
   ! vstring_trimleft_vstring --
-  !   Returns a new string except that any leading characters
+  !   Returns a new string except that any leading characters 
   !   from the set given by chars are removed.
-  !   If chars is not specified then white space is removed
+  !   If chars is not specified then white space is removed 
   !   (spaces, tabs, newlines, and carriage returns).
   !
   function vstring_trimleft_vstring ( this , chars ) result ( trim_string )
@@ -1392,7 +1386,7 @@ contains
   !   Search in the current string for a sequence of characters that exactly match the characters in string2.
   !   If found, return the index of the first character in the first such match within the current string.
   !   If not found, return 0.
-  !   If first is specified, then the search is constrained to start with the character
+  !   If first is specified, then the search is constrained to start with the character 
   !   in the current string specified by the index.
   !
   function vstring_first_vstring ( this , string2 , first ) result ( foundIndex )
@@ -1408,9 +1402,6 @@ contains
     type(t_vstring)   :: substring
     logical :: equals
     integer :: status
-
-    foundIndex = 0
-
     call vstring_check_string ( this , "vstring_first_vstring" , status )
     if ( status /= VSTRING_ERROR_OK ) then
        return
@@ -1468,7 +1459,7 @@ contains
   !   Search in the current string for a sequence of characters that exactly match the characters in string2.
   !   If found, return the index of the last character in the first such match within the current string.
   !   If not found, return 0.
-  !   If last is specified, then the search is constrained to start with the character in the current
+  !   If last is specified, then the search is constrained to start with the character in the current 
   !   string specified by the index.
   !
   function vstring_last_vstring ( this , string2 , last ) result ( foundIndex )
@@ -1484,9 +1475,6 @@ contains
     type(t_vstring)   :: substring
     logical :: equals
     integer :: status
-
-    foundIndex = 0
-
     call vstring_check_string ( this , "vstring_last_vstring" , status )
     if ( status /= VSTRING_ERROR_OK ) then
        return
@@ -1599,9 +1587,9 @@ contains
   end function vstring_index
   !
   ! vstring_toupper --
-  !   Returns a vstring except that all lower (or title) case letters have been
-  !   converted to upper case. If first is specified, it refers to the first char index in the string
-  !   to start modifying. If last is specified, it refers to the char index in the string to stop
+  !   Returns a vstring except that all lower (or title) case letters have been 
+  !   converted to upper case. If first is specified, it refers to the first char index in the string 
+  !   to start modifying. If last is specified, it refers to the char index in the string to stop 
   !   at (inclusive).
   !
   function vstring_toupper ( this , first , last ) result ( new_upper )
@@ -1653,9 +1641,9 @@ contains
   end function vstring_toupper
   !
   ! vstring_tolower --
-  !   Returns a vstring except that all upper (or title) case letters have been
-  !   converted to lower case. If first is specified, it refers to the first char index in the string
-  !   to start modifying. If last is specified, it refers to the char index in the string to stop
+  !   Returns a vstring except that all upper (or title) case letters have been 
+  !   converted to lower case. If first is specified, it refers to the first char index in the string 
+  !   to start modifying. If last is specified, it refers to the char index in the string to stop 
   !   at (inclusive).
   !
   function vstring_tolower ( this , first , last ) result ( new_lower )
@@ -1708,9 +1696,9 @@ contains
   end function vstring_tolower
   !
   ! vstring_totitle --
-  !   Returns a vstring except that the first character in string is converted
-  !   to upper case, and the rest of the string is converted to lower case. If first is specified, it refers
-  !   to the first char index in the string to start modifying. If last is specified, it refers
+  !   Returns a vstring except that the first character in string is converted 
+  !   to upper case, and the rest of the string is converted to lower case. If first is specified, it refers 
+  !   to the first char index in the string to start modifying. If last is specified, it refers 
   !   to the char index in the string to stop at (inclusive).
   !
   function vstring_totitle ( this , first , last ) result ( new_title )
@@ -1879,25 +1867,25 @@ contains
   end function vstring_random
   !
   ! vstring_match_vstring --
-  !   See if pattern matches string; return 1 if it does, 0 if it doesn't.
-  !   If -nocase is specified, then the pattern attempts to match against the
-  !   string in a case insensitive manner.
-  !   For the two strings to match, their contents must be identical except
+  !   See if pattern matches string; return 1 if it does, 0 if it doesn't. 
+  !   If -nocase is specified, then the pattern attempts to match against the 
+  !   string in a case insensitive manner. 
+  !   For the two strings to match, their contents must be identical except 
   !   that the following special sequences may appear in pattern:
   !     *
   !       Matches any sequence of characters in string, including a null string.
   !     ?
   !       Matches any single character in string.
   !     [chars]
-  !       Matches any character in the set given by chars.
-  !       If a sequence of the form x-y appears in chars, then any character
-  !       between x and y, inclusive, will match.
-  !       When used with -nocase, the characters of the range are converted to lower case first.
-  !       Whereas {[A-z]} matches '_' when matching case-sensitively ('_' falls between the 'Z'
-  !       and 'a'), with -nocase this is considered like {[A-Za-z]} (and probably what was
+  !       Matches any character in the set given by chars. 
+  !       If a sequence of the form x-y appears in chars, then any character 
+  !       between x and y, inclusive, will match. 
+  !       When used with -nocase, the characters of the range are converted to lower case first. 
+  !       Whereas {[A-z]} matches '_' when matching case-sensitively ('_' falls between the 'Z' 
+  !       and 'a'), with -nocase this is considered like {[A-Za-z]} (and probably what was 
   !       meant in the first place).
   !     \x
-  !       Matches the single character x.
+  !       Matches the single character x. 
   !       This provides a way of avoiding the special interpretation of the characters *?[]\ in pattern.
   !
   recursive function vstring_match_vstring ( this , pattern , nocase ) result ( match )
@@ -1927,9 +1915,6 @@ contains
     type(t_vstring) :: this_char1lower
     type(t_vstring) :: chars_lower
     integer :: status
-
-    match = .false.
-
     !
     ! Process options
     !
@@ -2164,16 +2149,16 @@ contains
   end function vstring_match_charstring
   !
   ! vstring_expandcharset --
-  !   Consider that the current string is a character set and returns
+  !   Consider that the current string is a character set and returns 
   !   the expanded form of that set.
   !   The expanded form of the character set "abc" is "abc".
   !   If a sequence of the form x-y appears in the current string, then the expanded form
   !   contains all characters between x and y, inclusive.
-  !   For example, if the current string is "a-z", the returned expanded set is made
+  !   For example, if the current string is "a-z", the returned expanded set is made 
   !   of all the lower case letters.
-  !   For example, if the current string is "a-zA-Z", the returned expanded set is made
+  !   For example, if the current string is "a-zA-Z", the returned expanded set is made 
   !   of all the lower case letters and upper case letters.
-  !   For example, if the current string is "a-zA-Z_", the returned expanded set is made
+  !   For example, if the current string is "a-zA-Z_", the returned expanded set is made 
   !   of all the lower case letters and upper case letters and underscore.
   !
   recursive function vstring_expandcharset ( this ) result ( expanded )
@@ -2244,12 +2229,12 @@ contains
   end function vstring_expandcharset
   !
   ! vstring_is --
-  !   Returns .true. if string is a valid member of the specified character class,
-  !   otherwise returns .false..
+  !   Returns .true. if string is a valid member of the specified character class, 
+  !   otherwise returns .false.. 
   !   If strict is provided and .true., then an empty string returns .false..
   !   If strict is provided and .false., or not provided, an empty string returns .true..
-  !   If failindex is provided, then if the function returns .false., the index in the
-  !   string where the class was no longer valid will be stored in the variable failindex.
+  !   If failindex is provided, then if the function returns .false., the index in the 
+  !   string where the class was no longer valid will be stored in the variable failindex. 
   !   The following character classes are recognized (the class name can be abbreviated):
   !     alpha
   !         Any alphabet character, that is [a-zA-Z].
@@ -2258,7 +2243,7 @@ contains
   !     ascii
   !         Any character with a value less than 128 (those that are in the 7-bit ascii range).
   !     control
-  !         Any control character. Control chars are in the
+  !         Any control character. Control chars are in the 
   !         ranges 00..1F and 7F..9F, that is from ascii #0 to #31 and from #127 to #159
   !     digit
   !         Any digit character. Note that this includes characters outside of the [0-9] range.
@@ -2267,7 +2252,7 @@ contains
   !     graph
   !         Any printing character, except space that is from ascii #33 to #126.
   !     integer
-  !         Any of the valid forms for an ordinary integer in Fortran, with optional surrounding whitespace.
+  !         Any of the valid forms for an ordinary integer in Fortran, with optional surrounding whitespace. 
   !     logical
   !         Any valid Fortran logical
   !     lower
@@ -2277,7 +2262,7 @@ contains
   !     print
   !         Any printing character, including space that is from ascii #32 to #126.
   !     real
-  !         Any of the valid forms for a real in Fortran, with optional surrounding whitespace.
+  !         Any of the valid forms for a real in Fortran, with optional surrounding whitespace. 
   !     space
   !         Any space character, that is white space, tab, newline or carriage return.
   !     true
@@ -2285,7 +2270,7 @@ contains
   !     upper
   !         Any upper case alphabet character, that is [A-Z].
   !     xdigit
-  !         Any hexadecimal digit character ([0-9A-Fa-f]).
+  !         Any hexadecimal digit character ([0-9A-Fa-f]). 
   !     wordchar
   !         Any word character. That is any alphanumeric character (upper case,
   !         lower case, or digit), or any connector punctuation characters (e.g. underscore).
@@ -2377,11 +2362,11 @@ contains
     if ( present ( failindex ) ) then
        failindex = failindex_real
     endif
-
+       
   end function vstring_is
   !
   ! vstring_isdigit --
-  !   Returns 1 if string is a valid digit.
+  !   Returns 1 if string is a valid digit. 
   !
   logical function vstring_isdigit ( this , failindex )
     implicit none
@@ -2394,7 +2379,7 @@ contains
   end function vstring_isdigit
   !
   ! vstring_isinteger --
-  !   Returns 1 if string is a valid integer, with optional surrounding whitespace.
+  !   Returns 1 if string is a valid integer, with optional surrounding whitespace. 
   !
   logical function vstring_isinteger ( this , failindex )
     implicit none
@@ -2675,7 +2660,7 @@ contains
   end function vstring_iswordchar
   !
   ! vstring_isincharset --
-  !   Returns .true. if string is made of characters which all are in the
+  !   Returns .true. if string is made of characters which all are in the 
   !   given character set.
   !   If failingindex is provided and the string in not in the character set,
   !   the integer failingindex is the index in the string where the
@@ -2764,7 +2749,7 @@ contains
     ! Process failindex
     !
     if ( present ( failindex ) ) then
-       if ( vstring_isinasciirange ) then
+       if ( vstring_isinasciirange ) then 
           failindex = VSTRING_INDEX_UNKNOWN
        else
           failindex = icharacter
@@ -2813,20 +2798,20 @@ contains
   end subroutine vstring_append_charstring
   !
   ! vstring_map --
-  !   Replaces substrings in string based on the mapping defined by the couple (map_old , map_new).
+  !   Replaces substrings in string based on the mapping defined by the couple (map_old , map_new). 
   !   map_old and map_new are arrays of vstrings and are of the same size so that
-  !   if imap is an index no greater than the size of map_old,
+  !   if imap is an index no greater than the size of map_old, 
   !   map_old ( imap ) is the old string and map_new ( imap ) is the new string.
-  !   Each instance of a key in the string will be replaced with its corresponding value.
-  !   Both old and new strings may be multiple characters.
-  !   If nocase is set to .true., then matching is done without regard to case differences.
-  !   Replacement is done in an ordered manner, so the old string appearing first
-  !   in the list will be checked first, and so on. The current string is only iterated over once,
+  !   Each instance of a key in the string will be replaced with its corresponding value. 
+  !   Both old and new strings may be multiple characters. 
+  !   If nocase is set to .true., then matching is done without regard to case differences. 
+  !   Replacement is done in an ordered manner, so the old string appearing first 
+  !   in the list will be checked first, and so on. The current string is only iterated over once, 
   !   so earlier replacements will have no affect for later matches.
   !   For example,
   !     vstring_map 1abcaababcabababc [abc,ab,a,1] [1,2,3,0]
   !   will return the string 01321221.
-  !   Note that if an earlier key is a prefix of a later one, it will completely
+  !   Note that if an earlier key is a prefix of a later one, it will completely 
   !   mask the later one. So if the previous example is reordered like this,
   !     vstring_map 1abcaababcabababc [1,ab,a,abc] [0,2,3,1]
   !   it will return the string 02c322c222c.
@@ -2902,7 +2887,7 @@ contains
     !
     do
        !
-       ! Computes the matches for all maps and
+       ! Computes the matches for all maps and 
        ! store the map which is the most at the left of the string.
        !
        first = vstring_length ( stringmap ) + 1
@@ -2955,9 +2940,9 @@ contains
   end function vstring_map
   !
   ! vstring_replace --
-  !   Removes a range of consecutive characters from string, starting with the character whose
-  !   index is first and ending with the character whose index is last. An index of 1 refers to
-  !   the first character of the string.
+  !   Removes a range of consecutive characters from string, starting with the character whose 
+  !   index is first and ending with the character whose index is last. An index of 1 refers to 
+  !   the first character of the string. 
   !   If newstring is specified, then it is placed in the removed character range.
   !
   function vstring_replace ( this , first , last , newstring ) result ( stringreplace )
@@ -3029,7 +3014,7 @@ contains
   ! Arguments
   !   unitnumber : the unit number where the string is to read
   ! Note
-  !   Possible implementation : see get_unit_set_CH
+  !   Possible implementation : see get_unit_set_CH 
   !   in iso_varying_string.f90
   !
 
@@ -3042,7 +3027,7 @@ contains
   !   unitnumber : the unit number where the string is to write
   !   iostat, optional : the I/O status of the write statement
   ! Note
-  !   Possible implementation : see put_unit_CH
+  !   Possible implementation : see put_unit_CH 
   !   in iso_varying_string.f90
   !    if(PRESENT(iostat)) then
   !       write(*, FMT='(A,/)', ADVANCE='NO', IOSTAT=iostat) string
@@ -3050,13 +3035,13 @@ contains
   !       write(*, FMT='(A,/)', ADVANCE='NO') string
   !    endif
   !
-
+  
   !
   ! TODO :
   ! vstring_wordend --
-  !   Returns the index of the character just after the last one in the word
-  !   containing character charIndex of string. A word is considered to be any contiguous range of
-  !   alphanumeric (letters or decimal digits) or underscore (connector punctuation)
+  !   Returns the index of the character just after the last one in the word 
+  !   containing character charIndex of string. A word is considered to be any contiguous range of 
+  !   alphanumeric (letters or decimal digits) or underscore (connector punctuation) 
   !   characters, or any single character other than these.
   ! Arguments
   !   charIndex : the string containing the separator
@@ -3065,9 +3050,9 @@ contains
   !
   ! TODO :
   ! vstring_wordstart --
-  !   Returns the index of the first character in the word containing character charIndex
-  !   of string. charIndex may be specified as for the index method. A word is considered
-  !   to be any contiguous range of alphanumeric (letters or decimal digits) or underscore
+  !   Returns the index of the first character in the word containing character charIndex 
+  !   of string. charIndex may be specified as for the index method. A word is considered 
+  !   to be any contiguous range of alphanumeric (letters or decimal digits) or underscore 
   !   (connector punctuation) characters, or any single character other than these.
   ! Arguments
   !   charIndex : the string containing the separator
@@ -3185,14 +3170,14 @@ contains
        STOP
     endif
   end subroutine vstring_error
-  !
+  ! 
   ! vstring_set_stoponerror --
-  !   Configure the behaviour of the component whenever an
+  !   Configure the behaviour of the component whenever an 
   !   error is met.
   !   If stoponerror is true, then the execution stops if an error is encountered.
   !   If stoponerror is false, then the execution continues if an error is encountered.
   !   In both cases, a message is displayed on standard output.
-  !
+  ! 
   subroutine vstring_set_stoponerror ( stoponerror )
     logical , intent(in) :: stoponerror
     vstring_stoponerror = stoponerror
@@ -3332,10 +3317,10 @@ contains
   end function vstring_scan
   !
   ! vstring_verify --
-  !   Returns the default integer value 0 if each character in the current
+  !   Returns the default integer value 0 if each character in the current 
   !   string appears in set, or the position of a character of the current string
   !   that is not in set. If the logical back is absent or present with value false,
-  !   the position of the left-most such character is returned. If back is
+  !   the position of the left-most such character is returned. If back is 
   !   present with value true, the position of the rightmost such character is returned.
   ! Note :
   !   This is a simple interface to the standard fortran intrinsic "verify".
@@ -3372,7 +3357,7 @@ contains
   end function vstring_verify
   !
   ! vstring_adjustl --
-  !   Adjusts left to return a string of the same length by removing
+  !   Adjusts left to return a string of the same length by removing 
   !   all leading blanks and inserting the same number of trailing blanks.
   ! Note :
   !   This is a simple interface to the standard fortran intrinsic "adjustl".
@@ -3399,7 +3384,7 @@ contains
   end function vstring_adjustl
   !
   ! vstring_adjustr --
-  !   Adjusts right to return a string of the same length by removing
+  !   Adjusts right to return a string of the same length by removing 
   !   all trailing blanks and inserting the same number of leading blanks.
   ! Note :
   !   This is a simple interface to the standard fortran intrinsic "adjustr".

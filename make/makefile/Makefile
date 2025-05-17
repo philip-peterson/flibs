@@ -10,7 +10,6 @@ include Makefile-cfg
 #
 include Makefile-flibs-objects
 
-
 ifeq ($(FC),g95)
 	F90OPTS += -I$(srcdir)/strings
 endif
@@ -33,7 +32,7 @@ EXE_TEST_LOGGER = $(bindir)/test_m_logger.exe
 archive_flibs = $(PROJECTDIR)/bin/$(OS)/$(ARCH)/$(FC)/$(VERSION)/flibs.a
 
 all: $(archive) tests
-	@echo "Targets are all built."
+	$(ECHO) "Target all OK."
 
 archive: $(libdir) $(bindir) $(archive_flibs) 
 

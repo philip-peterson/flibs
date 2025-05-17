@@ -10,12 +10,6 @@
 The module [strong m_logger] provides static methods to manage a log file,
 which is an execution report of the program.
 
-[para]
-Note that this module, from 2012 onwards, relies on the Fortran 2008 feature
-NEWUNIT. The advantage of this feature is that the log file can be opened with
-a logical unit number that is guaranteed not to interfer with any other
-unit number in the program.
-
 [section OVERVIEW]
 
 The goal of this component is to provide a way to write messages
@@ -83,7 +77,7 @@ messages on standard output or on file, or both.
 [arg_def [type "character(len=*), intent(in) ::"] log_file]
 [arg_def [type "logical, intent(in), optional ::"] append]
 [list_end]
-Initialises the logging management and connect it to the
+Initialises the logging management and connect it to the 
 given [arg filename].
 If [arg append] is present and true, then the logger appends the messages
 to the end of the log file.
@@ -102,14 +96,14 @@ Shutdown the logging management.
 [arg_def [type "character(len=*), intent(in) ::"] msg]
 [list_end]
 Log the given character string [arg msg] to the logging units.
-If the logging to standard output is enabled, writes the message
+If the logging to standard output is enabled, writes the message 
 on standard output.
-If the logging to the log file is enabled, writes the message
+If the logging to the log file is enabled, writes the message 
 into the log file.
 Before outputting directly the message string, the string is
 trimmed, that is to say that all trailing blanks are removed from
 the string.
-If the time stamp option is enabled, a time stamp with
+If the time stamp option is enabled, a time stamp with 
 format "year-month-day hh:mm:ss" is inserted before the message.
 
 

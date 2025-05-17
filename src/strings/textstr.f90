@@ -15,7 +15,7 @@
 !  A replace-string routine does not seem very useful, one
 !  can create it by combining the delete and insert functions
 !
-!  $Id: textstr.f90,v 1.5 2013/10/06 11:37:57 arjenmarkus Exp $
+!  $Id: textstr.f90,v 1.3 2006/03/26 19:03:53 arjenmarkus Exp $
 !
 module edit_text
    implicit none
@@ -157,10 +157,9 @@ subroutine txt_from_string( text, string )
     do i = 1,nosegm-1
         text%text(i) = string(1+(i-1)*segment_length:i*segment_length)
     enddo
-    if ( nosegm > 0 ) then
-        text%text(nosegm) = string(1+(nosegm-1)*segment_length:)
-    endif
+    text%text(nosegm) = string(1+(nosegm-1)*segment_length:)
     text%length       = len(string)
+
 end subroutine txt_from_string
 
 ! txt_to_string --
@@ -184,11 +183,8 @@ subroutine txt_to_string( text, string )
     do i = 1,nosegm-1
         string(1+(i-1)*segment_length:i*segment_length) = text%text(i)
     enddo
-    if ( nosegm > 0 ) then
-        string(1+(nosegm-1)*segment_length:) = text%text(nosegm)
-    else
-        string = ' '
-    endif
+    string(1+(nosegm-1)*segment_length:) = text%text(nosegm)
+
 end subroutine txt_to_string
 
 ! txt_read_from_file --
@@ -268,6 +264,7 @@ end subroutine txt_read_from_file
 !    Write a text string to a file (one complete line)
 ! Arguments:
 !    lun         LU-number of the file to be written to
+!                (if LU <= 0, write to screen)
 !    text        Text string to be written
 ! Prerequisites:
 !    Text string is properly initialised
@@ -279,8 +276,11 @@ subroutine txt_write_to_file( lun, text )
     character(len=txt_length(text))  :: string
 
     call txt_to_string( text, string )
-    write( lun, '(a)' ) string
-
+    if ( lun .gt. 0 ) then
+        write( lun, '(a)' ) string
+    else
+        write( *, '(1x,a)' ) string
+    endif
 end subroutine txt_write_to_file
 
 ! txt_delete_string --
@@ -343,7 +343,6 @@ module multiple_line_text
    interface mltxt_insert
        module procedure mltxt_insert_string
        module procedure mltxt_insert_text
-       module procedure mltxt_insert_mltxt
    end interface
 
    integer, parameter  :: MLTXT_END = -123456
@@ -452,65 +451,33 @@ subroutine mltxt_insert_text( text, pos, text_str )
     call mltxt_insert_string( text, pos, buffer )
 end subroutine mltxt_insert_text
 
-subroutine mltxt_insert_mltxt( text, pos, mltxt_str )
-    type(MULTILINE_TEXT), intent(inout) :: text
-    integer, intent(in)                 :: pos
-    type(MULTILINE_TEXT)                :: mltxt_str
-
-    integer                             :: i
-    integer                             :: posn
-    type(TEXT_STRING), pointer          :: text_str
-
-    do i = 1,mltxt_length(mltxt_str)
-        posn = pos + i - 1
-        call mltxt_get( text, posn, text_str )
-        call mltxt_insert_text( text, posn, text_str )
-    enddo
-end subroutine mltxt_insert_mltxt
-
 ! mltxt_delete --
 !    Delete a line from a multiline text
 ! Arguments:
 !    text        Multiline text to be used
-!    first       Position of the first line to throw away
-!    last        Position of the last line to throw away
+!    pos         Position of the line that is to be thrown away
 !
-subroutine mltxt_delete( text, first, last )
+subroutine mltxt_delete( text, pos )
     type(MULTILINE_TEXT), intent(inout) :: text
-    integer, intent(in)                 :: first
-    integer, intent(in), optional       :: last
+    integer, intent(in)                 :: pos
 
     integer                                  :: i
-    integer                                  :: lastn
     type(TEXT_STRING), pointer, dimension(:) :: old_text
-
-    if ( present(last) ) then
-        lastn = last
-    else
-        lastn = first
-    endif
 
     if ( .not. associated(text%text) ) then
         return ! We ignore calls with uninitialised items
     endif
 
-    if ( first .lt. 1 .or. first .gt. size(text%text) ) then
-        return ! We ignore calls with out-of-bound positions
-    endif
-    if ( lastn .lt. 1 .or. lastn .gt. size(text%text) .or. lastn < first ) then
+    if ( pos .lt. 1 .or. pos .gt. size(text%text) ) then
         return ! We ignore calls with out-of-bound positions
     endif
 
     old_text  => text%text
     text%text => null()
-    allocate( text%text(1:size(old_text)-(lastn-first+1)) )
+    allocate( text%text(1:size(old_text)-1) )
 
-    text%text(1:first-1) = old_text(1:first-1)
-    text%text(first:)    = old_text(lastn+1:)
-
-    do i = first,lastn
-        call txt_cleanup( old_text(i) )
-    enddo
+    text%text(1:pos-1) = old_text(1:pos-1)
+    text%text(pos:)    = old_text(pos+1:)
 
     deallocate( old_text )
 
@@ -538,84 +505,5 @@ subroutine mltxt_get( text, pos, line )
         line => null()
     endif
 end subroutine mltxt_get
-
-! mltxt_read_file --
-!     Read an entire file into a multiline_text variable
-!
-! Arguments:
-!     filename         Name of the file to be read
-!     text             Multiline text variable
-!     error            Whether a reading error occurred
-!
-subroutine mltxt_read_file( filename, text, error )
-    character(len=*), intent(in) :: filename
-    type(multiline_text)         :: text
-    logical, intent(out)         :: error
-
-    integer                      :: ierr
-    integer                      :: lun
-    type(text_string), pointer   :: line
-    logical                      :: eof
-
-    open( newunit = lun,  file = filename, iostat = ierr )
-
-    if ( ierr /= 0 ) then
-        error = .true.
-        return
-    endif
-
-    allocate( line )
-
-    error = .true.
-    eof   = .false.
-
-    do
-        call txt_read_from_file( lun, line, eof )
-        if ( .not. eof ) then
-            call mltxt_insert( text, mltxt_end, line )
-            error = .false.
-        else
-            exit
-        endif
-    enddo
-
-    deallocate( line )
-    close( lun )
-
-end subroutine mltxt_read_file
-
-! mltxt_write_file --
-!     Write a multiline_text variable to a file
-!
-! Arguments:
-!     text             Multiline text variable
-!     filename         Name of the file to be written
-!     error            Indication something went wrong
-!
-subroutine mltxt_write_file( text, filename, error )
-    type(multiline_text)         :: text
-    character(len=*), intent(in) :: filename
-    logical, intent(out)         :: error
-
-    integer                      :: ierr
-    integer                      :: lun
-    integer                      :: i
-
-    open( newunit = lun,  file = filename, iostat = ierr )
-
-    if ( ierr /= 0 ) then
-        error = .true.
-        return
-    endif
-
-    error = .false.
-
-    do i = 1,mltxt_number(text)
-        call txt_write_to_file( lun, text%text(i) )
-    enddo
-
-    close( lun )
-
-end subroutine mltxt_write_file
 
 end module multiple_line_text

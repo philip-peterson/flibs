@@ -1,134 +1,60 @@
-
+<! -- -*- flibs -*- doctools manpage
+   -->
 <html><head>
-<title>select_precision - flibs</title>
-<style type="text/css"><!--
-    HTML {
-	background: 	#FFFFFF;
-	color: 		black;
-    }
-    BODY {
-	background: 	#FFFFFF;
-	color:	 	black;
-    }
-    DIV.doctools {
-	margin-left:	10%;
-	margin-right:	10%;
-    }
-    DIV.doctools H1,DIV.doctools H2 {
-	margin-left:	-5%;
-    }
-    H1, H2, H3, H4 {
-	margin-top: 	1em;
-	font-family:	sans-serif;
-	font-size:	large;
-	color:		#005A9C;
-	background: 	transparent;
-	text-align:		left;
-    }
-    H1.title {
-	text-align: center;
-    }
-    UL,OL {
-	margin-right: 0em;
-	margin-top: 3pt;
-	margin-bottom: 3pt;
-    }
-    UL LI {
-	list-style: disc;
-    }
-    OL LI {
-	list-style: decimal;
-    }
-    DT {
-	padding-top: 	1ex;
-    }
-    UL.toc,UL.toc UL, UL.toc UL UL {
-	font:		normal 12pt/14pt sans-serif;
-	list-style:	none;
-    }
-    LI.section, LI.subsection {
-	list-style: 	none;
-	margin-left: 	0em;
-	text-indent:	0em;
-	padding: 	0em;
-    }
-    PRE {
-	display: 	block;
-	font-family:	monospace;
-	white-space:	pre;
-	margin:		0%;
-	padding-top:	0.5ex;
-	padding-bottom:	0.5ex;
-	padding-left:	1ex;
-	padding-right:	1ex;
-	width:		100%;
-    }
-    PRE.example {
-	color: 		black;
-	background: 	#f5dcb3;
-	border:		1px solid black;
-    }
-    UL.requirements LI, UL.syntax LI {
-	list-style: 	none;
-	margin-left: 	0em;
-	text-indent:	0em;
-	padding:	0em;
-    }
-    DIV.synopsis {
-	color: 		black;
-	background: 	#80ffff;
-	border:		1px solid black;
-	font-family:	serif;
-	margin-top: 	1em;
-	margin-bottom: 	1em;
-    }
-    UL.syntax {
-	margin-top: 	1em;
-	border-top:	1px solid black;
-    }
-    UL.requirements {
-	margin-bottom: 	1em;
-	border-bottom:	1px solid black;
-    }
---></style>
+<title>select_precision - flibs </title>
 </head>
-<! -- Generated from file 'computing/select_precision.man' by tcllib/doctools with format 'html'
+<! -- Generated from file 'select_precision.man' by tcllib/doctools with format 'html'
    -->
 <! -- Copyright &copy; 2008 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;
    -->
-<! -- CVS: $Id: select_precision.html,v 1.2 2013/05/13 08:03:15 knystrom Exp $ select_precision.n
+<! -- CVS: $Id: select_precision.html,v 1.1 2008/09/26 04:19:41 arjenmarkus Exp $ select_precision.n
    -->
-<body><div class="doctools">
-<h1 class="title">select_precision(n) 1.0  &quot;flibs&quot;</h1>
-<div id="name" class="section"><h2><a name="name">Name</a></h2>
-<p>select_precision - Select the precision for real variables</p>
-</div>
-<div id="toc" class="section"><h2><a name="toc">Table Of Contents</a></h2>
-<ul class="toc">
-<li class="section"><a href="#toc">Table Of Contents</a></li>
-<li class="section"><a href="#section1">Description</a></li>
-<li class="section"><a href="#copyright">Copyright</a></li>
-</ul>
-</div>
-<div id="section1" class="section"><h2><a name="section1">Description</a></h2>
-<p>The auxiliary <i class="term">select_precision</i> module defines three parameters
-by which you can select the precision for real variables and constants:</p>
-<ul class="itemized">
-<li><p><i class="term">sp</i> - Single precision</p></li>
-<li><p><i class="term">dp</i> - Double precision (the real kind whose precision is larger
-than that of single precision)</p></li>
-<li><p><i class="term">wp</i> - Working precision. If you consistently use <i class="term">wp</i> as the
+
+<body>
+<h1> select_precision(n) 1.0  &quot;flibs&quot;</h1>
+<h2><a name="name">NAME</a></h2>
+<p>
+<p> select_precision - Select the precision for real variables
+
+
+
+
+<h2><a name="table_of_contents">TABLE OF CONTENTS</a></h2>
+<p>&nbsp;&nbsp;&nbsp;&nbsp;<a href="#table_of_contents">TABLE OF CONTENTS</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#description">DESCRIPTION</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<a href="#copyright">COPYRIGHT</a><br>
+<h2><a name="description">DESCRIPTION</a></h2>
+<p>
+
+The auxiliary <em>select_precision</em> module defines three parameters
+by which you can select the precision for real variables and constants:
+
+<ul>
+<li>
+<em>sp</em> - Single precision
+
+<br><br>
+<li>
+<em>dp</em> - Double precision (the real kind whose precision is larger
+than that of single precision)
+
+<br><br>
+<li>
+<em>wp</em> - Working precision. If you consistently use <em>wp</em> as the
 kind for your real variables and constants, then switching between
-single and double precision is merely a matter of setting <i class="term">wp</i> to
-either <i class="term">sp</i> or <i class="term">dp</i> in this module and recompiling.</p></li>
+single and double precision is merely a matter of setting <em>wp</em> to
+either <em>sp</em> or <em>dp</em> in this module and recompiling.
+
 </ul>
-<p><em>Note:</em> One of the pitfalls in using double precision is that
-literal constants, such as <i class="term">1.2345678901234567890</i> are not
+
+<em>Note:</em> One of the pitfalls in using double precision is that
+literal constants, such as <em>1.2345678901234567890</em> are not
 automatically interpreted as double precision. You need to specify the
-kind explicitly: <i class="term">1.2345678901234567890_wp</i> will define the
-constant in the working precision.</p>
-</div>
-<div id="copyright" class="section"><h2><a name="copyright">Copyright</a></h2>
-<p>Copyright &copy; 2008 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;</p>
-</div>
-</div></body></html>
+kind explicitly: <em>1.2345678901234567890_wp</em> will define the
+constant in the working precision.
+
+<h2><a name="copyright">COPYRIGHT</a></h2>
+<p>
+Copyright &copy; 2008 Arjen Markus &lt;arjenmarkus@sourceforge.net&gt;<br>
+</body></html>
+

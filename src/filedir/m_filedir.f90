@@ -182,20 +182,17 @@
 ! Compiler : Intel Fortran
 ! _FS_INTEL_FORTRAN_PORTABILITY_ROUTINES
 ! _FS_RENAME_FUNCTION
-! _FS_GETCWD_FUNCTION
 !
 ! Compiler : g95
 ! _FS_RENAME_FUNCTION
-! _FS_GETCWD_FUNCTION
 !
 ! Compiler : gfortran
 ! _FS_RENAME_SUBROUTINE
-! _FS_GETCWD_SUBROUTINE
 !
 ! Copyright (c) 2008 Arjen Markus arjenmarkus@sourceforge.net
 ! Copyright (c) 2008 Michael Baudin michael.baudin@gmail.com
 !
-!   $Id: m_filedir.f90,v 1.7 2013/12/30 09:30:19 knystrom Exp $
+!   $Id: m_filedir.f90,v 1.6 2008/07/16 13:45:35 relaxmike Exp $
 !
 module m_filedir
 #ifdef _FS_INTEL_FORTRAN_PORTABILITY_ROUTINES
@@ -727,23 +724,7 @@ contains
   !
   subroutine filedir_pwd ( cwd )
     character(len=*), intent ( out ) :: cwd
-    integer :: local_status
-#ifdef _FS_GETCWD_FUNCTION
-    local_status = GETCWD ( cwd )
-#endif
-#ifdef _FS_GETCWD_SUBROUTINE
     call GETCWD ( cwd )
-#endif
-#ifndef _FS_GETCWD_FUNCTION
-#ifndef _FS_GETCWD_SUBROUTINE
-    if ( present ( status ) ) then
-       status = FS_ERROR_UNDEFINED_SERVICE
-    else
-       write(message,*) "The getcwd service is not provided."
-       call filedir_error ( "filedir_pwd" , message )
-    endif
-#endif
-#endif
   end subroutine filedir_pwd
   !
   ! filedir_exists --

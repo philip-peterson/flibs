@@ -4,13 +4,13 @@
 !
 !     TODO: 3D, circles, spheres, on spherical surface
 !
-!     $Id: pointsets.f90,v 1.4 2013/12/30 07:16:20 arjenmarkus Exp $
+!     $Id: pointsets.f90,v 1.2 2006/06/25 07:24:31 arjenmarkus Exp $
 !
 module pointsets
     use select_precision
     implicit none
 
-    real, parameter, private :: pi = 3.14159265389793238464338_wp
+    real, parameter, private :: pi = 3.1415926_wp ! Alas, no atan() possible
 
 contains
 
@@ -275,8 +275,8 @@ logical function filter_triangle( xp, yp, x, y, params )
     use select_precision
     real(kind=wp), intent(inout)            :: xp
     real(kind=wp), intent(inout)            :: yp
-    real(kind=wp), dimension(:), intent(in) :: x     ! Dummy in this case
-    real(kind=wp), dimension(:), intent(in) :: y     ! Ditto
+    real(kind=wp), dimension(:), intent(in) :: x
+    real(kind=wp), dimension(:), intent(in) :: y
     real(kind=wp), dimension(:), intent(in) :: params
 
     if ( xp/params(1)+yp/params(2) < 1.0 ) then
@@ -338,46 +338,13 @@ subroutine random_disk( x, y, radius )
     y = 2.0_wp * pi * y
 
     do i = 1,size(x)
-        xp = x(i) * radius
+        xp = x(i)
         yp = y(i)
         x(i) = xp * cos(yp)
-        y(i) = xp * sin(yp)
+        y(i) = yp * sin(yp)
     enddo
 
 end subroutine random_disk
-
-! random_circle --
-!     Generate points on a circle of given radius.
-!     The points are uniformly distributed
-! Arguments:
-!     x       Array of x-coordinates to be filled
-!     y       Array of y-coordinates to be filled
-!     radius  Radius of the circle
-! Result:
-!     Uniformly random points (that is: average
-!     number of points depends only on the area,
-!     not the position)
-!
-subroutine random_circle( x, y, radius )
-    real(kind=wp), dimension(:), intent(inout) :: x
-    real(kind=wp), dimension(:), intent(inout) :: y
-    real(kind=wp), intent(in)                  :: radius
-
-    real(kind=wp)                              :: xp
-    real(kind=wp)                              :: yp
-    integer                                    :: i
-
-    call random_number( y )
-
-    y = 2.0_wp * pi * y
-
-    do i = 1,size(x)
-        yp = y(i)
-        x(i) = radius * cos(yp)
-        y(i) = radius * sin(yp)
-    enddo
-
-end subroutine random_circle
 
 ! random_ball --
 !     Generate points within a sphere of given radius.
@@ -407,14 +374,14 @@ subroutine random_ball( x, y, z, radius )
 
     x = x**(1.0_wp/3.0_wp)
     y = 2.0_wp * pi * y
-    z = acos( 2.0_wp*z-1.0_wp ) - 0.5_wp * pi
+    z = acos( 2.0_wp*z-1.0_wp )
 
     do i = 1,size(x)
-        xp = x(i) * radius
+        xp = x(i)
         yp = y(i)
         zp = z(i)
         x(i) = xp * cos(yp) * cos(zp)
-        y(i) = xp * sin(yp) * cos(zp)
+        y(i) = xp * sin(yp) * sin(zp)
         z(i) = xp * sin(zp)
     enddo
 
@@ -443,16 +410,16 @@ subroutine random_sphere( x, y, z, radius )
     real(kind=wp)                              :: zp
     integer                                    :: i
 
-    call random_rectangle( y, z, 1.0_wp, 1.0_wp )
+    call random_rectangle( x, y, 1.0_wp, 1.0_wp )
 
     y = 2.0_wp * pi * y
-    z = acos( 2.0_wp*z-1.0_wp ) - 0.5_wp * pi
+    z = acos( 2.0_wp*z-1.0_wp )
 
     do i = 1,size(x)
         yp = y(i)
         zp = z(i)
         x(i) = radius * cos(yp) * cos(zp)
-        y(i) = radius * sin(yp) * cos(zp)
+        y(i) = radius * sin(yp) * sin(zp)
         z(i) = radius * sin(zp)
     enddo
 end subroutine random_sphere
